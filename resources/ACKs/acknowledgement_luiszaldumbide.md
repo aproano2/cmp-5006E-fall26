@@ -3,4 +3,4 @@ targets I own or am authorized to test, that doing otherwise is grounds for
 failing this course and may be a crime, and that the deliverable for any
 offensive technique in this course is a defense.
 
-Signed: Luis Eduardo Zaldumbide, 20/09/2026
+Signed: Luis Eduardo Zaldumbide, 20/08/2026
