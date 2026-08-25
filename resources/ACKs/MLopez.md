@@ -3,4 +3,4 @@ targets I own or am authorized to test, that doing otherwise is grounds for
 failing this course and may be a crime, and that the deliverable for any
 offensive technique in this course is a defense.
 
-Signed: Alejandro Proano, August 20th, 2026
+Signed: Marcos López, August 25th, 2026
