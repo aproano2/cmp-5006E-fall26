@@ -1,0 +1,22 @@
+# Ignore all hidden files and folders (those starting with a dot)
+.*
+# Exception: Do not ignore the .gitignore file itself
+!.gitignore
+
+# Python Cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Visual Studio for Mac
+.vs/
+xs-program-cache/
+*.userprefs
+*.usertasks
+*.sln.docstates
+
+# macOS clutter
+.DS_Store
+.AppleDouble
+.LSOverride
+
