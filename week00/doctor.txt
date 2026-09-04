@@ -1,0 +1,17 @@
+PS C:\ctOS\cmp5006-week0\cmp5006-week0> python -m seclab.doctor      # → save the output
+CMP-5006 environment check
+----------------------------------------------------------
+✔ Python 3.13.3
+✔ numpy 2.5.2, requests 2.32.5
+✔ optional: matplotlib MISSING, pytest MISSING, pandas MISSING
+! Docker: docker is installed but the daemon is not running
+    Weeks 6-10 need it. Install Docker Desktop / docker-ce, or use
+    the hosted-sandbox fallback in each lab guide.
+✔ backend ollama  serving (1 model(s))
+✔ backend manual  always available
+✔ backend echo    always available (testing only — not a model)
+✔ LLM backend: ollama (qwen2.5:3b) — 6.3s
+✔ .llm_cache/ writable (31 entries)
+----------------------------------------------------------
+→ Ready.
+PS C:\ctOS\cmp5006-week0\cmp5006-week0> python -m seclab.doctor > doctor.txt
