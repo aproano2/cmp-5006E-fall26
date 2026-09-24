@@ -114,3 +114,12 @@ hmac.compare_digest(a, b)
 4. Scorecard RSA and secret-comparison: the *condition outside the algorithm*.
 
 > **Duel 1 (crypto & protocols) is due next week.**
+
+
+
+
+a  b c   d   e f g  h i j k l m n o p q 
+
+
+
+asdfg ?= asdjg
