@@ -1,0 +1,15 @@
+{
+  "_comment": "Hand-verified ground truth for the vuln-web target (labs/vuln-web). The REAL vulnerabilities, keyed by (rule, location) exactly as seclab.scan.ScanResult.key() normalizes them (rule and location lowercased). Score your scanner and LLM against THIS set with seclab.scan.compare_scanners. Built by reading vulnweb_app.py, not by running any tool — that independence is the point (a ground truth = 'whatever sqlmap found' rigs the duel).",
+  "target": "vuln-web (labs/vuln-web/app/vulnweb_app.py)",
+  "findings": [
+    {"rule": "sqli", "location": "do_login", "note": "string-formatted SQL in do_login; auth bypass + canary FLAG-sqli-9f2c-admin-session extractable"},
+    {"rule": "xss", "location": "do_reflect", "note": "GET /?name= reflected into HTML unescaped in do_reflect"},
+    {"rule": "cmdi", "location": "do_ping", "note": "POST /ping host concatenated into a shell command in do_ping"}
+  ],
+  "true_negatives": [
+    {"location": "do_reflect_safe", "note": "GET /safe?name= uses html.escape — NOT vulnerable. A tool flagging this is a false positive."}
+  ],
+  "not_present": [
+    {"rule": "broken-access-control", "note": "the app has NO auth/session/role code. Any tool 'finding' access control here is hallucinating — the week-6 lesson that #1 needs app context."}
+  ]
+}

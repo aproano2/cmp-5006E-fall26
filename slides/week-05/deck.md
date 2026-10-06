@@ -36,7 +36,7 @@ log** — infeasible.
 Eve runs DH with **each** side and relays:
 
 ```
-Alice ⇄ Eve ⇄ Bob
+Alice         ⇄ Eve       ⇄ Bob
    \_ key K₁ _/  \_ key K₂ _/
 ```
 
