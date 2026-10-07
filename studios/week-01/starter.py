@@ -15,6 +15,7 @@ plaintext is English — because English leaks its letter statistics through any
 substitution. Naming that assumption is naming the attack (Kerckhoffs, week 1).
 """
 from cipher import (ALPHABET, ENGLISH_FREQ, apply_guess, letter_counts, score)
+import random
 
 
 # ---- the attack -------------------------------------------------------------
@@ -37,7 +38,16 @@ def frequency_guess_key(ciphertext):
       - ``zip`` the two rankings.
     """
     # TODO: build and return the frequency-rank decryption map.
-    raise NotImplementedError
+    cipher_ranked = letter_counts(ciphertext).most_common()
+    english_ranked = sorted(
+        ENGLISH_FREQ,
+        key=ENGLISH_FREQ.get,
+        reverse=True
+    )
+
+    cipher_symbols = [symbol for symbol, _ in cipher_ranked]
+
+    return dict(zip(cipher_symbols, english_ranked))
 
 
 def crack(ciphertext, restarts=8, iters=3000, seed=0):
@@ -66,7 +76,58 @@ def crack(ciphertext, restarts=8, iters=3000, seed=0):
     The only inputs are the ciphertext and the public ``score`` / ``ENGLISH_FREQ``.
     """
     # TODO: implement the random-restart hill climb described above.
-    raise NotImplementedError
+    rng = random.Random(seed)
+
+    frequency_key = frequency_guess_key(ciphertext)
+
+    best_key = None
+    best_score = float("-inf")    # puntaje lo mas bajo posible
+
+    for _ in range(restarts):
+      key = frequency_key.copy()
+
+      # identificar letras
+      used_plaintext = set(key.values())
+      missing_plaintext = [
+        letter for letter in ALPHABET
+        if letter not in used_plaintext
+      ]
+
+      # mapeao de letras
+      missing_cipher = [
+        symbol for symbol in ALPHABET
+        if symbol not in key
+      ]
+
+      rng.shuffle(missing_plaintext)    # asigna letras faltantes
+
+      # mapeamos todo el abecedario
+      for symbol, letter in zip(missing_cipher, missing_plaintext):
+        key[symbol] = letter
+
+      current_plaintext = apply_guess(ciphertext, key)    # nuevo texto
+      current_score = score(current_plaintext)    # puntaje del texto
+
+      for _ in range(iters):
+        a, b = rng.sample(ALPHABET, 2)
+        key[a], key[b] = key[b], key[a]
+
+        # texto y puntaje con nueva llave
+        new_plaintext = apply_guess(ciphertext, key)
+        new_score = score(new_plaintext)
+
+        # mejor puntaje?
+        if new_score > current_score:
+          current_score = new_score
+        else:
+          key[a], key[b] = key[b], key[a]
+
+      # tomar mejor llave y puntaje
+      if current_score > best_score:
+        best_score = current_score
+        best_key = key.copy()
+
+    return best_key
 
 
 # ---- Task: defeat your own attack (analysis, no test) -----------------------

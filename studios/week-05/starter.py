@@ -18,11 +18,13 @@ from dh_pki import DH_P, DH_G, make_cert, validate, verify, load_fixtures
 
 
 # ---- Task 1: Diffie-Hellman + the man-in-the-middle -------------------------
-
+# p es un primo
+# g es un numero pequenio
 def dh_public(private, g=DH_G, p=DH_P):
     """Alice/Bob's public value: g^private mod p, sent over the wire."""
     # TODO: return pow(g, private, p)
-    raise NotImplementedError
+    # publico = g^privado mod(p)
+    return pow(g, private, p)
 
 
 def dh_shared(their_public, my_private, p=DH_P):
@@ -33,7 +35,8 @@ def dh_shared(their_public, my_private, p=DH_P):
     public values cannot compute it (discrete-log assumption).
     """
     # TODO: return pow(their_public, my_private, p)
-    raise NotImplementedError
+    # secreto = publico^mi_privado mod(p)
+    return pow(their_public, my_private, p)
 
 
 def mitm_keys(a, b, m, g=DH_G, p=DH_P):
@@ -61,8 +64,25 @@ def mitm_keys(a, b, m, g=DH_G, p=DH_P):
     #   Bob,   seeing M (he thinks it's Alice), computes dh_shared(M, b)
     #   Mallory, seeing B, computes dh_shared(B, m)  -> same key as Bob
     #   alice_equals_bob = (Alice's key == Bob's key)
-    raise NotImplementedError
+    # publicos
+    A = dh_public(a)
+    B = dh_public(b)
+    M = dh_public(m)        # hacks
 
+    # privadas
+    A_priv = dh_shared(M, a)
+    B_priv = dh_shared(M, b)
+    M_alice_priv = dh_shared(A, m)
+    M_bob_priv = dh_shared(B, m)
+
+    return {
+        "alice": A_priv,
+        "mallory_alice": M_alice_priv,
+        "bob": B_priv,
+        "mallory_bob": M_bob_priv,
+        "alice_equals_bob": A_priv==B_priv,
+    }
+    
 
 # ---- Task 3: the trust-store attack -----------------------------------------
 
@@ -76,7 +96,10 @@ def poison_trust_store(trust_store, rogue_root):
     mode in miniature.
     """
     # TODO: return a new set = trust_store plus rogue_root["pub"]
-    raise NotImplementedError
+    # sistema confia en la clave
+    new_set = trust_store | {rogue_root["pub"]}
+    print(new_set)
+    return new_set
 
 
 # ---- Task 2 uses the GIVEN validator; nothing to implement there ------------

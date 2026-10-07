@@ -34,9 +34,17 @@ def batch_gcd_recover(corpus):
     shared prime (both fall). Given the shared prime, ``factor_from_shared`` in
     rsa_lab turns it into d.
     """
-    # TODO: pairwise-GCD scan over corpus["keys"]; for any pair with gcd != 1,
-    # recover d for BOTH keys via factor_from_shared(n, gcd, e).
-    raise NotImplementedError
+    # TODO: pairwise-GCD scan over corpus["keys"]; for any pair with gcd != 1
+    keys = corpus["keys"]       # mir las keys
+    e = corpus["e"]
+    recovered = {}
+    for i in range(len(keys)):
+        for j in range(i + 1, len(keys)):
+            g = math.gcd(keys[i]["n"], keys[j]["n"])        # mcd de todas las key
+            if g != 1:
+                recovered[i] = factor_from_shared(keys[i]["n"], g, e)
+                recovered[j] = factor_from_shared(keys[j]["n"], g, e)
+    return recovered
 
 
 # ---- Task 3: timing side-channel attack -------------------------------------
@@ -58,7 +66,21 @@ def timing_attack(secret_len, oracle, rounds=41):
     #   guesses = [known_prefix + bytes([b]) + padding for b in range(256)]
     #   med = time_guesses(oracle, guesses, rounds)
     #   append the byte with the largest median time to the recovered prefix.
-    raise NotImplementedError
+    recover_bytes = bytearray()
+    for pos in range(secret_len):       # recorre cada caracter
+        padding = bytes(secret_len - pos - 1)
+        guesses = [bytes(recover_bytes) + bytes([b])+ padding for b in range(256)]        # 256 valores de bytes posibles
+        med = time_guesses(oracle, guesses, rounds)     # tiempo de respuesta
+
+        best_byte = 0
+        max_time = -1       # byte mas lento
+        for b, t in enumerate(med):
+            if t > max_time:
+                max_time = t
+                best_byte = b
+        
+        recover_bytes.append(best_byte)
+    return recover_bytes        # longitud  total del secreto / secreto descifrado
 
 
 # ---- Task 3 (fix): constant-time comparison ---------------------------------
@@ -68,7 +90,13 @@ def constant_time_equal(a, b):
     not depend on the secret. (In real code, call ``hmac.compare_digest``.)"""
     # TODO: length check, then accumulate x ^ y across all bytes; return whether
     # the accumulator is 0 — never early-exit.
-    raise NotImplementedError
+    if len(a) != len(b):
+        return False
+
+    diff = 0
+    for x,y in zip(a,b):        # itera bytes por ambas cadenas
+        diff |= x^y      # compara si son identicos
+    return diff == 0        # diff igual a 0 -> True
 
 
 if __name__ == "__main__":

