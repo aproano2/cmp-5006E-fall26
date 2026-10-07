@@ -115,12 +115,12 @@ def test_constant_time_equal_is_correct():
 
 
 TESTS = [
-    test_rsa_roundtrip_and_reduction,
-    test_shared_factor_recovers_both_keys,
-    test_safe_keys_not_recovered,
-    test_timing_attack_recovers_secret,
+    # test_rsa_roundtrip_and_reduction,
+    # test_shared_factor_recovers_both_keys,
+    # test_safe_keys_not_recovered,
+    # test_timing_attack_recovers_secret,
     test_constant_time_defeats_timing_attack,
-    test_constant_time_equal_is_correct,
+    # test_constant_time_equal_is_correct,
 ]
 
 

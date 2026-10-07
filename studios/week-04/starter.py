@@ -13,12 +13,14 @@ All required tests must pass, INCLUDING the guarantee tests:
 You never factor a strong modulus. You attack the *conditions* RSA depends on:
 good independent entropy, and constant-time secret handling.
 """
+
 import math
 
 from rsa_lab import factor_from_shared, insecure_equal, make_oracle, time_guesses
 
 
 # ---- Task 2: shared-factor (batch-GCD) recovery -----------------------------
+
 
 def batch_gcd_recover(corpus):
     """Find every public key whose modulus shares a prime with another key, and
@@ -41,6 +43,7 @@ def batch_gcd_recover(corpus):
 
 # ---- Task 3: timing side-channel attack -------------------------------------
 
+
 def timing_attack(secret_len, oracle, rounds=41):
     """Recover the hidden secret one byte at a time by TIMING the oracle.
 
@@ -54,21 +57,32 @@ def timing_attack(secret_len, oracle, rounds=41):
     ``time_guesses(oracle, guesses, rounds)`` (it interleaves them so drift can't
     bias one candidate), then keep the slowest byte.
     """
-    # TODO: for pos in range(secret_len):
-    #   guesses = [known_prefix + bytes([b]) + padding for b in range(256)]
-    #   med = time_guesses(oracle, guesses, rounds)
-    #   append the byte with the largest median time to the recovered prefix.
-    raise NotImplementedError
+    known_prefix = b""
+
+    for pos in range(secret_len):
+        padding = b"\x00" * (secret_len - len(known_prefix) - 1)
+        guesses = [known_prefix + bytes([b]) + padding for b in range(256)]
+        med = time_guesses(oracle, guesses, rounds)
+        known_prefix = guesses[med.index(max(med))]
+
+    return known_prefix
 
 
 # ---- Task 3 (fix): constant-time comparison ---------------------------------
 
+
 def constant_time_equal(a, b):
     """The fix. Examine EVERY byte regardless of mismatches, so the duration does
     not depend on the secret. (In real code, call ``hmac.compare_digest``.)"""
-    # TODO: length check, then accumulate x ^ y across all bytes; return whether
-    # the accumulator is 0 — never early-exit.
-    raise NotImplementedError
+
+    if len(a) != len(b):
+        return False
+
+    result = 0
+    for x, y in zip(a, b):
+        result |= x ^ y  # accumulate differences; never early-exit
+
+    return result == 0
 
 
 if __name__ == "__main__":
@@ -78,8 +92,7 @@ if __name__ == "__main__":
     # Task 2 smoke test.
     try:
         recovered = batch_gcd_recover(load_keys())
-        print(f"batch-GCD recovered private keys for indices: "
-              f"{sorted(recovered)}")
+        print(f"batch-GCD recovered private keys for indices: {sorted(recovered)}")
     except NotImplementedError:
         print("batch_gcd_recover: not implemented yet")
 
@@ -87,7 +100,9 @@ if __name__ == "__main__":
     secret = os.urandom(2)
     try:
         got = timing_attack(len(secret), make_oracle(secret))
-        print(f"timing attack: secret={secret.hex()} recovered={got.hex()} "
-              f"match={got == secret}")
+        print(
+            f"timing attack: secret={secret.hex()} recovered={got.hex()} "
+            f"match={got == secret}"
+        )
     except NotImplementedError:
         print("timing_attack: not implemented yet")
