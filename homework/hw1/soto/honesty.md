@@ -138,7 +138,7 @@ or a dispute-resolution mechanism.
 ## Review validation
 
 All four scripts completed successfully once under Python 3.12.3 using
-`PYTHONDONTWRITEBYTECODE=1 python3 homework/hw1/mantilla/breaks/<script>.py`
+`PYTHONDONTWRITEBYTECODE=1 python3 homework/hw1/soto/breaks/<script>.py`
 from the repository root. The timing script recovered `83fabf35` and the target
 accepted it, using 500 samples per candidate: 512,000 measurement calls plus
 one validation call. This is one successful run, not an estimate of its success

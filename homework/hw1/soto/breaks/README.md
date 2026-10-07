@@ -1,7 +1,7 @@
 # Running the local breaks
 
 Python 3.10 or newer is sufficient for the plaintext recovery scripts and their
-verifier; they use only the standard library. From `homework/hw1/mantilla/`, run:
+verifier; they use only the standard library. From `homework/hw1/soto/`, run:
 
 ```bash
 python3 breaks/reused_pad.py
