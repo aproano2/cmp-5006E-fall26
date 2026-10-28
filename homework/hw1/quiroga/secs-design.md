@@ -17,7 +17,6 @@ source for that result while writing this, so we treat it as an **assumption beh
 not as a cited fact; it shows up as a condition in section 4.
 
 ---
-
 ## 1. Threat model (scorecard axis 1)
 
 | Actor | What it can do | Trusted for | NOT trusted for |
@@ -33,7 +32,6 @@ unless a condition below says "key not compromised". Compute is bounded: no brea
 ---
 
 ## 2. Primitives and why each one (weeks 2–5)
-
 | Need | Primitive | Why this one | Where it comes from in the course |
 |---|---|---|---|
 | Non-repudiation of origin | **Ed25519 signatures** (RFC 8032) | Non-repudiation needs a key that *only the signer* holds. A MAC (shared key) can never give it: either side could have produced the tag. Ed25519 uses **deterministic nonces**, so a bad RNG at signing time cannot leak the key. | weeks 4–5: signatures, key misuse |
