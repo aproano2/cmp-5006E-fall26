@@ -1,3 +1,4 @@
+# QUE DISHE BROSHUDOOOO
 # Week 1 Studio — Break a Cipher: the assumption *is* the attack
 
 **Companion to** [`../../weeks/week-01.md`](../../weeks/week-01.md) — Session 1B.

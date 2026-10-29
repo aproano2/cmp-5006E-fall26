@@ -34,9 +34,16 @@ def batch_gcd_recover(corpus):
     shared prime (both fall). Given the shared prime, ``factor_from_shared`` in
     rsa_lab turns it into d.
     """
-    # TODO: pairwise-GCD scan over corpus["keys"]; for any pair with gcd != 1,
-    # recover d for BOTH keys via factor_from_shared(n, gcd, e).
-    raise NotImplementedError
+    keys = corpus["keys"]
+    recovered = {}
+    for i in range(len(keys)):
+        for j in range(i + 1, len(keys)):
+            n_i, n_j = keys[i]["n"], keys[j]["n"]
+            shared = math.gcd(n_i, n_j)
+            if shared != 1:
+                recovered[i] = factor_from_shared(n_i, shared, keys[i]["e"])
+                recovered[j] = factor_from_shared(n_j, shared, keys[j]["e"])
+    return recovered
 
 
 # ---- Task 3: timing side-channel attack -------------------------------------
@@ -54,11 +61,14 @@ def timing_attack(secret_len, oracle, rounds=41):
     ``time_guesses(oracle, guesses, rounds)`` (it interleaves them so drift can't
     bias one candidate), then keep the slowest byte.
     """
-    # TODO: for pos in range(secret_len):
-    #   guesses = [known_prefix + bytes([b]) + padding for b in range(256)]
-    #   med = time_guesses(oracle, guesses, rounds)
-    #   append the byte with the largest median time to the recovered prefix.
-    raise NotImplementedError
+    recovered = bytearray()
+    for pos in range(secret_len):
+        padding = bytes(secret_len - pos - 1)
+        guesses = [bytes(recovered) + bytes([b]) + padding for b in range(256)]
+        medians = time_guesses(oracle, guesses, rounds)
+        best_byte = max(range(256), key=lambda b: medians[b])
+        recovered.append(best_byte)
+    return bytes(recovered)
 
 
 # ---- Task 3 (fix): constant-time comparison ---------------------------------
@@ -66,9 +76,12 @@ def timing_attack(secret_len, oracle, rounds=41):
 def constant_time_equal(a, b):
     """The fix. Examine EVERY byte regardless of mismatches, so the duration does
     not depend on the secret. (In real code, call ``hmac.compare_digest``.)"""
-    # TODO: length check, then accumulate x ^ y across all bytes; return whether
-    # the accumulator is 0 — never early-exit.
-    raise NotImplementedError
+    if len(a) != len(b):
+        return False
+    result = 0
+    for x, y in zip(a, b):
+        result |= x ^ y
+    return result == 0
 
 
 if __name__ == "__main__":
