@@ -1,0 +1,27 @@
+field,value,blocked,rule,classification
+login_username,alice,False,,true_negative
+login_username,bob_smith,False,,true_negative
+login_username,o'brien,True,',false_positive
+login_username,d'angelo,True,',false_positive
+login_username,renee,False,,true_negative
+login_username,user.name+tag@example.com,False,,true_negative
+login_username,María José,False,,true_negative
+login_username,select_committee_chair,False,,true_negative
+login_username,unionrep_delegate,False,,true_negative
+search_or_name,wireless headphones under 50 dollars,False,,true_negative
+search_or_name,i want to select the union option on the benefits form,False,,true_negative
+search_or_name,drop table tennis lessons for beginners,True,"(?i)\bdrop\b.{0,10}\btable\b",false_positive
+search_or_name,reserve the drop table at the makerspace friday,True,"(?i)\bdrop\b.{0,10}\btable\b",false_positive
+search_or_name,the OR gate and the AND gate in digital logic,False,,true_negative
+search_or_name,director of operations or equivalent role,False,,true_negative
+search_or_name,how do i update my shipping address,False,,true_negative
+search_or_name,javascript tutorial for absolute beginners,False,,true_negative
+search_or_name,my order number is 1=1-2024 please help,False,,true_negative
+search_or_name,"quotes about resilience: ""don't give up""",True,',false_positive
+search_or_name,screenwriter for the new script,False,,true_negative
+search_or_name,Panic! at the Disco tickets,False,,true_negative
+ping_host,example.com,False,,true_negative
+ping_host,192.168.1.1,False,,true_negative
+ping_host,api.internal.corp,False,,true_negative
+ping_host,host-with-dashes.example.org,False,,true_negative
+ping_host,localhost,False,,true_negative
