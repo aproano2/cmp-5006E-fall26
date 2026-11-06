@@ -93,3 +93,4 @@ print(f"      oracle check     : timing_compare(secret) -> {timing_compare(secre
 print(f"      timed calls used : {calls}  (= {LEN} positions x 256 candidates x {N_FINAL} rounds), {dt:.1f} s")
 print(f"      brute force would need up to 2^32 = {2**32:,} calls; this needed {calls:,}.")
 assert timing_compare(secret)
+#
