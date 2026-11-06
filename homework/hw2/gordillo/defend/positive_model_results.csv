@@ -1,0 +1,5 @@
+payload,logged_in,injection_succeeded
+admin' oR 1=1--,False,False
+admin' oR 'a'='a'--,False,False
+admin' oR 2>1--,False,False
+admin' oR TRUE--,False,False
