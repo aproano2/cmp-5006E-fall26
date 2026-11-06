@@ -1,0 +1,7 @@
+tool,rule,location,severity
+llm-run-1,sqli,do_login,high
+llm-run-1,xss,do_reflect,medium
+llm-run-1,cmdi,do_ping,high
+llm-run-2,sqli,do_login,unknown
+llm-run-2,xss,do_reflect,unknown
+llm-run-2,cmdi,do_ping,unknown

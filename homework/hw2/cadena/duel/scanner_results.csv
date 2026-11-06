@@ -1,0 +1,3 @@
+tool,rule,location,severity
+semgrep,xss,do_reflect,error
+semgrep,cmdi,do_ping,error
