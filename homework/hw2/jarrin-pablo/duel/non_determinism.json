@@ -1,0 +1,49 @@
+{
+  "run_1_findings": [
+    [
+      "cmdi",
+      "do_ping"
+    ],
+    [
+      "sqli",
+      "do_login"
+    ],
+    [
+      "xss",
+      "do_reflect"
+    ]
+  ],
+  "run_2_findings": [
+    [
+      "cmdi",
+      "do_ping"
+    ],
+    [
+      "sqli",
+      "do_login"
+    ],
+    [
+      "xss",
+      "do_reflect"
+    ]
+  ],
+  "shared": [
+    [
+      "cmdi",
+      "do_ping"
+    ],
+    [
+      "sqli",
+      "do_login"
+    ],
+    [
+      "xss",
+      "do_reflect"
+    ]
+  ],
+  "only_run_1": [],
+  "only_run_2": [],
+  "jaccard_similarity": 1.0,
+  "raw_responses_identical": false,
+  "note": "The finding sets were equal, but wording and severity formatting can still differ between runs."
+}
