@@ -1,0 +1,16 @@
+corpus,password,waf_v1_rule,waf_v1_blocked_live,waf_v2_rule,waf_v2_blocked_live
+human,Tr0ub4dor&3,pass,False,pass,False
+human,correct-horse-battery-staple,pass,False,pass,False
+human,Summer'#2024,quote then comment,True,quote then comment,True
+human,it's-a-secret,pass,False,any single quote,True
+human,O'Brien2024!,pass,False,any single quote,True
+human,rock'n'roll4ever,pass,False,any single quote,True
+human,P@ssw0rd--v2,pass,False,comment anywhere,True
+human,l'étoile-du-nord,pass,False,any single quote,True
+human,drop_bear_2024,pass,False,pass,False
+human,unionized!worker,pass,False,pass,False
+human,select*from*life,pass,False,SQL keyword,True
+human,MyDog|Rex#1,pass,False,comment anywhere,True
+human,café-crème-99,pass,False,pass,False
+human,1=1-is-true,pass,False,pass,False
+human,x&y&z-logic,pass,False,pass,False

