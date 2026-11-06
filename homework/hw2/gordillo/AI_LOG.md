@@ -4,16 +4,21 @@
 
 ## 2026-11-03 — Codex
 
-The team used Codex to help organize and implement this homework. We asked it to help with the attack, defense, scanner-versus-LLM comparison, reports, and reproducibility checks in English.
+The team used Codex as a support tool to better understand the homework requirements, clarify technical concepts, and receive recommendations on how to approach the different tasks. The purpose was to obtain guidance and avoid common implementation mistakes, rather than having the AI complete the assignment.
 
-The assistant helped with:
+The assistant provided guidance on:
 
-- reading the homework instructions and the local `vuln-web` source;
-- writing the Python attack harness and security-effect oracles;
-- measuring the WAF and parameterized query;
-- running the real Semgrep engine with committed local rules;
-- structuring the local Ollama comparison and calculating precision, recall, F1, and run-to-run similarity;
-- drafting the reports, scorecard, and honesty limitations;
-- running the scripts and correcting problems found during verification.
+•⁠  ⁠Understanding the homework instructions and identifying the main requirements.
+•⁠  ⁠Reviewing the ⁠ vuln-web ⁠ application to understand its structure and potential vulnerabilities.
+•⁠  ⁠Explaining how to approach the attack scenarios and what security effects should be verified.
+•⁠  ⁠Recommending ways to evaluate the WAF and parameterized queries.
+•⁠  ⁠Explaining how to use Semgrep with local rules and interpret its results.
+•⁠  ⁠Clarifying how to compare Semgrep findings with a local Ollama model using precision, recall, F1, and run-to-run similarity.
+•⁠  ⁠Suggesting how to organize the reports, document limitations, and ensure reproducibility.
+•⁠  ⁠Providing recommendations for troubleshooting and verifying the experiments.
 
-One important correction was needed during the LLM experiment. The first local calls returned an empty final-response field because the model used a separate thinking channel. The call was changed to disable that channel, and both LLM runs were repeated. Only the valid repeated runs are reported. No external target was tested. All attacks were limited to the course application on `127.0.0.1`.
+The team was responsible for implementing the solutions, running the experiments, analyzing the results, and preparing the final deliverables.
+
+During the LLM experiment, an issue was identified where the model returned an empty final-response field because it was using a separate thinking channel. Based on the troubleshooting guidance, the team adjusted the configuration to disable that channel and repeated both runs. Only the valid repeated runs were included in the results.
+
+All testing was performed locally using the course application on ⁠ 127.0.0.1 ⁠. No external systems or targets were tested.
