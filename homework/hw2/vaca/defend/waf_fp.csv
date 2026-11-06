@@ -1,0 +1,3 @@
+field,benign_input,waf_rule_fired
+search_or_name,drop table tennis lessons for beginners,SQLi DROP TABLE
+search_or_name,reserve the drop table at the makerspace friday,SQLi DROP TABLE

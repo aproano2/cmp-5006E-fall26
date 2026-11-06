@@ -1,0 +1,86 @@
+{
+  "rules": [
+    "SQLi OR numeric tautology (comment-obfuscated)",
+    "SQLi OR numeric tautology",
+    "SQLi OR string tautology",
+    "SQLi UNION SELECT",
+    "SQLi DROP TABLE",
+    "SQLi quote-OR opener",
+    "SQL comment terminator"
+  ],
+  "coverage": {
+    "blocked": 6,
+    "total": 6,
+    "detail": [
+      {
+        "payload": "admin' OR '1'='1",
+        "rule": "SQLi quote-OR opener"
+      },
+      {
+        "payload": "admin' OR 1=1 -- ",
+        "rule": "SQLi OR numeric tautology"
+      },
+      {
+        "payload": "x' UNION SELECT user, pw FROM users -- ",
+        "rule": "SQLi UNION SELECT"
+      },
+      {
+        "payload": "'; DROP TABLE users -- ",
+        "rule": "SQLi DROP TABLE"
+      },
+      {
+        "payload": "admin' OR 'a'='a",
+        "rule": "SQLi quote-OR opener"
+      },
+      {
+        "payload": "admin'-- ",
+        "rule": "SQL comment terminator"
+      }
+    ]
+  },
+  "bypass": {
+    "passed_waf": 3,
+    "genuine_leaks": 3,
+    "total": 3,
+    "detail": [
+      {
+        "payload": "admin'/**/OR/**/'1'='1",
+        "why": "inline comments defeat the whitespace-anchored rules",
+        "passed_waf": true,
+        "blocked_rule": null,
+        "canary_leaked": true
+      },
+      {
+        "payload": "admin'/**/OR/**/'1'LIKE'1",
+        "why": "LIKE instead of = evades the tautology rules",
+        "passed_waf": true,
+        "blocked_rule": null,
+        "canary_leaked": true
+      },
+      {
+        "payload": "admin'/**/OR/**/'1'>'0",
+        "why": "a > comparison evades the = rules",
+        "passed_waf": true,
+        "blocked_rule": null,
+        "canary_leaked": true
+      }
+    ]
+  },
+  "false_positives": {
+    "blocked": 2,
+    "corpus": 26,
+    "rate": 0.0769,
+    "detail": [
+      {
+        "field": "search_or_name",
+        "input": "drop table tennis lessons for beginners",
+        "rule": "SQLi DROP TABLE"
+      },
+      {
+        "field": "search_or_name",
+        "input": "reserve the drop table at the makerspace friday",
+        "rule": "SQLi DROP TABLE"
+      }
+    ]
+  }
+}
