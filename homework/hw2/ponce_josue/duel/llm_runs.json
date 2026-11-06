@@ -1,0 +1,22 @@
+[
+  {
+    "run": 1,
+    "backend": "ollama",
+    "model": "qwen2.5:1.5b",
+    "temperature": 0.7,
+    "seed": 11,
+    "elapsed_seconds": 3.402,
+    "cached": false,
+    "raw_response": "```json\n[\n    {\n        \"rule\": \"sqli|xss|cmdi|broken-access-control|other\",\n        \"location\": \"do_login\",\n        \"severity\": \"high\",\n        \"confidence\": \"medium\",\n        \"rationale\": \"SQL injection due to the use of string-formatted query without parameterization.\"\n    },\n    {\n        \"rule\": \"sqli|xss|cmdi|broken-access-control|other\",\n        \"location\": \"do_reflect\",\n        \"severity\": \"high\",\n        \"confidence\": \"medium\",\n        \"rationale\": \"Reflected XSS due to the use of unencoded user input in the HTML.\"\n    },\n    {\n        \"rule\": \"sqli|xss|cmdi|broken-access-control|other\",\n        \"location\": \"do_reflect_safe\",\n        \"severity\": \"low\",\n        \"confidence\": \"low\",\n        \"rationale\": \"The code is intentionally safe as it uses html.escape() to encode the input.\"\n    }\n]\n```"
+  },
+  {
+    "run": 2,
+    "backend": "ollama",
+    "model": "qwen2.5:1.5b",
+    "temperature": 0.7,
+    "seed": 29,
+    "elapsed_seconds": 3.495,
+    "cached": false,
+    "raw_response": "{\n    \"findings\": [\n        {\n            \"rule\": \"sqli|xss|cmdi|broken-access-control|other\",\n            \"location\": \"do_login\",\n            \"severity\": \"high\",\n            \"confidence\": \"medium\",\n            \"rationale\": \"do_login function is vulnerable to SQL injection and reflected XSS due to the use of unparameterized queries and input not being properly sanitized.\"\n        },\n        {\n            \"rule\": \"sqli|xss|cmdi|broken-access-control|other\",\n            \"location\": \"do_reflect\",\n            \"severity\": \"high\",\n            \"confidence\": \"medium\",\n            \"rationale\": \"do_reflect function is vulnerable to reflected XSS due to the lack of input sanitization.\"\n        },\n        {\n            \"rule\": \"cmdi\",\n            \"location\": \"do_ping\",\n            \"severity\": \"high\",\n            \"confidence\": \"medium\",\n            \"rationale\": \"do_ping function is vulnerable to command injection because the host input is concatenated into a command without proper sanitization.\"\n        }\n    ]\n}"
+  }
+]
