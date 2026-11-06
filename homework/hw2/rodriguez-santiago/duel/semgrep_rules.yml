@@ -1,0 +1,18 @@
+rules:
+  - id: hw2-reflected-xss
+    languages: [python]
+    message: User input is returned inside HTML without output encoding.
+    severity: ERROR
+    pattern-regex: 'return f"<html><body><h1>Hello, \{name\}!'
+
+  - id: hw2-command-injection
+    languages: [python]
+    message: User input is concatenated into a shell command string.
+    severity: ERROR
+    pattern-regex: 'command\s*=\s*f"ping -c 1 \{host\}"'
+
+  - id: hw2-sqli-single-line
+    languages: [python]
+    message: User input appears inside a SELECT f-string on one source line.
+    severity: ERROR
+    pattern-regex: 'f"SELECT[^\n]*\{[^\n]*\}'
