@@ -5,7 +5,7 @@
 ## Team
 
 - Juan Diego Cadena
-- Omar Gordillo
+- Omar Andrés Gordillo
 - Pablo Jarrín
 - Santiago Rodríguez
 

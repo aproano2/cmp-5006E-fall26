@@ -1,9 +1,6 @@
 # Where Our Attack, Defense, or Comparison Might Be Unfair
 
 > **Team:** Juan Diego Cadena · Omar Andrés Gordillo · Pablo Jarrín · Santiago Rodríguez
-# Where Our Attack, Defense, or Comparison Might Be Unfair
-
-> **Team:** Juan Diego Cadena · Omar Gordillo · Pablo Jarrín · Santiago Rodríguez
 
 1. **The Semgrep result reflects our rules, not Semgrep.** We wrote the three
    rules in `duel/semgrep_rules.yml` after reading the source. Two of them are
