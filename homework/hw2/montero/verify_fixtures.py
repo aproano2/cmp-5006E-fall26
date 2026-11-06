@@ -19,7 +19,7 @@ import urllib.parse
 from http.server import ThreadingHTTPServer
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT / "labs" / "vuln-web" / "app"))
 import vulnweb_app as app          # noqa: E402
 

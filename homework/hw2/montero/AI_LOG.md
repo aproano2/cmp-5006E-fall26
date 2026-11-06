@@ -1,114 +1,86 @@
-# AI use log: Homework 2 (Web Attack & Defend)
+# AI Log — Homework 2
 
-Group: Isabella Tulcan, Martin Montero, Santiago Arellano.
-All attacks ran against a local DVWA bound to `127.0.0.1` and the course's
-`vuln-web` source. No credentials, real data, or external hosts were given to any
-assistant; the DVWA password is read from the shell or a prompt and never stored.
+## Assistance and authorship
 
-## 2026-11-01: Part A attacks and oracles
+Codex assisted with interpreting the rubric, implementing local experiment
+support, reviewing source, drafting reports, and checking artifact consistency.
+The exact assistant model identifier was not exposed in this session.
 
-**Who:** Santiago Arellano
+AI assistance covered the notebook senders and seclab.attack oracles, the PHP
+WAF and parameterized SQLi patch, the SQLite supplement, Semgrep integration,
+local Ollama prompts, result normalization, tests, and reproduction instructions.
+The group remains responsible for understanding and reviewing the submission.
+AI-generated explanations are not experimental evidence.
 
-**Tool:** Claude Opus 5.5.
+## Reference and evidence provenance
 
-**What I asked:** Read `hw2-web.md`, `seclab.attack`, and the week-6 material, then
-help me set up the notebook against a local DVWA at Medium: a logged-in session,
-one sender per exercise, and an oracle per vulnerability that checks a
-security-relevant effect instead of a changed page.
+- The historical target was labs/vuln-web/app/vulnweb_app.py. Its
+  ground_truth.json is an instructor fixture, not an independently constructed
+  group reference. Historical outputs were imported from Santiago's branch
+  homework/hw-2-arellano, commit 65cee0f, and retained separately.
+- The current Part C target is duel/dvwa_source/: three DVWA Medium PHP
+  snapshots and our fixed SQLi negative control. The upstream snippets retain
+  their license; they are not group-authored vulnerable code.
+- ground_truth_manual.json records AI-assisted manual reasoning about the PHP
+  before the new tool calls. Historical outputs were already known. This is
+  not a blinded study, and final human group review remains necessary.
+- Current attack and defense CSVs record local DVWA execution. Supplemental
+  SQLite results and historical macOS results are labeled separately.
+- The supplied benign_traffic.json is a generic teaching corpus. Its 2/26
+  blocked inputs measure signature false positives, not valid-ID usability.
 
-**What I got:** The notebook scaffold (course-root discovery, localhost-only guard,
-DVWA login and security-level check), senders for SQLi, XSS, and command
-injection, three oracles, and a benign control per case run through
-`run_payloads` with `trials=3`.
+## Recorded implementation and experiment work
 
-**What I did with it / verification:** I ran Part A against my local DVWA. All
-three payloads confirmed 3/3 and all three benign controls stayed 0/3. I rejected a
-first XSS oracle that only looked for the payload text in the page, because that
-proves reflection, not an executable context; the final oracle requires the raw
-`<ScRiPt>` element with our unique marker to survive unencoded.
+Codex helped prepare Windows reproduction instructions, a dedicated local lab,
+CSV exports, and the three-member attribution in the README and notebook.
+The experiment support deploys our PHP WAF and prepared-statement patch at the
+same Medium SQLi endpoint and restores the original source afterward.
+A cached PHP response invalidated an early fix test; implementation markers and
+revalidation checks were added before the defense experiment was repeated.
 
-**Did I understand it?** Yes. DVWA Medium's SQLi sends the ID as a number, so
-quoting is irrelevant and `1 OR 1=1` works without any quote to escape; the extra
-`Smith` row is the proof. Its XSS filter is a case-sensitive `str_replace` on
-`<script>`, so mixed case gets through, and its command filter strips `&&` and `;`
-but not `|`. Each bypass is a gap in a list of bad strings.
+The retained current evidence reports three Medium attack classes confirmed
+3/3 each, three same-intent SQLi WAF bypasses confirmed 3/3 each, and no extra-row
+leak for the six replayed strings at our parameterized sink. These statements
+refer to recorded experiments, not new runs performed during this document review.
 
-**What I kept or rejected:** Kept the effect-based oracles and the benign controls.
-Rejected any oracle based on status codes or echoed input.
+Part C retains actual Semgrep and local Ollama responses. Semgrep's custom rules
+miss SQL built through a variable. Two structured qwen2.5:0.5b calls use identical
+inputs, temperature 0.7, seeds 11/29, and disabled cache reads. An earlier
+formatting attempt is preserved in duel/format_attempt rather than hidden.
+Recorded F1 scores are 0.800, 0.333, and 0.000; run-to-run Jaccard is 0.167.
+Unsupported access-control claims and the invented SQL query in exec_medium.php
+are discussed instead of removed from the scores.
 
-## 2026-11-02: Part B WAF, false positives, and structural fix
+## Final submission review — 2026-11-06
 
-**Who:** Isabella Tulcan
+The user requested another review because edits appeared unsaved, and required
+English throughout the submission documents. Codex saved English versions of
+this log and REVISION.md, retained the substantive honesty limitations, and
+checked that the notebook contains the same honesty text.
 
-**Tool:** Claude Opus 5.5.
+Corrections retained: instructor-fixture attribution, prior-results exposure,
+the distinction between generic benign prose and valid IDs, the limited scope
+of the SQLi guarantee, and command injection as the least portable Part-A result.
+Rejected claims: that AI assistance constitutes human group review, that the
+historical reference was group-authored, or that old test results are fresh runs.
 
-**What I asked:** Help me write a small blocklist WAF for the Part-A payloads, find
-same-intent mutations that evade it, measure false positives on
-`benign_traffic.json`, and replay every attack and bypass against DVWA's Impossible
-level without leaving DVWA stuck at Impossible if a check fails.
+The prior review recorded 29 passing tests. Those tests and DVWA/LLM experiments
+were not rerun in this document-only review: .hw2-venv is unavailable and the
+existing .venv Python trampoline is broken. Artifact checks confirmed the
+reference hash, matching honesty text, no notebook error outputs, 12 deployed
+defense rows, and 2/26 corpus blocks. Final group review and committing all required evidence remain
+necessary. No commit, PR, or message to another person was sent.
 
-**What I got:** A five-rule blocklist (numeric tautology, UNION SELECT, script tag,
-DROP TABLE, shell metacharacters) that URL- and HTML-decodes input first, a coverage
-measurement, three bypasses
-(`1/**/OR/**/1=1`, an `<img onerror>` handler, and a newline command separator), the
-false-positive loop over the 26 benign inputs, and separate Impossible-level replay
-cells that restore Medium in `finally`, with benign checks to show the fixed
-endpoints still work.
+## Scope
 
-**What I did with it / verification:** Coverage was 3/3, all three bypasses still
-confirmed 3/3 on the real target, and 2/26 benign inputs were blocked (7.7 %), both
-by the DROP TABLE rule (`drop table tennis lessons for beginners`, `reserve the drop
-table at the makerspace friday`). At Impossible, 0/2 payloads confirmed in each class
-and the three benign controls still worked. I made sure the B2 guarantee is stated
-as a conditional on the parameterized path staying in place.
+Experiments target only the authenticated loopback lab with synthetic data.
+Raw outputs, rather than screenshots or AI prose, support the reported results.
+The group must verify each claim and review the AI-assisted manual reference
+before submission, following resources/ethics-and-scope.md.
 
-**Did I understand it?** Yes. The WAF matches the surface of known attacks, so any
-equivalent form it did not list goes through, and widening a rule to catch more
-variants blocks more real users. A prepared statement is different in kind: the ID
-is sent as data and never parsed as SQL, so no input value can change the query
-structure, as long as nobody reverts to building the query from strings.
+## Fork publication preparation
 
-**What I kept or rejected:** Kept the false-positive examples and the conditional
-guarantee. Rejected a suggestion to add a rule for `/**/` after the fact, since
-tuning the WAF to the bypasses we had already found would inflate its coverage.
-
-## 2026-11-05: Part C duel, honesty review, and submission
-
-**Who:** Martin Montero
-
-**Tool:** Claude Opus 5.5.
-
-**What I asked:** Help me run Semgrep and the local Ollama model against
-`vuln-web`, score both with `seclab.scan` against `ground_truth.json`, and measure
-non-determinism over two runs. Then audit the whole notebook against the rubric,
-check every number in the README against the recorded outputs, and package the
-folder for the PR.
-
-**What I got:** Custom Semgrep rules, an Ollama prompt that asks for JSON findings,
-a parser into `ScanResult`, two uncached runs with different seeds, the scoring
-table, and the cell that saves the raw outputs to `duel/`. The audit flagged that
-Part D was thin on the duel and that the LLM's evidence strings copy the `# VULN`
-comments in the source.
-
-**What I did with it / verification:** Semgrep found `xss/do_reflect` and
-`cmdi/do_ping` but missed `sqli/do_login` (F1 0.80). Both Ollama runs found all
-three with no false positives (F1 1.00, Jaccard 1.0) and neither tool claimed
-Broken Access Control. I compared the model's evidence text with the source and it
-matches the comments almost verbatim, so I added that to Part D along with the
-limits of two identical runs, our reliance on DVWA's Impossible code for B2, and
-the thin per-class bypass sample. I also moved the work to `homework/hw2/montero/`,
-put the three of us in the notebook header and README, and removed local paths and
-draft notes.
-
-**Did I understand it?** Yes. Semgrep misses the SQLi because our rule only matches
-an f-string passed directly to `execute`, and in `do_login` the f-string is first
-assigned to a `query` variable over two lines and executed later. A taint rule
-from the request to `execute` would have caught it; we kept the narrow rule and
-report the miss. The LLM's perfect score does not show it can
-find bugs: the file labels each one, and a fair test would strip the comments first.
-Two matching runs at temperature 0.7 show agreement on this file, not determinism
-in general.
-
-**What I kept or rejected:** Kept the recorded outputs exactly as produced, including
-the absolute paths from Santiago's machine, rather than editing evidence. Rejected
-wording that presented the LLM's 3/3 as a win over the scanner.
+The user authorized committing the submission and pushing it to the configured
+myfork remote for group review. Codex removed the README link to the excluded
+internal REVISION.md note and prepared only homework/hw2/tulcan files for the
+submission commit. No PR or messages to classmates are part of this step.

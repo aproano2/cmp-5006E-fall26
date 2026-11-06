@@ -1,139 +1,211 @@
 {
-  "target": "/Users/santiagoarellano/Documents/Projects/cmp-5006E-fall26/labs/vuln-web/app/vulnweb_app.py",
-  "source_sha256": "fd87ee62ede6fd83befb5b37b8a0f8335f86178522c3ab1480b7d56aa0ae257e",
+  "target": "C:\\Users\\isabe\\OneDrive\\Escritorio\\NOVENOSEMESTRE\\CompSec\\cmp-5006E-fall26\\homework\\hw2\\tulcan\\duel\\dvwa_source",
+  "ground_truth_document": "ground_truth_manual.json",
+  "provenance": "Fresh Windows run; manual review before these calls, historical results known",
+  "source_files": [
+    "exec_medium.php",
+    "sqli_fixed.php",
+    "sqli_medium.php",
+    "xss_medium.php"
+  ],
+  "source_sha256": "acc8fe8e1f7e743555cfb3e5e02d689a817b3e2185a509cde5c10773fe2dfb68",
   "ground_truth": [
     [
       "cmdi",
-      "do_ping"
+      "exec_medium.php"
     ],
     [
       "sqli",
-      "do_login"
+      "sqli_medium.php"
     ],
     [
       "xss",
-      "do_reflect"
+      "xss_medium.php"
     ]
   ],
   "classical_scanner": "semgrep custom rules embedded in notebook",
+  "normalization": "rule aliases and lowercase source basename; evidence retained unchanged",
+  "format_retry": "Initial unconstrained-format responses retained in duel/format_attempt; two new structured calls scored",
   "llm": {
     "backend": "ollama",
-    "model": "qwen2.5:3b",
+    "model": "qwen2.5:0.5b",
     "temperature": 0.7,
     "seeds": [
       11,
       29
     ],
     "run_1": {
-      "text": "```json\n[\n    {\"rule\":\"sqli\",\"location\":\"do_login\",\"severity\":\"high\",\"confidence\":\"confirmed\",\"evidence\":\"String-formatted query, no parameterization. The whole point of the SQLi lab.\"},\n    {\"rule\":\"xss\",\"location\":\"do_reflect\",\"severity\":\"high\",\"confidence\":\"confirmed\",\"evidence\":\"User input placed into HTML with no encoding. Fixed version is /safe, which html.escape()s the input.\"},\n    {\"rule\":\"cmdi\",\"location\":\"do_ping\",\"severity\":\"high\",\"confidence\":\"confirmed\",\"evidence\":\"The host string is concatenated into a command. We SIMULATE execution (echo the command) so the lab is safe to run, but the bug — untrusted data reaching a command context — is real and detectable.\"}\n]\n```",
+      "text": "[\n    {\n        \"rule\": \"sqli\",\n        \"location\": \"dvwa_source/sqli_fixed.php\",\n        \"severity\": \"high\",\n        \"confidence\": \"high\",\n        \"evidence\": \"php_uname is missing from the script.\"\n    },\n    {\n        \"rule\": \"xss\",\n        \"location\": \"dvwa_source/xss_medium.php\",\n        \"severity\": \"low\",\n        \"confidence\": \"high\",\n        \"evidence\": \"The script includes `<?php` and `<?` tags, which are not valid in XSS protection.\"\n    },\n    {\n        \"rule\": \"broken-access-control\",\n        \"location\": \"dvwa_source/sqli_fixed.php\",\n        \"severity\": \"high\",\n        \"confidence\": \"high\",\n        \"evidence\": \"The script contains an attempt to bypass access control using `if( isset( $_POST[ 'Submit' ] ) )`, which is not allowed.\"\n    }\n]",
       "backend": "ollama",
-      "model": "qwen2.5:3b",
-      "prompt": "\nYou are reviewing one small Python web application for a security homework.\nReport every suspected finding in the source under these labels only: sqli, xss, cmdi, broken-access-control.\nFor each finding, give the enclosing function name (for example do_login) and concise evidence from the source.\nDo not invent CVEs, dependencies, endpoints, or code not shown. Include uncertain findings rather than silently omitting them.\nReturn ONLY a JSON array. Each object must have keys rule, location, severity, confidence, evidence.\n\nSOURCE FILE: vulnweb_app.py\n```python\n\"\"\"vuln-web — a small, deliberately vulnerable web app (CMP-5006 week 6).\n\nTwo jobs at once, on purpose:\n\n  1. You ATTACK the running app (SQLi, reflected XSS, command injection),\n     confirming each finding with a seclab.attack oracle.\n  2. You SCAN THIS SAME SOURCE with a classical scanner and with an LLM, then\n     compare (seclab.scan). Because the target and the scan-subject are the same\n     readable file, you can check every tool's finding against the truth by eye.\n\nStdlib only (sqlite3 + http.server), so the container is tiny and the whole app\nfits on one screen. Every vulnerability is intentional and commented `# VULN`.\n\n    GET  /health\n    GET  /?name=<x>            reflected XSS sink\n    POST /login {user,pw}      SQL injection sink (auth bypass)\n    POST /ping  {host}         command-injection sink (os.system-style)\n    GET  /safe?name=<x>        the FIXED version of the XSS sink (a true negative)\n\nThe command-injection sink does NOT actually run a shell — it simulates the\nvulnerability by echoing what WOULD have been executed, so the lab is safe to run\nanywhere while still being detectable and confirmable. That simulation is itself\na lesson: the bug is the unsanitized string reaching a command context, whether or\nnot this teaching copy pulls the trigger.\n\"\"\"\n\nfrom __future__ import annotations\n\nimport json\nimport os\nimport re\nimport sqlite3\nimport sys\nfrom http.server import BaseHTTPRequestHandler, ThreadingHTTPServer\nfrom urllib.parse import urlparse, parse_qs\n\n# A canary row so an oracle can CONFIRM a SQLi auth-bypass extracted real data,\n# not just that the response changed.\nCANARY_SECRET = \"FLAG-sqli-9f2c-admin-session\"\n\n\ndef make_db():\n    db = sqlite3.connect(\":memory:\", check_same_thread=False)\n    db.execute(\"CREATE TABLE users (id INTEGER, user TEXT, pw TEXT, secret TEXT)\")\n    db.execute(\"INSERT INTO users VALUES (1,'admin','s3cr3t',?)\", (CANARY_SECRET,))\n    db.execute(\"INSERT INTO users VALUES (2,'alice','password','ordinary-row')\")\n    db.commit()\n    return db\n\n\nDB = make_db()\n\n\n# ---------------------------------------------------------------------------\n# The vulnerable handlers. Read these — you scan this exact code in Task 2.\n# ---------------------------------------------------------------------------\ndef do_login(user: str, pw: str) -> str:\n    # VULN: SQL injection. String-formatted query, no parameterization. The whole\n    # point of the SQLi lab. Fixed version would be:\n    #   DB.execute(\"SELECT ... WHERE user=? AND pw=?\", (user, pw))\n    query = (f\"SELECT user, secret FROM users \"\n             f\"WHERE user = '{user}' AND pw = '{pw}'\")\n    try:\n        rows = DB.execute(query).fetchall()\n    except sqlite3.Error as e:\n        return json.dumps({\"error\": f\"sql error: {e}\", \"query\": query})\n    if rows:\n        # Leaks the secret on success — so ' OR '1'='1 dumps the admin canary.\n        return json.dumps({\"ok\": True, \"rows\": rows})\n    return json.dumps({\"ok\": False})\n\n\ndef do_reflect(name: str) -> str:\n    # VULN: reflected XSS. User input placed into HTML with no encoding.\n    # Fixed version is /safe, which html.escape()s the input.\n    return f\"<html><body><h1>Hello, {name}!</h1></body></html>\"\n\n\ndef do_reflect_safe(name: str) -> str:\n    import html\n    return f\"<html><body><h1>Hello, {html.escape(name)}!</h1></body></html>\"\n\n\ndef do_ping(host: str) -> str:\n    # VULN: command injection. The host string is concatenated into a command.\n    # We SIMULATE execution (echo the command) so the lab is safe to run, but the\n    # bug — untrusted data reaching a command context — is real and detectable.\n    command = f\"ping -c 1 {host}\"\n    # A real app would do os.system(command). We parse it to reveal the injection:\n    injected = bool(re.search(r\"[;&|`$()]\", host))\n    return json.dumps({\n        \"would_run\": command,\n        \"injection_detected\": injected,\n        \"note\": (\"extra command(s) smuggled in via a shell metacharacter\"\n                 if injected else \"no shell metacharacters in host\"),\n    })\n\n\nclass Handler(BaseHTTPRequestHandler):\n    def _send(self, code, body, ctype=\"application/json\"):\n        b = body.encode()\n        self.send_response(code)\n        self.send_header(\"Content-Type\", ctype)\n        self.send_header(\"Content-Length\", str(len(b)))\n        self.end_headers()\n        self.wfile.write(b)\n\n    def _form(self):\n        n = int(self.headers.get(\"Content-Length\", 0) or 0)\n        raw = self.rfile.read(n).decode() if n else \"\"\n        try:\n            return json.loads(raw) if raw else {}\n        except json.JSONDecodeError:\n            return {k: v[0] for k, v in parse_qs(raw).items()}\n\n    def log_message(self, *a):\n        pass\n\n    def do_GET(self):\n        u = urlparse(self.path)\n        q = parse_qs(u.query)\n        if u.path == \"/health\":\n            return self._send(200, json.dumps({\"status\": \"ok\"}))\n        if u.path == \"/\":\n            return self._send(200, do_reflect(q.get(\"name\", [\"\"])[0]), \"text/html\")\n        if u.path == \"/safe\":\n            return self._send(200, do_reflect_safe(q.get(\"name\", [\"\"])[0]), \"text/html\")\n        return self._send(404, json.dumps({\"error\": \"not found\"}))\n\n    def do_POST(self):\n        u = urlparse(self.path)\n        form = self._form()\n        if u.path == \"/login\":\n            return self._send(200, do_login(form.get(\"user\", \"\"), form.get(\"pw\", \"\")))\n        if u.path == \"/ping\":\n            return self._send(200, do_ping(form.get(\"host\", \"\")))\n        return self._send(404, json.dumps({\"error\": \"not found\"}))\n\n\ndef main():\n    port = int(os.environ.get(\"PORT\", \"8000\"))\n    srv = ThreadingHTTPServer((\"0.0.0.0\", port), Handler)\n    print(f\"vuln-web on :{port}\", file=sys.stderr, flush=True)\n    try:\n        srv.serve_forever()\n    except KeyboardInterrupt:\n        srv.shutdown()\n\n\nif __name__ == \"__main__\":\n    main()\n\n```\n",
+      "model": "qwen2.5:0.5b",
+      "prompt": "\nYou are reviewing four PHP source files from the local DVWA lab for a security homework.\nReport every suspected finding in the source under these labels only: sqli, xss, cmdi, broken-access-control.\nFor each finding, give the exact PHP filename in location (for example sqli_medium.php) and concise evidence from the source.\nDo not invent CVEs, dependencies, endpoints, or code not shown. Report exploitable injection issues in the shown files; review the fixed file as a negative control. Do not infer an access-control policy from missing application context.\nReturn ONLY a JSON array. Each object must have keys rule, location, severity, confidence, evidence.\n\nSOURCE FILE: dvwa_source\n```php\nFILE: exec_medium.php\n<?php\n\nif( isset( $_POST[ 'Submit' ]  ) ) {\n\t// Get input\n\t$target = $_REQUEST[ 'ip' ];\n\n\t// Set blacklist\n\t$substitutions = array(\n\t\t'&&' => '',\n\t\t';'  => '',\n\t);\n\n\t// Remove any of the characters in the array (blacklist).\n\t$target = str_replace( array_keys( $substitutions ), $substitutions, $target );\n\n\t// Determine OS and execute the ping command.\n\tif( stristr( php_uname( 's' ), 'Windows NT' ) ) {\n\t\t// Windows\n\t\t$cmd = shell_exec( 'ping  ' . $target );\n\t}\n\telse {\n\t\t// *nix\n\t\t$cmd = shell_exec( 'ping  -c 4 ' . $target );\n\t}\n\n\t// Feedback for the end user\n\t$html .= \"<pre>{$cmd}</pre>\";\n}\n\n?>\n\n\nFILE: sqli_fixed.php\n<?php\n// HW2 group fix for DVWA's MySQL numeric-ID sink, deployed at Medium.\n// Input is bound as one value; it never becomes part of the SQL statement.\nif ($_DVWA['SQLI_DB'] !== MYSQL) {\n    throw new RuntimeException('This evaluated patch requires the MySQL backend.');\n}\n$connection = $GLOBALS['___mysqli_ston'];\n$html .= '<!-- HW2 parameterized fix -->';\nif (isset($_POST['Submit'])) {\n    $id = (string) ($_POST['id'] ?? '');\n    $statement = mysqli_prepare($connection,\n        'SELECT first_name, last_name FROM users WHERE user_id = ?');\n    if (!$statement) {\n        throw new RuntimeException('Could not prepare the fixed query.');\n    }\n    mysqli_stmt_bind_param($statement, 's', $id);\n    if (!mysqli_stmt_execute($statement)) {\n        throw new RuntimeException('Could not execute the fixed query.');\n    }\n    $result = mysqli_stmt_get_result($statement);\n    while ($row = mysqli_fetch_assoc($result)) {\n        // Also encode values at the HTML boundary: the ID may contain markup.\n        $display_id = htmlspecialchars($id, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');\n        $first = htmlspecialchars($row['first_name'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');\n        $last = htmlspecialchars($row['last_name'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');\n        $html .= \"<pre>ID: {$display_id}<br />First name: {$first}<br />Surname: {$last}</pre>\";\n    }\n    mysqli_stmt_close($statement);\n}\n$result = mysqli_query($connection, 'SELECT COUNT(*) FROM users');\nif (!$result) {\n    throw new RuntimeException('Could not count users.');\n}\n$number_of_rows = mysqli_fetch_row($result)[0];\nmysqli_close($connection);\n?>\n\n\nFILE: sqli_medium.php\n<?php\n\nif( isset( $_POST[ 'Submit' ] ) ) {\n\t// Get input\n\t$id = $_POST[ 'id' ];\n\n\t$id = mysqli_real_escape_string($GLOBALS[\"___mysqli_ston\"], $id);\n\n\tswitch ($_DVWA['SQLI_DB']) {\n\t\tcase MYSQL:\n\t\t\t$query  = \"SELECT first_name, last_name FROM users WHERE user_id = $id;\";\n\t\t\t$result = mysqli_query($GLOBALS[\"___mysqli_ston\"], $query) or die( '<pre>' . mysqli_error($GLOBALS[\"___mysqli_ston\"]) . '</pre>' );\n\n\t\t\t// Get results\n\t\t\twhile( $row = mysqli_fetch_assoc( $result ) ) {\n\t\t\t\t// Display values\n\t\t\t\t$first = $row[\"first_name\"];\n\t\t\t\t$last  = $row[\"last_name\"];\n\n\t\t\t\t// Feedback for end user\n\t\t\t\t$html .= \"<pre>ID: {$id}<br />First name: {$first}<br />Surname: {$last}</pre>\";\n\t\t\t}\n\t\t\tbreak;\n\t\tcase SQLITE:\n\t\t\tglobal $sqlite_db_connection;\n\n\t\t\t$query  = \"SELECT first_name, last_name FROM users WHERE user_id = $id;\";\n\t\t\t#print $query;\n\t\t\ttry {\n\t\t\t\t$results = $sqlite_db_connection->query($query);\n\t\t\t} catch (Exception $e) {\n\t\t\t\techo 'Caught exception: ' . $e->getMessage();\n\t\t\t\texit();\n\t\t\t}\n\n\t\t\tif ($results) {\n\t\t\t\twhile ($row = $results->fetchArray()) {\n\t\t\t\t\t// Get values\n\t\t\t\t\t$first = $row[\"first_name\"];\n\t\t\t\t\t$last  = $row[\"last_name\"];\n\n\t\t\t\t\t// Feedback for end user\n\t\t\t\t\t$html .= \"<pre>ID: {$id}<br />First name: {$first}<br />Surname: {$last}</pre>\";\n\t\t\t\t}\n\t\t\t} else {\n\t\t\t\techo \"Error in fetch \".$sqlite_db->lastErrorMsg();\n\t\t\t}\n\t\t\tbreak;\n\t}\n}\n\n// This is used later on in the index.php page\n// Setting it here so we can close the database connection in here like in the rest of the source scripts\n$query  = \"SELECT COUNT(*) FROM users;\";\n$result = mysqli_query($GLOBALS[\"___mysqli_ston\"],  $query ) or die( '<pre>' . ((is_object($GLOBALS[\"___mysqli_ston\"])) ? mysqli_error($GLOBALS[\"___mysqli_ston\"]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false)) . '</pre>' );\n$number_of_rows = mysqli_fetch_row( $result )[0];\n\nmysqli_close($GLOBALS[\"___mysqli_ston\"]);\n?>\n\n\nFILE: xss_medium.php\n<?php\n\nheader (\"X-XSS-Protection: 0\");\n\n// Is there any input?\nif( array_key_exists( \"name\", $_GET ) && $_GET[ 'name' ] != NULL ) {\n\t// Get input\n\t$name = str_replace( '<script>', '', $_GET[ 'name' ] );\n\n\t// Feedback for end user\n\t$html .= \"<pre>Hello {$name}</pre>\";\n}\n\n?>\n\n```\n",
       "temperature": 0.7,
       "seed": 11,
       "cached": false,
-      "elapsed": 1.1136721249786206,
+      "elapsed": 6.664459299994633,
       "error": null,
       "meta": {
-        "eval_count": 165,
-        "prompt_eval_count": 1629,
-        "total_duration": 1110271791
+        "eval_count": 200,
+        "prompt_eval_count": 1426,
+        "total_duration": 4623109433,
+        "format_schema": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "rule": {
+                "type": "string"
+              },
+              "location": {
+                "type": "string"
+              },
+              "severity": {
+                "type": "string"
+              },
+              "confidence": {
+                "type": "string"
+              },
+              "evidence": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "rule",
+              "location",
+              "severity",
+              "confidence",
+              "evidence"
+            ],
+            "additionalProperties": false
+          }
+        }
       }
     },
     "run_2": {
-      "text": "```json\n[\n    {\"rule\":\"sqli\",\"location\":\"do_login\",\"severity\":\"high\",\"confidence\":\"confirmed\",\"evidence\":\"String-formatted query, no parameterization. The whole point of the SQLi lab.\"},\n    {\"rule\":\"xss\",\"location\":\"do_reflect\",\"severity\":\"high\",\"confidence\":\"confirmed\",\"evidence\":\"User input placed into HTML with no encoding. Fixed version is /safe, which html.escape()s the input.\"},\n    {\"rule\":\"cmdi\",\"location\":\"do_ping\",\"severity\":\"high\",\"confidence\":\"confirmed\",\"evidence\":\"The host string is concatenated into a command. We simulate execution (echo the command) so the lab is safe to run, but the bug is real and detectable.\"}\n]\n```",
+      "text": "[\n  {\n    \"rule\": \"sqli\",\n    \"location\": \"dvwa_source/exec_medium.php\",\n    \"severity\": \"high\",\n    \"confidence\": \"low\",\n    \"evidence\": \"PHP code retrieves user information from the database via an SQL query with user IDs.\"\n  },\n  {\n    \"rule\": \"xss\",\n    \"location\": \"dvwa_source/exec_medium.php\",\n    \"severity\": \"high\",\n    \"confidence\": \"high\",\n    \"evidence\": \"The code includes user IDs in the URL, which can be exploited if the user has a logged-in account. A full exploit requires access to the user's session data or user authentication mechanisms.\"\n  },\n  {\n    \"rule\": \"cmdi\",\n    \"location\": \"dvwa_source/sqli_fixed.php\",\n    \"severity\": \"low\",\n    \"confidence\": \"low\",\n    \"evidence\": \"The code does not execute a SQL command, but still exploits the injected string by echoing it as text.\"\n  },\n  {\n    \"rule\": \"broken-access-control\",\n    \"location\": \"dvwa_source/sqli_fixed.php\",\n    \"severity\": \"high\",\n    \"confidence\": \"high\",\n    \"evidence\": \"The script contains a SQL injection vulnerability in the form of an escaped string, which can be exploited to execute arbitrary SQL commands.\"\n  }\n]",
       "backend": "ollama",
-      "model": "qwen2.5:3b",
-      "prompt": "\nYou are reviewing one small Python web application for a security homework.\nReport every suspected finding in the source under these labels only: sqli, xss, cmdi, broken-access-control.\nFor each finding, give the enclosing function name (for example do_login) and concise evidence from the source.\nDo not invent CVEs, dependencies, endpoints, or code not shown. Include uncertain findings rather than silently omitting them.\nReturn ONLY a JSON array. Each object must have keys rule, location, severity, confidence, evidence.\n\nSOURCE FILE: vulnweb_app.py\n```python\n\"\"\"vuln-web — a small, deliberately vulnerable web app (CMP-5006 week 6).\n\nTwo jobs at once, on purpose:\n\n  1. You ATTACK the running app (SQLi, reflected XSS, command injection),\n     confirming each finding with a seclab.attack oracle.\n  2. You SCAN THIS SAME SOURCE with a classical scanner and with an LLM, then\n     compare (seclab.scan). Because the target and the scan-subject are the same\n     readable file, you can check every tool's finding against the truth by eye.\n\nStdlib only (sqlite3 + http.server), so the container is tiny and the whole app\nfits on one screen. Every vulnerability is intentional and commented `# VULN`.\n\n    GET  /health\n    GET  /?name=<x>            reflected XSS sink\n    POST /login {user,pw}      SQL injection sink (auth bypass)\n    POST /ping  {host}         command-injection sink (os.system-style)\n    GET  /safe?name=<x>        the FIXED version of the XSS sink (a true negative)\n\nThe command-injection sink does NOT actually run a shell — it simulates the\nvulnerability by echoing what WOULD have been executed, so the lab is safe to run\nanywhere while still being detectable and confirmable. That simulation is itself\na lesson: the bug is the unsanitized string reaching a command context, whether or\nnot this teaching copy pulls the trigger.\n\"\"\"\n\nfrom __future__ import annotations\n\nimport json\nimport os\nimport re\nimport sqlite3\nimport sys\nfrom http.server import BaseHTTPRequestHandler, ThreadingHTTPServer\nfrom urllib.parse import urlparse, parse_qs\n\n# A canary row so an oracle can CONFIRM a SQLi auth-bypass extracted real data,\n# not just that the response changed.\nCANARY_SECRET = \"FLAG-sqli-9f2c-admin-session\"\n\n\ndef make_db():\n    db = sqlite3.connect(\":memory:\", check_same_thread=False)\n    db.execute(\"CREATE TABLE users (id INTEGER, user TEXT, pw TEXT, secret TEXT)\")\n    db.execute(\"INSERT INTO users VALUES (1,'admin','s3cr3t',?)\", (CANARY_SECRET,))\n    db.execute(\"INSERT INTO users VALUES (2,'alice','password','ordinary-row')\")\n    db.commit()\n    return db\n\n\nDB = make_db()\n\n\n# ---------------------------------------------------------------------------\n# The vulnerable handlers. Read these — you scan this exact code in Task 2.\n# ---------------------------------------------------------------------------\ndef do_login(user: str, pw: str) -> str:\n    # VULN: SQL injection. String-formatted query, no parameterization. The whole\n    # point of the SQLi lab. Fixed version would be:\n    #   DB.execute(\"SELECT ... WHERE user=? AND pw=?\", (user, pw))\n    query = (f\"SELECT user, secret FROM users \"\n             f\"WHERE user = '{user}' AND pw = '{pw}'\")\n    try:\n        rows = DB.execute(query).fetchall()\n    except sqlite3.Error as e:\n        return json.dumps({\"error\": f\"sql error: {e}\", \"query\": query})\n    if rows:\n        # Leaks the secret on success — so ' OR '1'='1 dumps the admin canary.\n        return json.dumps({\"ok\": True, \"rows\": rows})\n    return json.dumps({\"ok\": False})\n\n\ndef do_reflect(name: str) -> str:\n    # VULN: reflected XSS. User input placed into HTML with no encoding.\n    # Fixed version is /safe, which html.escape()s the input.\n    return f\"<html><body><h1>Hello, {name}!</h1></body></html>\"\n\n\ndef do_reflect_safe(name: str) -> str:\n    import html\n    return f\"<html><body><h1>Hello, {html.escape(name)}!</h1></body></html>\"\n\n\ndef do_ping(host: str) -> str:\n    # VULN: command injection. The host string is concatenated into a command.\n    # We SIMULATE execution (echo the command) so the lab is safe to run, but the\n    # bug — untrusted data reaching a command context — is real and detectable.\n    command = f\"ping -c 1 {host}\"\n    # A real app would do os.system(command). We parse it to reveal the injection:\n    injected = bool(re.search(r\"[;&|`$()]\", host))\n    return json.dumps({\n        \"would_run\": command,\n        \"injection_detected\": injected,\n        \"note\": (\"extra command(s) smuggled in via a shell metacharacter\"\n                 if injected else \"no shell metacharacters in host\"),\n    })\n\n\nclass Handler(BaseHTTPRequestHandler):\n    def _send(self, code, body, ctype=\"application/json\"):\n        b = body.encode()\n        self.send_response(code)\n        self.send_header(\"Content-Type\", ctype)\n        self.send_header(\"Content-Length\", str(len(b)))\n        self.end_headers()\n        self.wfile.write(b)\n\n    def _form(self):\n        n = int(self.headers.get(\"Content-Length\", 0) or 0)\n        raw = self.rfile.read(n).decode() if n else \"\"\n        try:\n            return json.loads(raw) if raw else {}\n        except json.JSONDecodeError:\n            return {k: v[0] for k, v in parse_qs(raw).items()}\n\n    def log_message(self, *a):\n        pass\n\n    def do_GET(self):\n        u = urlparse(self.path)\n        q = parse_qs(u.query)\n        if u.path == \"/health\":\n            return self._send(200, json.dumps({\"status\": \"ok\"}))\n        if u.path == \"/\":\n            return self._send(200, do_reflect(q.get(\"name\", [\"\"])[0]), \"text/html\")\n        if u.path == \"/safe\":\n            return self._send(200, do_reflect_safe(q.get(\"name\", [\"\"])[0]), \"text/html\")\n        return self._send(404, json.dumps({\"error\": \"not found\"}))\n\n    def do_POST(self):\n        u = urlparse(self.path)\n        form = self._form()\n        if u.path == \"/login\":\n            return self._send(200, do_login(form.get(\"user\", \"\"), form.get(\"pw\", \"\")))\n        if u.path == \"/ping\":\n            return self._send(200, do_ping(form.get(\"host\", \"\")))\n        return self._send(404, json.dumps({\"error\": \"not found\"}))\n\n\ndef main():\n    port = int(os.environ.get(\"PORT\", \"8000\"))\n    srv = ThreadingHTTPServer((\"0.0.0.0\", port), Handler)\n    print(f\"vuln-web on :{port}\", file=sys.stderr, flush=True)\n    try:\n        srv.serve_forever()\n    except KeyboardInterrupt:\n        srv.shutdown()\n\n\nif __name__ == \"__main__\":\n    main()\n\n```\n",
+      "model": "qwen2.5:0.5b",
+      "prompt": "\nYou are reviewing four PHP source files from the local DVWA lab for a security homework.\nReport every suspected finding in the source under these labels only: sqli, xss, cmdi, broken-access-control.\nFor each finding, give the exact PHP filename in location (for example sqli_medium.php) and concise evidence from the source.\nDo not invent CVEs, dependencies, endpoints, or code not shown. Report exploitable injection issues in the shown files; review the fixed file as a negative control. Do not infer an access-control policy from missing application context.\nReturn ONLY a JSON array. Each object must have keys rule, location, severity, confidence, evidence.\n\nSOURCE FILE: dvwa_source\n```php\nFILE: exec_medium.php\n<?php\n\nif( isset( $_POST[ 'Submit' ]  ) ) {\n\t// Get input\n\t$target = $_REQUEST[ 'ip' ];\n\n\t// Set blacklist\n\t$substitutions = array(\n\t\t'&&' => '',\n\t\t';'  => '',\n\t);\n\n\t// Remove any of the characters in the array (blacklist).\n\t$target = str_replace( array_keys( $substitutions ), $substitutions, $target );\n\n\t// Determine OS and execute the ping command.\n\tif( stristr( php_uname( 's' ), 'Windows NT' ) ) {\n\t\t// Windows\n\t\t$cmd = shell_exec( 'ping  ' . $target );\n\t}\n\telse {\n\t\t// *nix\n\t\t$cmd = shell_exec( 'ping  -c 4 ' . $target );\n\t}\n\n\t// Feedback for the end user\n\t$html .= \"<pre>{$cmd}</pre>\";\n}\n\n?>\n\n\nFILE: sqli_fixed.php\n<?php\n// HW2 group fix for DVWA's MySQL numeric-ID sink, deployed at Medium.\n// Input is bound as one value; it never becomes part of the SQL statement.\nif ($_DVWA['SQLI_DB'] !== MYSQL) {\n    throw new RuntimeException('This evaluated patch requires the MySQL backend.');\n}\n$connection = $GLOBALS['___mysqli_ston'];\n$html .= '<!-- HW2 parameterized fix -->';\nif (isset($_POST['Submit'])) {\n    $id = (string) ($_POST['id'] ?? '');\n    $statement = mysqli_prepare($connection,\n        'SELECT first_name, last_name FROM users WHERE user_id = ?');\n    if (!$statement) {\n        throw new RuntimeException('Could not prepare the fixed query.');\n    }\n    mysqli_stmt_bind_param($statement, 's', $id);\n    if (!mysqli_stmt_execute($statement)) {\n        throw new RuntimeException('Could not execute the fixed query.');\n    }\n    $result = mysqli_stmt_get_result($statement);\n    while ($row = mysqli_fetch_assoc($result)) {\n        // Also encode values at the HTML boundary: the ID may contain markup.\n        $display_id = htmlspecialchars($id, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');\n        $first = htmlspecialchars($row['first_name'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');\n        $last = htmlspecialchars($row['last_name'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');\n        $html .= \"<pre>ID: {$display_id}<br />First name: {$first}<br />Surname: {$last}</pre>\";\n    }\n    mysqli_stmt_close($statement);\n}\n$result = mysqli_query($connection, 'SELECT COUNT(*) FROM users');\nif (!$result) {\n    throw new RuntimeException('Could not count users.');\n}\n$number_of_rows = mysqli_fetch_row($result)[0];\nmysqli_close($connection);\n?>\n\n\nFILE: sqli_medium.php\n<?php\n\nif( isset( $_POST[ 'Submit' ] ) ) {\n\t// Get input\n\t$id = $_POST[ 'id' ];\n\n\t$id = mysqli_real_escape_string($GLOBALS[\"___mysqli_ston\"], $id);\n\n\tswitch ($_DVWA['SQLI_DB']) {\n\t\tcase MYSQL:\n\t\t\t$query  = \"SELECT first_name, last_name FROM users WHERE user_id = $id;\";\n\t\t\t$result = mysqli_query($GLOBALS[\"___mysqli_ston\"], $query) or die( '<pre>' . mysqli_error($GLOBALS[\"___mysqli_ston\"]) . '</pre>' );\n\n\t\t\t// Get results\n\t\t\twhile( $row = mysqli_fetch_assoc( $result ) ) {\n\t\t\t\t// Display values\n\t\t\t\t$first = $row[\"first_name\"];\n\t\t\t\t$last  = $row[\"last_name\"];\n\n\t\t\t\t// Feedback for end user\n\t\t\t\t$html .= \"<pre>ID: {$id}<br />First name: {$first}<br />Surname: {$last}</pre>\";\n\t\t\t}\n\t\t\tbreak;\n\t\tcase SQLITE:\n\t\t\tglobal $sqlite_db_connection;\n\n\t\t\t$query  = \"SELECT first_name, last_name FROM users WHERE user_id = $id;\";\n\t\t\t#print $query;\n\t\t\ttry {\n\t\t\t\t$results = $sqlite_db_connection->query($query);\n\t\t\t} catch (Exception $e) {\n\t\t\t\techo 'Caught exception: ' . $e->getMessage();\n\t\t\t\texit();\n\t\t\t}\n\n\t\t\tif ($results) {\n\t\t\t\twhile ($row = $results->fetchArray()) {\n\t\t\t\t\t// Get values\n\t\t\t\t\t$first = $row[\"first_name\"];\n\t\t\t\t\t$last  = $row[\"last_name\"];\n\n\t\t\t\t\t// Feedback for end user\n\t\t\t\t\t$html .= \"<pre>ID: {$id}<br />First name: {$first}<br />Surname: {$last}</pre>\";\n\t\t\t\t}\n\t\t\t} else {\n\t\t\t\techo \"Error in fetch \".$sqlite_db->lastErrorMsg();\n\t\t\t}\n\t\t\tbreak;\n\t}\n}\n\n// This is used later on in the index.php page\n// Setting it here so we can close the database connection in here like in the rest of the source scripts\n$query  = \"SELECT COUNT(*) FROM users;\";\n$result = mysqli_query($GLOBALS[\"___mysqli_ston\"],  $query ) or die( '<pre>' . ((is_object($GLOBALS[\"___mysqli_ston\"])) ? mysqli_error($GLOBALS[\"___mysqli_ston\"]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false)) . '</pre>' );\n$number_of_rows = mysqli_fetch_row( $result )[0];\n\nmysqli_close($GLOBALS[\"___mysqli_ston\"]);\n?>\n\n\nFILE: xss_medium.php\n<?php\n\nheader (\"X-XSS-Protection: 0\");\n\n// Is there any input?\nif( array_key_exists( \"name\", $_GET ) && $_GET[ 'name' ] != NULL ) {\n\t// Get input\n\t$name = str_replace( '<script>', '', $_GET[ 'name' ] );\n\n\t// Feedback for end user\n\t$html .= \"<pre>Hello {$name}</pre>\";\n}\n\n?>\n\n```\n",
       "temperature": 0.7,
       "seed": 29,
       "cached": false,
-      "elapsed": 1.0319627920398489,
+      "elapsed": 8.0566039000405,
       "error": null,
       "meta": {
-        "eval_count": 153,
-        "prompt_eval_count": 1629,
-        "total_duration": 1028042292
+        "eval_count": 282,
+        "prompt_eval_count": 1426,
+        "total_duration": 6009388788,
+        "format_schema": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "rule": {
+                "type": "string"
+              },
+              "location": {
+                "type": "string"
+              },
+              "severity": {
+                "type": "string"
+              },
+              "confidence": {
+                "type": "string"
+              },
+              "evidence": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "rule",
+              "location",
+              "severity",
+              "confidence",
+              "evidence"
+            ],
+            "additionalProperties": false
+          }
+        }
       }
     }
   },
   "findings": {
     "semgrep": [
       {
-        "rule": "xss",
-        "location": "do_reflect",
-        "severity": "high",
-        "tool": "semgrep",
-        "confidence": "rule",
-        "raw": "User input interpolated into an HTML response."
-      },
-      {
-        "rule": "xss",
-        "location": "do_reflect",
-        "severity": "high",
-        "tool": "semgrep",
-        "confidence": "rule",
-        "raw": "User input interpolated into an HTML response."
-      },
-      {
         "rule": "cmdi",
-        "location": "do_ping",
+        "location": "exec_medium.php",
         "severity": "high",
         "tool": "semgrep",
         "confidence": "rule",
-        "raw": "User input interpolated into a shell command string."
+        "raw": "User-controlled target concatenated into a shell command."
+      },
+      {
+        "rule": "xss",
+        "location": "xss_medium.php",
+        "severity": "high",
+        "tool": "semgrep",
+        "confidence": "rule",
+        "raw": "Name enters an HTML response without output encoding."
       }
     ],
     "ollama-run-1": [
       {
         "rule": "sqli",
-        "location": "do_login",
+        "location": "sqli_fixed.php",
         "severity": "high",
         "tool": "ollama-run-1",
-        "confidence": "confirmed",
-        "raw": "{\"rule\": \"sqli\", \"location\": \"do_login\", \"severity\": \"high\", \"confidence\": \"confirmed\", \"evidence\": \"String-formatted query, no parameterization. The whole point of the SQLi lab.\"}"
+        "confidence": "high",
+        "raw": "{\"rule\": \"sqli\", \"location\": \"dvwa_source/sqli_fixed.php\", \"severity\": \"high\", \"confidence\": \"high\", \"evidence\": \"php_uname is missing from the script.\"}"
       },
       {
         "rule": "xss",
-        "location": "do_reflect",
-        "severity": "high",
+        "location": "xss_medium.php",
+        "severity": "low",
         "tool": "ollama-run-1",
-        "confidence": "confirmed",
-        "raw": "{\"rule\": \"xss\", \"location\": \"do_reflect\", \"severity\": \"high\", \"confidence\": \"confirmed\", \"evidence\": \"User input placed into HTML with no encoding. Fixed version is /safe, which html.escape()s the input.\"}"
+        "confidence": "high",
+        "raw": "{\"rule\": \"xss\", \"location\": \"dvwa_source/xss_medium.php\", \"severity\": \"low\", \"confidence\": \"high\", \"evidence\": \"The script includes `<?php` and `<?` tags, which are not valid in XSS protection.\"}"
       },
       {
-        "rule": "cmdi",
-        "location": "do_ping",
+        "rule": "broken-access-control",
+        "location": "sqli_fixed.php",
         "severity": "high",
         "tool": "ollama-run-1",
-        "confidence": "confirmed",
-        "raw": "{\"rule\": \"cmdi\", \"location\": \"do_ping\", \"severity\": \"high\", \"confidence\": \"confirmed\", \"evidence\": \"The host string is concatenated into a command. We SIMULATE execution (echo the command) so the lab is safe to run, but the bug — untrusted data reaching a command context — is real and detectable.\"}"
+        "confidence": "high",
+        "raw": "{\"rule\": \"broken-access-control\", \"location\": \"dvwa_source/sqli_fixed.php\", \"severity\": \"high\", \"confidence\": \"high\", \"evidence\": \"The script contains an attempt to bypass access control using `if( isset( $_POST[ 'Submit' ] ) )`, which is not allowed.\"}"
       }
     ],
     "ollama-run-2": [
       {
         "rule": "sqli",
-        "location": "do_login",
+        "location": "exec_medium.php",
         "severity": "high",
         "tool": "ollama-run-2",
-        "confidence": "confirmed",
-        "raw": "{\"rule\": \"sqli\", \"location\": \"do_login\", \"severity\": \"high\", \"confidence\": \"confirmed\", \"evidence\": \"String-formatted query, no parameterization. The whole point of the SQLi lab.\"}"
+        "confidence": "low",
+        "raw": "{\"rule\": \"sqli\", \"location\": \"dvwa_source/exec_medium.php\", \"severity\": \"high\", \"confidence\": \"low\", \"evidence\": \"PHP code retrieves user information from the database via an SQL query with user IDs.\"}"
       },
       {
         "rule": "xss",
-        "location": "do_reflect",
+        "location": "exec_medium.php",
         "severity": "high",
         "tool": "ollama-run-2",
-        "confidence": "confirmed",
-        "raw": "{\"rule\": \"xss\", \"location\": \"do_reflect\", \"severity\": \"high\", \"confidence\": \"confirmed\", \"evidence\": \"User input placed into HTML with no encoding. Fixed version is /safe, which html.escape()s the input.\"}"
+        "confidence": "high",
+        "raw": "{\"rule\": \"xss\", \"location\": \"dvwa_source/exec_medium.php\", \"severity\": \"high\", \"confidence\": \"high\", \"evidence\": \"The code includes user IDs in the URL, which can be exploited if the user has a logged-in account. A full exploit requires access to the user's session data or user authentication mechanisms.\"}"
       },
       {
         "rule": "cmdi",
-        "location": "do_ping",
+        "location": "sqli_fixed.php",
+        "severity": "low",
+        "tool": "ollama-run-2",
+        "confidence": "low",
+        "raw": "{\"rule\": \"cmdi\", \"location\": \"dvwa_source/sqli_fixed.php\", \"severity\": \"low\", \"confidence\": \"low\", \"evidence\": \"The code does not execute a SQL command, but still exploits the injected string by echoing it as text.\"}"
+      },
+      {
+        "rule": "broken-access-control",
+        "location": "sqli_fixed.php",
         "severity": "high",
         "tool": "ollama-run-2",
-        "confidence": "confirmed",
-        "raw": "{\"rule\": \"cmdi\", \"location\": \"do_ping\", \"severity\": \"high\", \"confidence\": \"confirmed\", \"evidence\": \"The host string is concatenated into a command. We simulate execution (echo the command) so the lab is safe to run, but the bug is real and detectable.\"}"
+        "confidence": "high",
+        "raw": "{\"rule\": \"broken-access-control\", \"location\": \"dvwa_source/sqli_fixed.php\", \"severity\": \"high\", \"confidence\": \"high\", \"evidence\": \"The script contains a SQL injection vulnerability in the form of an escaped string, which can be exploited to execute arbitrary SQL commands.\"}"
       }
     ]
   },
@@ -149,34 +221,104 @@
       "missed": [
         [
           "sqli",
-          "do_login"
+          "sqli_medium.php"
         ]
       ]
     },
     "ollama-run-1": {
-      "tp": 3,
-      "fp": 0,
-      "fn": 0,
-      "precision": 1.0,
-      "recall": 1.0,
-      "f1": 1.0,
-      "false_positives": [],
-      "missed": []
+      "tp": 1,
+      "fp": 2,
+      "fn": 2,
+      "precision": 0.3333333333333333,
+      "recall": 0.3333333333333333,
+      "f1": 0.3333333333333333,
+      "false_positives": [
+        [
+          "broken-access-control",
+          "sqli_fixed.php"
+        ],
+        [
+          "sqli",
+          "sqli_fixed.php"
+        ]
+      ],
+      "missed": [
+        [
+          "cmdi",
+          "exec_medium.php"
+        ],
+        [
+          "sqli",
+          "sqli_medium.php"
+        ]
+      ]
     },
     "ollama-run-2": {
-      "tp": 3,
-      "fp": 0,
-      "fn": 0,
-      "precision": 1.0,
-      "recall": 1.0,
-      "f1": 1.0,
-      "false_positives": [],
-      "missed": []
+      "tp": 0,
+      "fp": 4,
+      "fn": 3,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "false_positives": [
+        [
+          "broken-access-control",
+          "sqli_fixed.php"
+        ],
+        [
+          "cmdi",
+          "sqli_fixed.php"
+        ],
+        [
+          "sqli",
+          "exec_medium.php"
+        ],
+        [
+          "xss",
+          "exec_medium.php"
+        ]
+      ],
+      "missed": [
+        [
+          "cmdi",
+          "exec_medium.php"
+        ],
+        [
+          "sqli",
+          "sqli_medium.php"
+        ],
+        [
+          "xss",
+          "xss_medium.php"
+        ]
+      ]
     }
   },
   "non_determinism": {
-    "only_run_1": [],
-    "only_run_2": [],
-    "jaccard": 1.0
+    "only_run_1": [
+      [
+        "sqli",
+        "sqli_fixed.php"
+      ],
+      [
+        "xss",
+        "xss_medium.php"
+      ]
+    ],
+    "only_run_2": [
+      [
+        "cmdi",
+        "sqli_fixed.php"
+      ],
+      [
+        "sqli",
+        "exec_medium.php"
+      ],
+      [
+        "xss",
+        "exec_medium.php"
+      ]
+    ],
+    "jaccard": 0.16666666666666666
   }
 }

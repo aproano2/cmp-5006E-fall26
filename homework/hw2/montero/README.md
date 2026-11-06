@@ -6,98 +6,77 @@
 - Martin Montero Torres — 00328595
 - Santiago Arellano Jaramillo — 00328370
 
-## What this submission contains
+The executable report is [hw2_web_attack_defend.ipynb](hw2_web_attack_defend.ipynb).
+All attacks are on authenticated, loopback-only DVWA with synthetic data.
 
-The implementation, its evidence, and the written analysis are in
-[`hw2_web_attack_defend.ipynb`](hw2_web_attack_defend.ipynb). It contains:
+## Current evidence
 
-- **Part A:** SQLi, reflected XSS, and command injection against a local DVWA
-  at **Medium**, each with its filter bypass, a benign control, and a sound
-  `seclab.attack` oracle. Includes the OWASP 2021 mapping and why Broken Access
-  Control (A01) is not what this evidence shows.
-- **Part B1:** a deliberately small WAF blocklist, its coverage on the Part-A
-  payloads, same-intent bypasses, and its false-positive rate on
-  `benign_traffic.json`.
-- **Part B2/B3:** every Part-A payload and WAF bypass replayed against DVWA's
-  Impossible level (the structural fix), plus the guarantee stated as a
-  conditional.
-- **Part C:** Semgrep versus a local Ollama model (`qwen2.5:3b`, two runs)
-  against the readable `vuln-web` source, scored with `seclab.scan` against the
-  hand-built `ground_truth.json`.
-- **Part D:** "Where our attack, defense, or comparison might be unfair."
+- Part A: three Medium-level classes confirmed 3/3 trials each; benign controls negative.
+- Part B: deployed PHP WAF blocks the three original strings; three SQLi mutations
+  bypass it 3/3 trials each. Our own parameterized Medium patch prevents all six
+  tested strings from leaking an extra row, with a functional benign lookup.
+- Supplied generic corpus: deployed PHP WAF blocks 2/26 inputs (7.69%); this is
+  not a measurement of realistic numeric-ID traffic.
+- Part C: Completed; raw PHP tool evidence and metrics saved in duel/.
+- [honesty.md](honesty.md): limitations, prior-results exposure, and corpus scope.
 
-## Results at a glance
+## Reproduce on Windows
 
-| Part | Result |
-|---|---|
-| A · SQLi `1 OR 1=1` | confirmed 3/3 (extra `Smith` row appears); benign `1` stays 0/3 |
-| A · XSS `<ScRiPt>…</ScRiPt>` | confirmed 3/3 (raw script element survives); benign `Ada` 0/3 |
-| A · cmdi `127.0.0.1 \| whoami` | confirmed 3/3 (`www-data` in output); benign `127.0.0.1` 0/3 |
-| B1 · WAF coverage | 3/3 Part-A payloads blocked |
-| B1 · WAF bypass | 3/3 same-intent mutations pass and still confirm (`/**/`, `onerror`, newline) |
-| B1 · False positives | 2/26 benign inputs blocked (7.7 %), e.g. `drop table tennis lessons for beginners` |
-| B2 · Impossible level | 0/2 attacks + bypasses confirm per class; 3/3 benign controls still work |
-| C · Semgrep | precision 100 %, recall 67 %, F1 0.80 (missed `sqli/do_login`) |
-| C · Ollama runs 1 and 2 | precision 100 %, recall 100 %, F1 1.00; identical findings (Jaccard 1.0) |
-| C · Broken Access Control | claimed by neither tool; not present in `vuln-web` |
+Use Python 3.14 and Docker Desktop with Linux containers. From the repository root:
 
-Part D explains why some of these numbers are kinder than they look, in
-particular why the LLM's perfect score comes from the `# VULN` comments in the
-source.
-
-## Prerequisites
-
-- Python 3.10 or later and Jupyter (Lab, Notebook, or VS Code), with `pandas`
-  installed in the kernel.
-- Docker running an authorized local DVWA instance set to **Medium**. The
-  notebook defaults to `http://127.0.0.1:60281`; override it with `DVWA_BASE` if
-  Docker assigns another port. It refuses any host other than `127.0.0.1` or
-  `localhost`.
-- Ollama serving locally with the Part-C model:
-
-  ```bash
-  ollama serve
-  ollama pull qwen2.5:3b
-  ```
-
-- Semgrep for the classical-scanner arm:
-
-  ```bash
-  python3 -m pip install semgrep
-  ```
-
-## Run the notebook
-
-From the repository root. Do not commit passwords.
-
-```bash
-cd homework/hw2/montero
-export DVWA_BASE='http://127.0.0.1:60281'
-export DVWA_USERNAME='admin'
-# Either set DVWA_PASSWORD in your shell or let the notebook prompt for it.
-jupyter lab hw2_web_attack_defend.ipynb
+```powershell
+python -m venv .hw2-venv
+.hw2-venv/Scripts/python.exe -m pip install -r homework/hw2/montero/requirements.txt
+docker compose -f homework/hw2/montero/lab.compose.yaml up -d
+docker pull semgrep/semgrep
+docker run -d --name hw2-montero-ollama -p 127.0.0.1:11434:11434 -v hw2-montero-ollama:/root/.ollama -e OLLAMA_NUM_PARALLEL=1 alpine/ollama@sha256:5a84f1bb6c4868f80fe02b104bc31cf48a07d5b5d8812870ada9fb7b561ed284
+docker exec hw2-montero-ollama ollama pull qwen2.5:0.5b
+$env:SECLAB_MODEL = 'qwen2.5:0.5b'
+# Only on the first run: initialize this dedicated synthetic DVWA database.
+$env:HW2_INITIALIZE_DB = '1'
+.hw2-venv/Scripts/python.exe homework/hw2/montero/run_experiment.py
 ```
 
-Run the cells in order. The notebook checks that DVWA starts at Medium, and the
-Impossible-level blocks restore Medium in `finally`, even if an assertion fails.
+Unset HW2_INITIALIZE_DB on subsequent runs. The public lab credentials are
+admin/password; override DVWA_USERNAME and DVWA_PASSWORD if needed. If Docker is
+outside PATH, set DOCKER_EXE to its executable. On this machine it is at
+C:/Users/isabe/AppData/Local/Programs/DockerDesktop/resources/bin/docker.exe.
+DVWA_BASE defaults to http://127.0.0.1:4280. The notebook refuses non-loopback targets.
 
-Part C makes two uncached Ollama calls with different seeds and writes the raw
-model outputs, normalized findings, scores, and metrics to
-`duel/part_c_results.json` and `duel/part_c_metrics.csv`.
+The runner verifies that scan snapshots match the actual running Medium files.
+The CPU runtime is the community [alpine/ollama distribution](https://hub.docker.com/r/alpine/ollama),
+pinned by digest; it reports Ollama 0.40.13. This is a real local model runtime.
+It deploys our two PHP defenses only in hw2-montero-dvwa-1 and restores original
+source and Medium after evaluation. It supports --part-ab, --part-c, and
+--scanner-only for individual stages. To inspect interactively, open the notebook
+using the same Python environment in VS Code; no separate Jupyter UI is required.
 
-The committed outputs come from the run on Santiago's machine, so the absolute
-paths printed in the notebook and stored in `part_c_results.json` point to his
-checkout. We left them unedited because they are part of the recorded evidence.
+## Evidence files and provenance
 
-## Files
+- [attack/results.csv](attack/results.csv): current DVWA attacks and controls.
+- [defend/dvwa_deployed_results.csv](defend/dvwa_deployed_results.csv): actual
+  deployed WAF and own MySQL fix at the original Medium SQLi endpoint.
+- [defend/dvwa_waf_benign_results.csv](defend/dvwa_waf_benign_results.csv): real PHP
+  filter classifications of the supplied generic corpus.
+- [ground_truth_manual.json](ground_truth_manual.json): AI-assisted manual PHP
+  review before the new tool calls; historical vuln-web results were known.
+- [duel/dvwa_source/](duel/dvwa_source/): reviewed source, including our fixed
+  negative control. The three original snippets are from digininja/DVWA under
+  its included GPL license; they are not group-authored vulnerable code.
+- [duel/](duel/README.md): current scan evidence and separately archived originals.
+- ground_truth.json and verify_fixtures.py: original instructor vuln-web fixtures,
+  retained for the supplemental fixture check; not the new PHP benchmark.
+- defend/evaluate.py and its SQLite CSVs: supplemental, not MySQL evidence.
+- [AI_LOG.md](AI_LOG.md): assistance disclosure.
 
-- `hw2_web_attack_defend.ipynb`: all code, outputs, and analysis (Parts A–D).
-- `duel/part_c_results.json`, `duel/part_c_metrics.csv`: Part-C raw outputs and
-  metrics.
-- `ground_truth.json`: the hand-built findings for `vuln-web`, used to score
-  Part C. Built by reading the source, not from either tool's output.
-- `benign_traffic.json`: legitimate inputs used for the Part-B1 false-positive
-  rate.
-- `verify_fixtures.py`: the instructor's fixture check, kept for reference. It
-  assumes the original `duel-2-web` layout, so the notebook is the main workflow.
-- `AI_LOG.md`: how each of us used AI on this homework.
+Historical results were imported from Santiago's branch homework/hw-2-arellano,
+commit 65cee0f. attack/recorded_results.txt and defend/recorded_results.txt retain
+those originals. Their macOS execution is not relabeled as a Windows run.
+
+Run tests from the repository root:
+
+```powershell
+.hw2-venv/Scripts/python.exe -m pytest seclab/tests labs/vuln-web homework/hw2/montero/test_submission.py -q
+.hw2-venv/Scripts/python.exe homework/hw2/montero/verify_fixtures.py
+.hw2-venv/Scripts/python.exe homework/hw2/montero/defend/evaluate.py
+```

