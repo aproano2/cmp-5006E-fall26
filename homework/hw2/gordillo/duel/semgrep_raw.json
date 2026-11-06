@@ -1,0 +1,130 @@
+{
+  "version": "1.183.0",
+  "results": [
+    {
+      "check_id": "duel.hw2-reflected-xss",
+      "path": "C:\\Universidad\\Ciberseguridad\\labs\\vuln-web\\app\\vulnweb_app.py",
+      "start": {
+        "line": 76,
+        "col": 5,
+        "offset": 3218
+      },
+      "end": {
+        "line": 76,
+        "col": 44,
+        "offset": 3257
+      },
+      "extra": {
+        "message": "User input is returned inside HTML without output encoding.",
+        "metadata": {},
+        "severity": "ERROR",
+        "fingerprint": "requires login",
+        "lines": "requires login",
+        "validation_state": "NO_VALIDATOR",
+        "engine_kind": "OSS"
+      }
+    },
+    {
+      "check_id": "duel.hw2-command-injection",
+      "path": "C:\\Universidad\\Ciberseguridad\\labs\\vuln-web\\app\\vulnweb_app.py",
+      "start": {
+        "line": 88,
+        "col": 5,
+        "offset": 3706
+      },
+      "end": {
+        "line": 88,
+        "col": 34,
+        "offset": 3735
+      },
+      "extra": {
+        "message": "User input is concatenated into a shell command string.",
+        "metadata": {},
+        "severity": "ERROR",
+        "fingerprint": "requires login",
+        "lines": "requires login",
+        "validation_state": "NO_VALIDATOR",
+        "engine_kind": "OSS"
+      }
+    }
+  ],
+  "errors": [],
+  "paths": {
+    "scanned": [
+      "C:\\Universidad\\Ciberseguridad\\labs\\vuln-web\\app\\vulnweb_app.py"
+    ]
+  },
+  "time": {
+    "rules": [],
+    "rules_parse_time": 0.0009913444519042969,
+    "profiling_times": {
+      "config_time": 0.12299442291259766,
+      "core_time": 0.3445899486541748,
+      "ignores_time": 0.0,
+      "total_time": 0.4856300354003906
+    },
+    "parsing_time": {
+      "total_time": 0.013794660568237305,
+      "per_file_time": {
+        "mean": 0.006897330284118652,
+        "std_dev": 4.757316504822029e-05
+      },
+      "very_slow_stats": {
+        "time_ratio": 0.0,
+        "count_ratio": 0.0
+      },
+      "very_slow_files": []
+    },
+    "scanning_time": {
+      "total_time": 0.015335559844970703,
+      "per_file_time": {
+        "mean": 0.015335559844970703,
+        "std_dev": 0.0
+      },
+      "very_slow_stats": {
+        "time_ratio": 0.0,
+        "count_ratio": 0.0
+      },
+      "very_slow_files": []
+    },
+    "matching_time": {
+      "total_time": 0.0,
+      "per_file_and_rule_time": {
+        "mean": 0.0,
+        "std_dev": 0.0
+      },
+      "very_slow_stats": {
+        "time_ratio": 0.0,
+        "count_ratio": 0.0
+      },
+      "very_slow_rules_on_files": []
+    },
+    "tainting_time": {
+      "total_time": 0.0,
+      "per_def_and_rule_time": {
+        "mean": 0.0,
+        "std_dev": 0.0
+      },
+      "very_slow_stats": {
+        "time_ratio": 0.0,
+        "count_ratio": 0.0
+      },
+      "very_slow_rules_on_defs": []
+    },
+    "fixpoint_timeouts": [],
+    "prefiltering": {
+      "project_level_time": 0.0,
+      "file_level_time": 0.0,
+      "rules_with_project_prefilters_ratio": 0.0,
+      "rules_with_file_prefilters_ratio": 1.0,
+      "rules_selected_ratio": 0.6666666666666666,
+      "rules_matched_ratio": 0.6666666666666666
+    },
+    "targets": [],
+    "total_bytes": 0,
+    "max_memory_bytes": 84722432
+  },
+  "engine_requested": "OSS",
+  "skipped_rules": [],
+  "profiling_results": []
+}
