@@ -142,3 +142,10 @@ Belongs there:
 
 This section is worth real credit. **A student who identifies a genuine flaw in
 their own evaluation has learned the thing this course is actually teaching.**
+
+## Week 2 — One-Time Pad
+
+| Axis | Before | After control | Evidence |
+|------|--------|---------------|----------|
+| Guarantee | — | Perfect secrecy — ciphertext is statistically independent of the plaintext against an attacker with unbounded compute, **provided the key is random, at least as long as the message, and used exactly once** | `studios/week-02-copy/test_otp.py` |
+| Failure mode | — | **Key reuse:** `c1 ⊕ c2 = p1 ⊕ p2`, allowing crib-dragging to recover the plaintexts | `studios/week-02-copy/test_otp.py` |
