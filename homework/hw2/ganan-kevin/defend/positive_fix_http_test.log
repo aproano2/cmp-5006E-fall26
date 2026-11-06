@@ -1,0 +1,8 @@
+PASS SQLi Part-A payload (HTTP 200)
+PASS Benign apostrophe username (HTTP 200)
+PASS XSS Part-A baseline (HTTP 200)
+PASS B1-XSS-01 (HTTP 200)
+PASS B1-XSS-02 (HTTP 200)
+PASS B1-XSS-03 (HTTP 200)
+PASS CMDi Part-A payload (HTTP 200)
+7/7 passed. Wrote ./defend/positive_fix_http_results.csv
