@@ -1,0 +1,8 @@
+test,http_status,passed,evidence
+SQLi Part-A payload,200,True,"{""ok"": false}"
+Benign apostrophe username,200,True,"{""ok"": false}"
+XSS Part-A baseline,200,True,"<html><body><h1>Hello, &lt;script&gt;alert(1)&lt;/script&gt;!</h1></body></html>"
+B1-XSS-01,200,True,"<html><body><h1>Hello, &lt;a href=jav&amp;#x61;script:alert(1)&gt;click&lt;/a&gt;!</h1></body></html>"
+B1-XSS-02,200,True,"<html><body><h1>Hello, &lt;a href=j&amp;#97;vascript:alert(1)&gt;click&lt;/a&gt;!</h1></body></html>"
+B1-XSS-03,200,True,"<html><body><h1>Hello, &lt;a href=java&amp;#x73;cript:alert(1)&gt;click&lt;/a&gt;!</h1></body></html>"
+CMDi Part-A payload,200,True,"{""would_run"": null, ""injection_detected"": false, ""rejected"": true, ""note"": ""host '127.0.0.1; whoami' does not match the hostname/IP allowlist; refused""}"

@@ -1,0 +1,40 @@
+rules:
+  # This is intentionally a narrow, line-oriented classroom rule. The source
+  # constructs the SQL statement from two adjacent f-strings on separate lines,
+  # so this single-line signature misses do_login. The lab README identifies
+  # that as the scanner's expected miss; this limitation is disclosed in D.
+  - id: hw2.sqli
+    languages: [python]
+    severity: ERROR
+    message: Single-line signature for string-formatted SQL query (does not match the lab's split f-strings).
+    metadata:
+      category: security
+      technology: [python, sqlite]
+    paths:
+      include: ["**/vulnweb_app.py"]
+    pattern-regex: |-
+      f"SELECT user, secret FROM users WHERE user = '\{user\}' AND pw = '\{pw\}'"
+
+  - id: hw2.xss
+    languages: [python]
+    severity: ERROR
+    message: Unescaped user input interpolated into an HTML response.
+    metadata:
+      category: security
+      technology: [python, html]
+    paths:
+      include: ["**/vulnweb_app.py"]
+    pattern-regex: |-
+      return f"<html><body><h1>Hello, \{name\}!</h1></body></html>"
+
+  - id: hw2.cmdi
+    languages: [python]
+    severity: ERROR
+    message: Untrusted host interpolated into a shell command string.
+    metadata:
+      category: security
+      technology: [python, command-injection]
+    paths:
+      include: ["**/vulnweb_app.py"]
+    pattern-regex: |-
+      command\s*=\s*f"ping -c 1 \{host\}"

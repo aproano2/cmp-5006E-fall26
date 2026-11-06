@@ -1,0 +1,21 @@
+{
+  "selected_class": "xss",
+  "total_payloads": 20,
+  "blocked": 17,
+  "allowed": 3,
+  "combined_sample_coverage": 0.85,
+  "part_a_payloads": 1,
+  "part_a_blocked": 1,
+  "part_a_coverage": 1.0,
+  "b1_bypass_attempts": 3,
+  "bypasses_allowed": 3,
+  "bypass_success_rate": 1.0,
+  "parsed_javascript_uri_count": 4,
+  "scope": "20-payload sample: one Part-A payload, 16 additional XSS inputs, and three same-intent bypass attempts.",
+  "live_proxy_probe": {
+    "base_url": "http://127.0.0.1:8001",
+    "checked": 20,
+    "matched_expected_behavior": 20,
+    "mismatches": []
+  }
+}
