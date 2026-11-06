@@ -1,0 +1,10 @@
+config,seed,line
+v1-full,0,NONE  <- NONE after 2 finding(s)
+v1-full,4,[NONE]  <- NONE after 3 finding(s)
+v1,0,NONE  <- NONE after 1 finding(s)
+v1,1,NONE  <- NONE after 1 finding(s)
+v1,2,NONE  <- NONE after 1 finding(s)
+v1,3,NONE  <- NONE after 1 finding(s)
+v1,4,NONE  <- NONE after 5 finding(s)
+v1,5,NONE  <- NONE after 2 finding(s)
+v2,4,[NONE]  <- NONE after 2 finding(s)
