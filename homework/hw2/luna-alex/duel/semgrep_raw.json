@@ -1,0 +1,142 @@
+{
+  "version": "1.183.0",
+  "results": [
+    {
+      "check_id": "homework.hw2.luna-alex.duel.hw2.xss",
+      "path": "C:\\Users\\alexj\\Desktop\\Noveno Semestre\\Computer Security\\cmp-5006E-fall26\\labs\\vuln-web\\app\\vulnweb_app.py",
+      "start": {
+        "line": 76,
+        "col": 5,
+        "offset": 3218
+      },
+      "end": {
+        "line": 76,
+        "col": 64,
+        "offset": 3277
+      },
+      "extra": {
+        "message": "Unescaped user input interpolated into an HTML response.",
+        "metadata": {
+          "category": "security",
+          "technology": [
+            "python",
+            "html"
+          ]
+        },
+        "severity": "ERROR",
+        "fingerprint": "requires login",
+        "lines": "requires login",
+        "validation_state": "NO_VALIDATOR",
+        "engine_kind": "OSS"
+      }
+    },
+    {
+      "check_id": "homework.hw2.luna-alex.duel.hw2.cmdi",
+      "path": "C:\\Users\\alexj\\Desktop\\Noveno Semestre\\Computer Security\\cmp-5006E-fall26\\labs\\vuln-web\\app\\vulnweb_app.py",
+      "start": {
+        "line": 88,
+        "col": 5,
+        "offset": 3706
+      },
+      "end": {
+        "line": 88,
+        "col": 34,
+        "offset": 3735
+      },
+      "extra": {
+        "message": "Untrusted host interpolated into a shell command string.",
+        "metadata": {
+          "category": "security",
+          "technology": [
+            "python",
+            "command-injection"
+          ]
+        },
+        "severity": "ERROR",
+        "fingerprint": "requires login",
+        "lines": "requires login",
+        "validation_state": "NO_VALIDATOR",
+        "engine_kind": "OSS"
+      }
+    }
+  ],
+  "errors": [],
+  "paths": {
+    "scanned": [
+      "C:\\Users\\alexj\\Desktop\\Noveno Semestre\\Computer Security\\cmp-5006E-fall26\\labs\\vuln-web\\app\\vulnweb_app.py"
+    ]
+  },
+  "time": {
+    "rules": [],
+    "rules_parse_time": 0.002112865447998047,
+    "profiling_times": {
+      "config_time": 0.19547295570373535,
+      "core_time": 0.23271870613098145,
+      "ignores_time": 4.9114227294921875e-05,
+      "total_time": 0.47734522819519043
+    },
+    "parsing_time": {
+      "total_time": 0.012916326522827148,
+      "per_file_time": {
+        "mean": 0.006458163261413574,
+        "std_dev": 4.1707872711072014e-05
+      },
+      "very_slow_stats": {
+        "time_ratio": 0.0,
+        "count_ratio": 0.0
+      },
+      "very_slow_files": []
+    },
+    "scanning_time": {
+      "total_time": 0.014421463012695312,
+      "per_file_time": {
+        "mean": 0.014421463012695312,
+        "std_dev": 0.0
+      },
+      "very_slow_stats": {
+        "time_ratio": 0.0,
+        "count_ratio": 0.0
+      },
+      "very_slow_files": []
+    },
+    "matching_time": {
+      "total_time": 0.0,
+      "per_file_and_rule_time": {
+        "mean": 0.0,
+        "std_dev": 0.0
+      },
+      "very_slow_stats": {
+        "time_ratio": 0.0,
+        "count_ratio": 0.0
+      },
+      "very_slow_rules_on_files": []
+    },
+    "tainting_time": {
+      "total_time": 0.0,
+      "per_def_and_rule_time": {
+        "mean": 0.0,
+        "std_dev": 0.0
+      },
+      "very_slow_stats": {
+        "time_ratio": 0.0,
+        "count_ratio": 0.0
+      },
+      "very_slow_rules_on_defs": []
+    },
+    "fixpoint_timeouts": [],
+    "prefiltering": {
+      "project_level_time": 0.0,
+      "file_level_time": 0.0,
+      "rules_with_project_prefilters_ratio": 0.0,
+      "rules_with_file_prefilters_ratio": 1.0,
+      "rules_selected_ratio": 0.6666666666666666,
+      "rules_matched_ratio": 0.6666666666666666
+    },
+    "targets": [],
+    "total_bytes": 0,
+    "max_memory_bytes": 83491712
+  },
+  "engine_requested": "OSS",
+  "skipped_rules": [],
+  "profiling_results": []
+}
