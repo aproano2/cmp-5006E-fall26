@@ -60,3 +60,4 @@ print(f"\nRepeated ciphertext blocks across the table: {len(rep)} distinct value
 for b, c in sorted(rep.items(), key=lambda t: -t[1]):
     where = [(NAMES[i], k) for i in range(4) for k in range(4) if blocks[i][k] == b]
     print(f"  {b} x{c}: {where}")
+#

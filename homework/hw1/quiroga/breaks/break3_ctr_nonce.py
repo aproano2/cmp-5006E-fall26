@@ -85,3 +85,4 @@ print("TARGET log entry:", entry2.decode() + "?")
 print("  user=admin action=export result=success from=10.0.0.   <- 69/70 bytes recovered")
 print("  The last byte exists only in the longest entry (the TARGET), so no other entry")
 print("  covers that keystream byte; it is not recoverable by this attack (it is the IP digit).")
+#
