@@ -1,0 +1,5 @@
+src,user,pw,canary_leaked
+Part-A SQLi,admin' --,x,False
+B1 bypass,admin,' OR 'x' LIKE 'x,False
+B1 bypass,admin,' OR 'a'<>'b,False
+B1 bypass,admin,' OR 'x'>',False
