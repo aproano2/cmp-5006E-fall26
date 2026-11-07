@@ -19,7 +19,7 @@
 #        6. state the guarantee the WAF cannot make.
 #
 # Run (no server / no Docker needed -- we import the real sink in-process):
-#     PYTHONPATH=. python homework/hw2/duel-2-web/defend_partB.py
+#     cd defend && PYTHONPATH=../../../.. python defend_partB.py
 
 from __future__ import annotations
 
@@ -33,7 +33,7 @@ import sys
 import seclab.attack as a
 
 HERE = pathlib.Path(__file__).resolve().parent
-REPO = HERE.parents[2]                       # .../cmp-5006E-fall26
+REPO = HERE.parents[3]                       # .../cmp-5006E-fall26 (defend -> lopez-marcos -> hw2 -> homework -> repo)
 
 # --- the REAL vulnerable sink, imported in-process ---------------------------
 # Importing the app does NOT start the server (it is guarded by __main__), so we
