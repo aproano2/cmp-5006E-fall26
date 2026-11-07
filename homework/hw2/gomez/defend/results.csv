@@ -1,0 +1,11 @@
+stage,case,payload,blocked_by_waf,http_status,oracle_successes,trials
+waf,part_a_sqli,admin'/**/OR/**/'1'='1,True,403,0,3
+waf,bypass_1,admin'--,False,200,3,3
+waf,bypass_2,admin'/*,False,200,3,3
+waf,bypass_3,admin' AND 1=1--,False,200,3,3
+fixed,part_a_sqli,admin'/**/OR/**/'1'='1,False,200,0,3
+fixed,bypass_1,admin'--,False,200,0,3
+fixed,bypass_2,admin'/*,False,200,0,3
+fixed,bypass_3,admin' AND 1=1--,False,200,0,3
+fixed,part_a_xss,<ScRiPt>alert(1)</ScRiPt>,False,200,0,3
+fixed,part_a_cmdi,127.0.0.1|whoami,False,200,0,3
