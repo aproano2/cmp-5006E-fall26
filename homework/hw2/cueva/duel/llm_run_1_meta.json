@@ -1,0 +1,9 @@
+{
+  "backend": "ollama",
+  "model": "qwen2.5:3b",
+  "temperature": 0.7,
+  "seed": 11,
+  "cached": false,
+  "elapsed": 16.370386480997695,
+  "error": null
+}
