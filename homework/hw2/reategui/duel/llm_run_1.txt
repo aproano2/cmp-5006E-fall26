@@ -1,0 +1,22 @@
+{
+  "findings": [
+    {
+      "rule": "SQLi",
+      "location": "do_login",
+      "confidence": "high",
+      "reason": "The SQL query is constructed using string concatenation without parameterization, which can lead to SQL injection. The query is vulnerable to SQL injection attacks."
+    },
+    {
+      "rule": "Reflected XSS",
+      "location": "do_reflect",
+      "confidence": "high",
+      "reason": "The input 'name' is directly used in the HTML response without proper encoding, allowing for reflected Cross-Site Scripting (XSS) attacks."
+    },
+    {
+      "rule": "Command Injection",
+      "location": "do_ping",
+      "confidence": "high",
+      "reason": "The input 'host' is concatenated into a command string without proper sanitization, allowing for command injection attacks. The vulnerability is simulated, but the underlying issue remains."
+    }
+  ]
+}
