@@ -1,0 +1,53 @@
+{
+  "vulnerable_leaks": 7,
+  "parameterized_leaks": 0,
+  "total_payloads": 9,
+  "detail": [
+    {
+      "payload": "admin' OR '1'='1",
+      "leaks_on_vulnerable": true,
+      "leaks_on_parameterized": false
+    },
+    {
+      "payload": "admin'/**/OR/**/'1'='1",
+      "leaks_on_vulnerable": true,
+      "leaks_on_parameterized": false
+    },
+    {
+      "payload": "admin'/**/OR/**/'1'LIKE'1",
+      "leaks_on_vulnerable": true,
+      "leaks_on_parameterized": false
+    },
+    {
+      "payload": "admin'/**/OR/**/'1'>'0",
+      "leaks_on_vulnerable": true,
+      "leaks_on_parameterized": false
+    },
+    {
+      "payload": "admin' OR 1=1 -- ",
+      "leaks_on_vulnerable": true,
+      "leaks_on_parameterized": false
+    },
+    {
+      "payload": "x' UNION SELECT user, pw FROM users -- ",
+      "leaks_on_vulnerable": false,
+      "leaks_on_parameterized": false
+    },
+    {
+      "payload": "'; DROP TABLE users -- ",
+      "leaks_on_vulnerable": false,
+      "leaks_on_parameterized": false
+    },
+    {
+      "payload": "admin'-- ",
+      "leaks_on_vulnerable": true,
+      "leaks_on_parameterized": false
+    },
+    {
+      "payload": "admin' OR 'a'='a",
+      "leaks_on_vulnerable": true,
+      "leaks_on_parameterized": false
+    }
+  ],
+  "guarantee": "For any input string `user`, the parameterized statement's structure is fixed at parse time and `user` is bound as a literal value; therefore no input can alter the query's meaning. (Holds for all inputs, not just enumerated ones.)"
+}
