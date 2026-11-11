@@ -1,0 +1,10 @@
+payload,leaks_on_vulnerable,leaks_on_parameterized
+admin' or '1'='1,True,False
+admin' OR '1'='1,True,False
+admin'/**/Or/**/'1'='1,True,False
+admin'/**/-- -,True,False
+admin'/* :: */ AND '1'='1,True,False
+admin'/* :: */ AND pw GLOB '*,True,False
+admin'/* :: */ AND 2>1 AND 'a'<'z,True,False
+admin'/* :: */ AND 'a'='a,True,False
+admin'/* :: */ AND pw LIKE '%,True,False
