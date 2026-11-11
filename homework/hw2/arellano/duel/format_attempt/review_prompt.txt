@@ -1,0 +1,160 @@
+
+You are reviewing four PHP source files from the local DVWA lab for a security homework.
+Report every suspected finding in the source under these labels only: sqli, xss, cmdi, broken-access-control.
+For each finding, give the exact PHP filename in location (for example sqli_medium.php) and concise evidence from the source.
+Do not invent CVEs, dependencies, endpoints, or code not shown. Report exploitable injection issues in the shown files; review the fixed file as a negative control. Do not infer an access-control policy from missing application context.
+Return ONLY a JSON array. Each object must have keys rule, location, severity, confidence, evidence.
+
+SOURCE FILE: dvwa_source
+```php
+FILE: exec_medium.php
+<?php
+
+if( isset( $_POST[ 'Submit' ]  ) ) {
+	// Get input
+	$target = $_REQUEST[ 'ip' ];
+
+	// Set blacklist
+	$substitutions = array(
+		'&&' => '',
+		';'  => '',
+	);
+
+	// Remove any of the characters in the array (blacklist).
+	$target = str_replace( array_keys( $substitutions ), $substitutions, $target );
+
+	// Determine OS and execute the ping command.
+	if( stristr( php_uname( 's' ), 'Windows NT' ) ) {
+		// Windows
+		$cmd = shell_exec( 'ping  ' . $target );
+	}
+	else {
+		// *nix
+		$cmd = shell_exec( 'ping  -c 4 ' . $target );
+	}
+
+	// Feedback for the end user
+	$html .= "<pre>{$cmd}</pre>";
+}
+
+?>
+
+
+FILE: sqli_fixed.php
+<?php
+// HW2 group fix for DVWA's MySQL numeric-ID sink, deployed at Medium.
+// Input is bound as one value; it never becomes part of the SQL statement.
+if ($_DVWA['SQLI_DB'] !== MYSQL) {
+    throw new RuntimeException('This evaluated patch requires the MySQL backend.');
+}
+$connection = $GLOBALS['___mysqli_ston'];
+$html .= '<!-- HW2 parameterized fix -->';
+if (isset($_POST['Submit'])) {
+    $id = (string) ($_POST['id'] ?? '');
+    $statement = mysqli_prepare($connection,
+        'SELECT first_name, last_name FROM users WHERE user_id = ?');
+    if (!$statement) {
+        throw new RuntimeException('Could not prepare the fixed query.');
+    }
+    mysqli_stmt_bind_param($statement, 's', $id);
+    if (!mysqli_stmt_execute($statement)) {
+        throw new RuntimeException('Could not execute the fixed query.');
+    }
+    $result = mysqli_stmt_get_result($statement);
+    while ($row = mysqli_fetch_assoc($result)) {
+        // Also encode values at the HTML boundary: the ID may contain markup.
+        $display_id = htmlspecialchars($id, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+        $first = htmlspecialchars($row['first_name'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+        $last = htmlspecialchars($row['last_name'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+        $html .= "<pre>ID: {$display_id}<br />First name: {$first}<br />Surname: {$last}</pre>";
+    }
+    mysqli_stmt_close($statement);
+}
+$result = mysqli_query($connection, 'SELECT COUNT(*) FROM users');
+if (!$result) {
+    throw new RuntimeException('Could not count users.');
+}
+$number_of_rows = mysqli_fetch_row($result)[0];
+mysqli_close($connection);
+?>
+
+
+FILE: sqli_medium.php
+<?php
+
+if( isset( $_POST[ 'Submit' ] ) ) {
+	// Get input
+	$id = $_POST[ 'id' ];
+
+	$id = mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $id);
+
+	switch ($_DVWA['SQLI_DB']) {
+		case MYSQL:
+			$query  = "SELECT first_name, last_name FROM users WHERE user_id = $id;";
+			$result = mysqli_query($GLOBALS["___mysqli_ston"], $query) or die( '<pre>' . mysqli_error($GLOBALS["___mysqli_ston"]) . '</pre>' );
+
+			// Get results
+			while( $row = mysqli_fetch_assoc( $result ) ) {
+				// Display values
+				$first = $row["first_name"];
+				$last  = $row["last_name"];
+
+				// Feedback for end user
+				$html .= "<pre>ID: {$id}<br />First name: {$first}<br />Surname: {$last}</pre>";
+			}
+			break;
+		case SQLITE:
+			global $sqlite_db_connection;
+
+			$query  = "SELECT first_name, last_name FROM users WHERE user_id = $id;";
+			#print $query;
+			try {
+				$results = $sqlite_db_connection->query($query);
+			} catch (Exception $e) {
+				echo 'Caught exception: ' . $e->getMessage();
+				exit();
+			}
+
+			if ($results) {
+				while ($row = $results->fetchArray()) {
+					// Get values
+					$first = $row["first_name"];
+					$last  = $row["last_name"];
+
+					// Feedback for end user
+					$html .= "<pre>ID: {$id}<br />First name: {$first}<br />Surname: {$last}</pre>";
+				}
+			} else {
+				echo "Error in fetch ".$sqlite_db->lastErrorMsg();
+			}
+			break;
+	}
+}
+
+// This is used later on in the index.php page
+// Setting it here so we can close the database connection in here like in the rest of the source scripts
+$query  = "SELECT COUNT(*) FROM users;";
+$result = mysqli_query($GLOBALS["___mysqli_ston"],  $query ) or die( '<pre>' . ((is_object($GLOBALS["___mysqli_ston"])) ? mysqli_error($GLOBALS["___mysqli_ston"]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false)) . '</pre>' );
+$number_of_rows = mysqli_fetch_row( $result )[0];
+
+mysqli_close($GLOBALS["___mysqli_ston"]);
+?>
+
+
+FILE: xss_medium.php
+<?php
+
+header ("X-XSS-Protection: 0");
+
+// Is there any input?
+if( array_key_exists( "name", $_GET ) && $_GET[ 'name' ] != NULL ) {
+	// Get input
+	$name = str_replace( '<script>', '', $_GET[ 'name' ] );
+
+	// Feedback for end user
+	$html .= "<pre>Hello {$name}</pre>";
+}
+
+?>
+
+```
