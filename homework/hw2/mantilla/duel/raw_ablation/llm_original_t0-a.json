@@ -1,0 +1,10 @@
+{
+  "run": "original:t0-a",
+  "variant": "original",
+  "model": "gemma4:12b",
+  "model_digest": "c7597fc90b86aff6965317f37dd5465402284e26382d9b4bf2dfe3ef1491f4b6",
+  "temperature": 0.0,
+  "seed": 0,
+  "elapsed_s": 34.7,
+  "text": "```json\n[\n  {\n    \"vulnerability\": \"SQL injection\",\n    \"function\": \"do_login\",\n    \"severity\": \"HIGH\",\n    \"reason\": \"The application uses f-strings to construct a SQL query with unsanitized user input, allowing for authentication bypass and data extraction.\"\n  },\n  {\n    \"vulnerability\": \"Reflected Cross-Site Scripting (XSS)\",\n    \"function\": \"do_reflect\",\n    \"severity\": \"MEDIUM\",\n    \"reason\": \"User-provided input is directly embedded into the HTML response without proper escaping or sanitization.\"\n  },\n  {\n    \"vulnerability\": \"Command injection\",\n    \"function\": \"do_ping\",\n    \"severity\": \"HIGH\",\n    \"reason\": \"The application constructs a shell command by concatenating unsanitized user input, which could lead to arbitrary command execution.\"\n  }\n]\n```"
+}

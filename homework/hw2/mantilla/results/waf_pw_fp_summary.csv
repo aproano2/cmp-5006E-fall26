@@ -1,0 +1,5 @@
+corpus,n,waf_v1_blocked,waf_v1_fp_rate,waf_v2_blocked,waf_v2_fp_rate
+human,15,1,0.0667,8,0.5333
+synthetic-len12,20000,0,0.0,2595,0.1298
+synthetic-len16,20000,0,0.0,3407,0.1704
+synthetic-len20,20000,0,0.0,4080,0.204

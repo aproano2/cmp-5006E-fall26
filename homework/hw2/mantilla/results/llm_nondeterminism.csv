@@ -1,0 +1,8 @@
+finding,verdict,t0-a,t0-b,t07-s1,t07-s2,t07-s3,runs_reporting
+bind-all-interfaces/main,FP,1,1,0,0,0,2/5
+cmdi/do_ping,TP,1,1,1,1,1,5/5
+csrf/do_post,FP,1,1,0,0,0,2/5
+information-disclosure/do_login,"FP (real, out of scope)",1,1,1,1,1,5/5
+missing-rate-limiting/do_post,FP,1,1,0,0,0,2/5
+sqli/do_login,TP,1,1,1,1,1,5/5
+xss/do_reflect,TP,1,1,1,1,1,5/5

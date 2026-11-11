@@ -1,0 +1,10 @@
+{
+  "run": "stripped:t07-s1",
+  "variant": "stripped",
+  "model": "gemma4:12b",
+  "model_digest": "c7597fc90b86aff6965317f37dd5465402284e26382d9b4bf2dfe3ef1491f4b6",
+  "temperature": 0.7,
+  "seed": 1,
+  "elapsed_s": 123.0,
+  "text": "```json\n[\n  {\n    \"vulnerability\": \"SQL injection\",\n    \"function\": \"do_login\",\n    \"severity\": \"HIGH\",\n    \"reason\": \"User-supplied input is directly concatenated into a SQL query string without using parameterized queries.\"\n  },\n  {\n    \"vulnerability\": \"Cross-Site Scripting (XSS)\",\n    \"function\": \"do_reflect\",\n    \"severity\": \"HIGH\",\n    \"reason\": \"The application reflects unescaped user input directly into the HTML response body.\"\n  },\n  {\n    \"vulnerability\": \"Command injection\",\n    \"function\": \"do_ping\",\n    \"severity\": \"HIGH\",\n    \"reason\": \"The application constructs a shell command using unsanitized user input.\"\n  },\n  {\n    \"vulnerability\": \"Information Exposure\",\n    \"function\": \"do_login\",\n    \"severity\": \"LOW\",\n    \"reason\": \"The application returns internal database error messages and the raw SQL query to the client.\"\n  }\n]\n```"
+}
