@@ -1,0 +1,35 @@
+{
+  "_comment": "Benign traffic for measuring WAF false positives (Duel 2, Part B1, scorecard axis 5). These are LEGITIMATE user inputs — none is an attack. A good blocklist should pass ALL of them; a broad one trips on some, and every trip is a real user blocked. Run each through your WAF filter and report the false-positive rate. Deliberately includes attack-adjacent English (select, union, drop, or, script) so naive regexes false-positive — that is the lesson. Grouped by field so you can target the right sink.",
+  "login_username": [
+    "alice",
+    "bob_smith",
+    "o'brien",
+    "d'angelo",
+    "renee",
+    "user.name+tag@example.com",
+    "María José",
+    "select_committee_chair",
+    "unionrep_delegate"
+  ],
+  "search_or_name": [
+    "wireless headphones under 50 dollars",
+    "i want to select the union option on the benefits form",
+    "drop table tennis lessons for beginners",
+    "reserve the drop table at the makerspace friday",
+    "the OR gate and the AND gate in digital logic",
+    "director of operations or equivalent role",
+    "how do i update my shipping address",
+    "javascript tutorial for absolute beginners",
+    "my order number is 1=1-2024 please help",
+    "quotes about resilience: \"don't give up\"",
+    "screenwriter for the new script",
+    "Panic! at the Disco tickets"
+  ],
+  "ping_host": [
+    "example.com",
+    "192.168.1.1",
+    "api.internal.corp",
+    "host-with-dashes.example.org",
+    "localhost"
+  ]
+}

