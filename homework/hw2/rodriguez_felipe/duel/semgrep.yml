@@ -1,0 +1,27 @@
+rules:
+  - id: hw2-sqli-do-login
+    languages: [python]
+    severity: ERROR
+    message: User-controlled values are interpolated into a SQL query.
+    metadata:
+      security_rule: sqli
+      location: do_login
+    patterns:
+      - pattern-inside: |
+          def do_login(...):
+            ...
+      - pattern: $DB.execute($QUERY)
+
+  - id: hw2-xss-do-reflect
+    languages: [python]
+    severity: WARNING
+    message: User input is returned in HTML without context-aware encoding.
+    metadata:
+      security_rule: xss
+      location: do_reflect
+    patterns:
+      - pattern-inside: |
+          def do_reflect(...):
+            ...
+      - pattern: return f"...{...}..."
+
