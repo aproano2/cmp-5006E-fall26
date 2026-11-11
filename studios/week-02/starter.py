@@ -33,8 +33,10 @@ def unicity_for_substitution():
     why week 1's attack worked: the message was hundreds of characters, far past
     U, so the key was uniquely pinned. Below ~28 chars the break is ambiguous.
     """
-    # TODO: N = 26!  ;  H_K = entropy_bits(N)  ;  U = unicity_distance(H_K)
-    raise NotImplementedError
+    N = math.factorial(26)
+    H_K = entropy_bits(N)
+    U = unicity_distance(H_K)
+    return H_K, U
 
 
 # ---- Task 2: one-time pad — perfect secrecy, made concrete ------------------
@@ -47,8 +49,7 @@ def key_that_decrypts_to(ciphertext, decoy_plaintext):
     ciphertext cannot betray the real message. The key is simply
     ``ciphertext XOR decoy_plaintext``.
     """
-    # TODO: return xor(ciphertext, decoy_plaintext)
-    raise NotImplementedError
+    return xor(ciphertext, decoy_plaintext)
 
 
 # ---- Task 3: the two-time-pad break -----------------------------------------
@@ -62,9 +63,13 @@ def crib_drag(x, crib):
     ``printable_word`` to decide what counts as readable (lowercase + spaces).
     Noise elsewhere; real fragments at the true spots.
     """
-    # TODO: for i in range(len(x) - len(crib)): frag = xor(x[i:i+len(crib)], crib)
-    #       keep (i, frag) when printable_word(frag)
-    raise NotImplementedError
+    crib_len = len(crib)
+    hits = []
+    for i in range(len(x) - crib_len + 1):
+        fragment = xor(x[i:i + crib_len], crib)
+        if printable_word(fragment):
+            hits.append((i, fragment))
+    return hits
 
 
 def recover_other_plaintext(c1, c2, p1_known):
@@ -74,8 +79,8 @@ def recover_other_plaintext(c1, c2, p1_known):
     plaintext (keystream = c1 XOR p1_known), then apply it to c2.
     Return the recovered p2 (bytes), truncated to len(p1_known).
     """
-    # TODO: keystream = xor(c1, p1_known)  ;  return xor(c2, keystream)
-    raise NotImplementedError
+    keystream = xor(c1, p1_known)
+    return xor(c2, keystream)
 
 
 if __name__ == "__main__":
