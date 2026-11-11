@@ -1,0 +1,22 @@
+{
+  "findings": [
+    {
+      "rule": "SQL Injection",
+      "location": "do_login",
+      "confidence": "High",
+      "reason": "The SQL query is formed using string interpolation, resulting in a SQL injection vulnerability."
+    },
+    {
+      "rule": "Reflected XSS",
+      "location": "do_reflect",
+      "confidence": "Medium",
+      "reason": "The user input is directly placed into HTML with no encoding, leading to a reflected XSS vulnerability."
+    },
+    {
+      "rule": "Command Injection (Simulated)",
+      "location": "do_ping",
+      "confidence": "High",
+      "reason": "The command is formed by concatenating user input into a command string, simulating a command injection vulnerability."
+    }
+  ]
+}
