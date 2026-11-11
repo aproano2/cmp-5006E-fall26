@@ -1,0 +1,29 @@
+# Derived from the official digininja/DVWA compose file.
+# Public synthetic lab credentials only. Never use these for other services.
+name: hw2-montero
+services:
+  dvwa:
+    image: ghcr.io/digininja/dvwa@sha256:8029450682bd70e2e8cd1ffe8e46dd1885ff2a913296091cebfa8ba0a7d36498
+    environment:
+      DB_SERVER: db
+    depends_on:
+      - db
+    ports:
+      - "127.0.0.1:4280:80"
+    networks:
+      - dvwa
+  db:
+    image: mariadb@sha256:d769e37960821dfdcf096954f6e7ac89f747e116c1bba98e48edd265dfc7deae
+    environment:
+      MYSQL_ROOT_PASSWORD: dvwa
+      MYSQL_DATABASE: dvwa
+      MYSQL_USER: dvwa
+      MYSQL_PASSWORD: p@ssw0rd
+    volumes:
+      - dvwa:/var/lib/mysql
+    networks:
+      - dvwa
+networks:
+  dvwa:
+volumes:
+  dvwa:
