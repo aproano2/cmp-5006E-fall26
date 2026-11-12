@@ -52,7 +52,7 @@ def show(title):
     for m in range(len(cts)):
         print(f"  msg{m}{' (TARGET)' if m == TARGET else '         '}: {view(m)}")
 
-
+#
 # ---------------------------------------------------------------- Round 0
 print("Ciphertext lengths:", [len(c) for c in cts])
 same = [(i, j) for i in range(4) for j in range(i + 1, 4) if cts[i][:4] == cts[j][:4]]
