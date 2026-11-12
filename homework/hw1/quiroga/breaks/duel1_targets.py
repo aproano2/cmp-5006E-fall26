@@ -283,3 +283,4 @@ if __name__ == "__main__":
         sys.exit(0 if _check() else 1)
     import json
     print(json.dumps(public_artifacts(), indent=2, default=str))
+#
