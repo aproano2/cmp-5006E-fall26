@@ -1,0 +1,37 @@
+# Generic, un-tuned static rules for the Part C classical (static) arm.
+#
+# Ordinary CWE pattern rules — the kind a team keeps in-repo — NOT tuned to the
+# vuln-web ground truth beyond the standard anti-patterns they name. semgrep
+# matches on the AST. Two honest, documented consequences on this target:
+#
+#   * the SQLi rule MISSES do_login: it looks for an f-string passed DIRECTLY to
+#     .execute(), but vuln-web builds the query in a variable from two
+#     concatenated f-strings, so the direct-pattern does not fire — a real
+#     static-analysis blind spot, the AST analogue of the week-6 line-oriented
+#     miss.
+#   * the XSS rule FALSE-POSITIVES on do_reflect_safe: it matches any f-string
+#     returned as HTML and cannot see that /safe wraps input in html.escape(),
+#     so it flags a true negative — the scanner's own "hallucination".
+rules:
+  - id: sqli-fstring-in-execute
+    languages: [python]
+    severity: ERROR
+    message: "SQL injection: an f-string is passed directly to DB execute() (CWE-89)."
+    patterns:
+      - pattern-either:
+          - pattern: $DB.execute(f"...")
+          - pattern: $DB.execute(f"...", ...)
+
+  - id: xss-fstring-html-reflection
+    languages: [python]
+    severity: ERROR
+    message: "Reflected XSS: user input returned inside an HTML f-string without escaping (CWE-79)."
+    patterns:
+      - pattern: return f"...{$Y}..."
+
+  - id: cmdi-fstring-shell-command
+    languages: [python]
+    severity: ERROR
+    message: "OS command injection: a command string is built by f-string interpolation of a variable (CWE-78). Crude heuristic — flags any f-string-built string that reaches a command context."
+    patterns:
+      - pattern: $C = f"...{$H}..."
