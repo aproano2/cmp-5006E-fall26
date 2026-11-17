@@ -1,0 +1,7 @@
+payload,desc,blocked,rule
+admin' --,Part-A payload (comment-out),True,sql-comment
+' OR '1'='1,classic tautology,True,tautology-eq
+' OR 1=1 --,tautology + comment,True,sql-comment
+"' UNION SELECT user, secret FROM users --",UNION exfiltration,True,sql-comment
+'; DROP TABLE users; --,stacked query,True,sql-comment
+admin'/**/OR/**/1=1,inline-comment tautology,True,sql-comment
