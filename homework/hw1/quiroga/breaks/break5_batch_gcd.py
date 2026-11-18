@@ -65,3 +65,4 @@ safe = [k for k in names if k not in vulnerable]
 print(f"\nCompromised devices: {list(vulnerable)}   Not compromised by this attack: {safe}")
 print("(Those two have unique primes: batch-gcd gives 1. The 128-bit toy moduli could still be")
 print(" factored directly, but that is a separate, unrelated weakness of the toy key size.)")
+#
