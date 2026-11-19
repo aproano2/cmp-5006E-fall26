@@ -1,0 +1,8 @@
+tool,run,tp,fp,fn,precision,recall,f1,flagged_true_negative,hallucinated_not_present
+LLM,1,3,0,0,1.0,1.0,1.0,0,0
+LLM,2,2,2,1,0.5,0.6667,0.5714,1,0
+LLM,3,2,2,1,0.5,0.6667,0.5714,1,0
+LLM,4,3,1,0,0.75,1.0,0.8571,0,1
+LLM,5,3,0,0,1.0,1.0,1.0,0,0
+Semgrep,single,2,0,1,1.0,0.6667,0.8,0,0
+LLM macro-average,mean,2.6,1.0,0.4,0.75,0.8667,0.8,0.4,0.2

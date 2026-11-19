@@ -1,0 +1,25 @@
+Live proxy: 20/20 decisions matched expected block/allow+reflection behavior.
+Part-A coverage: 1/1 (100.0%)
+B1 bypasses allowed: 3/3 (100.0%)
+Combined sample: 17/20 blocked (85.0%)
+A-XSS-01: BLOCK; status=403; parsed_js_uri=False
+XSS-01: BLOCK; status=403; parsed_js_uri=False
+XSS-02: BLOCK; status=403; parsed_js_uri=False
+XSS-03: BLOCK; status=403; parsed_js_uri=False
+XSS-04: BLOCK; status=403; parsed_js_uri=False
+XSS-05: BLOCK; status=403; parsed_js_uri=False
+XSS-06: BLOCK; status=403; parsed_js_uri=False
+XSS-07: BLOCK; status=403; parsed_js_uri=False
+XSS-08: BLOCK; status=403; parsed_js_uri=False
+XSS-09: BLOCK; status=403; parsed_js_uri=False
+XSS-10: BLOCK; status=403; parsed_js_uri=False
+XSS-11: BLOCK; status=403; parsed_js_uri=False
+XSS-12: BLOCK; status=403; parsed_js_uri=True
+XSS-13: BLOCK; status=403; parsed_js_uri=False
+XSS-14: BLOCK; status=403; parsed_js_uri=False
+XSS-15: BLOCK; status=403; parsed_js_uri=False
+XSS-16: BLOCK; status=403; parsed_js_uri=False
+B1-XSS-01: ALLOW; status=200; parsed_js_uri=True
+B1-XSS-02: ALLOW; status=200; parsed_js_uri=True
+B1-XSS-03: ALLOW; status=200; parsed_js_uri=True
+Wrote ./defend/coverage.csv and ./defend/bypass_results.csv

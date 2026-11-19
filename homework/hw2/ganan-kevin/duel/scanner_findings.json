@@ -1,0 +1,20 @@
+[
+  {
+    "rule": "xss",
+    "location": "do_reflect",
+    "severity": "ERROR",
+    "confidence": "",
+    "evidence": "Unescaped user input interpolated into an HTML response.",
+    "line": 76,
+    "check_id": "homework.hw2.luna-alex.duel.hw2.xss"
+  },
+  {
+    "rule": "cmdi",
+    "location": "do_ping",
+    "severity": "ERROR",
+    "confidence": "",
+    "evidence": "Untrusted host interpolated into a shell command string.",
+    "line": 88,
+    "check_id": "homework.hw2.luna-alex.duel.hw2.cmdi"
+  }
+]
