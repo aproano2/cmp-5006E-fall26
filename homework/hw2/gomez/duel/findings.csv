@@ -1,0 +1,9 @@
+tool,rule,location,confidence,in_ground_truth,reason
+semgrep,xss,do_reflect,,True,Name interpolated into an HTML response
+semgrep,cmdi,do_ping,,True,Host interpolated into a command string
+llm_run_1,sqli,do_login,high,True,"The SQL query is constructed using string concatenation without parameterization, which can lead to SQL injection. The query is vulnerable to SQL injection attacks."
+llm_run_1,xss,do_reflect,high,True,"The input 'name' is directly used in the HTML response without proper encoding, allowing for reflected Cross-Site Scripting (XSS) attacks."
+llm_run_1,cmdi,do_ping,high,True,"The input 'host' is concatenated into a command string without proper sanitization, allowing for command injection attacks. The vulnerability is simulated, but the underlying issue remains."
+llm_run_2,sqli,do_login,High,True,"The SQL query is formed using string interpolation, resulting in a SQL injection vulnerability."
+llm_run_2,xss,do_reflect,Medium,True,"The user input is directly placed into HTML with no encoding, leading to a reflected XSS vulnerability."
+llm_run_2,command injection (simulated),do_ping,High,False,"The command is formed by concatenating user input into a command string, simulating a command injection vulnerability."
