@@ -1,0 +1,9 @@
+FINDING | SQL Injection | do_login | LOW | "admin" | SQL injection vulnerability when using the `do_login` function without proper input validation.
+
+FINDING | None | NONE | NONE | | No known vulnerabilities found in the provided code.
+
+FINDING | None | NONE | NONE | | No known vulnerabilities found in the provided code.
+
+FINDING | None | NONE | NONE | | No known vulnerabilities found in the provided code.
+
+FINDING | None | NONE | NONE | | No known vulnerabilities found in the provided code.
