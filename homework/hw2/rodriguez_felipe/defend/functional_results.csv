@@ -1,0 +1,10 @@
+mode,case,passed
+original,login admin expected=True,True
+original,login alice expected=True,True
+original,login admin expected=False,True
+waf,login admin expected=True,True
+waf,login alice expected=True,True
+waf,login admin expected=False,True
+positive,login admin expected=True,True
+positive,login alice expected=True,True
+positive,login admin expected=False,True

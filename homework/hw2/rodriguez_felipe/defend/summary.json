@@ -1,0 +1,50 @@
+{
+  "run_utc": "2026-11-05T14:52:21.938453+00:00",
+  "python": "3.14.0",
+  "original": "unmodified labs/vuln-web/app/vulnweb_app.py Handler",
+  "false_positives": {
+    "original": {
+      "login_username": {
+        "blocked": 0,
+        "total": 9,
+        "fp_rate": 0.0
+      },
+      "all": {
+        "blocked": 0,
+        "total": 26,
+        "fp_rate": 0.0
+      }
+    },
+    "waf": {
+      "login_username": {
+        "blocked": 2,
+        "total": 9,
+        "fp_rate": 0.2222222222222222
+      },
+      "all": {
+        "blocked": 2,
+        "total": 26,
+        "fp_rate": 0.07692307692307693
+      }
+    },
+    "positive": {
+      "login_username": {
+        "blocked": 0,
+        "total": 9,
+        "fp_rate": 0.0
+      },
+      "all": {
+        "blocked": 0,
+        "total": 26,
+        "fp_rate": 0.0
+      }
+    }
+  },
+  "sha256": {
+    "labs/vuln-web/app/vulnweb_app.py": "fd87ee62ede6fd83befb5b37b8a0f8335f86178522c3ab1480b7d56aa0ae257e",
+    "homework/hw2/rodriguez_felipe/benign_traffic.json": "187a8d4800a16d3f0f80a6f9a826ebbd44b6692ff05fd5ce2907271217fb1ce0",
+    "homework/hw2/rodriguez_felipe/target.py": "2a819179a7cb5f3997b1fbc0c736b8ce3a51803688695d2b35b6643e1745c852",
+    "homework/hw2/rodriguez_felipe/defend/controls.py": "e2ec02509655417879ee66779e1cfde05b8cc88dcbec171eb792f9baf2ee9f71",
+    "homework/hw2/rodriguez_felipe/run.py": "9af478ddf3371d3f91df411b0a5395904ee6494d0894b52c7ea4cd46e4c323f2"
+  }
+}
