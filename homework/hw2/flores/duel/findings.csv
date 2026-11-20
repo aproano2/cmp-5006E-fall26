@@ -1,0 +1,40 @@
+config,tool,seed,rule,location,severity,mapped_by,in_ground_truth,raw
+v1-full,llm,0,sqli,do_login,high,model:type,True,"[HIGH] SQL injection in do_login: String-formatted query, no parameterization. The whole point of the SQLi lab."
+v1-full,llm,0,cmdi,do_ping,high,model:type,True,[HIGH] Command injection in do_ping: The host string is concatenated into a command. Fixed version would be to use os.system(command) but simulate execution to avoid running actual commands.
+v1-full,llm,1,sqli,do_login,high,model:type,True,"[HIGH] SQL injection in do_login: String-formatted query, no parameterization."
+v1-full,llm,1,xss,do_reflect,low,model:type,True,[LOW] Reflected XSS in do_reflect: User input placed into HTML with no encoding.
+v1-full,llm,1,cmdi,do_ping,low,model:type,True,[LOW] Command injection in do_ping: The host string is concatenated into a command.
+v1-full,llm,2,sqli,do_login,high,model:type,True,"[HIGH] SQL injection in do_login: String-formatted query, no parameterization"
+v1-full,llm,2,cmdi,do_ping,high,model:type,True,[HIGH] Command injection in do_ping: Untrusted data concatenated into a command
+v1-full,llm,3,sqli,do_login,high,model:type,True,"[HIGH] SQL injection in do_login: String-formatted query, no parameterization. The whole point of the SQLi lab."
+v1-full,llm,3,cmdi,do_ping,high,model:type,True,"[HIGH] Command injection in do_ping: User input concatenated into a command. The lab is safe to run, but the bug — untrusted data reaching a command context — is real and detectable."
+v1-full,llm,3,xss,do_reflect,low,model:type,True,"LOW] XSS in do_reflect: User input placed into HTML with no encoding. Fixed version is /safe, which html.escape()s the input."
+v1-full,llm,4,sqli,do_login,medium,model:type,True,"[MEDIUM] SQL Injection in do_login: String-formatted query, no parameterization"
+v1-full,llm,4,xss,do_reflect,medium,model:type,True,[MEDIUM] Reflected XSS in do_reflect: User input placed into HTML with no encoding
+v1-full,llm,4,cmdi,do_ping,medium,model:type,True,[MEDIUM] Command Injection in do_ping: User input concatenated into a command without sanitization
+v1-full,llm,5,sqli,do_login,high,model:type,True,"[HIGH] SQL injection in do_login: String-formatted query, no parameterization. The whole point of the SQLi lab."
+v1-full,llm,5,cmdi,do_ping,high,model:type,True,"[HIGH] Command injection in do_ping: User input concatenated into a command. The lab is safe to run, but the bug — untrusted data reaching a command context — is real and detectable."
+v1-full,llm,5,xss,do_reflect,low,model:type,True,"LOW] XSS in do_reflect: User input placed into HTML with no encoding. Fixed version is /safe, which html.escape()s the input."
+v1,llm,0,sqli,do_login,low,model:type,True,"LOW [SECURITY] SQL Injection in do_login: The query string contains user and password inputs directly, which can be exploited for SQL injection."
+v1,llm,1,sqli,do_login,high,model:type,True,"HIGH SQL injection in do_login: The login query is directly constructed from user input, which can lead to SQL injection if user input is not properly sanitized."
+v1,llm,2,sqli,do_login,low,model:type,True,"LOW [LOW] SQL Injection in do_login: Password comparison is not properly sanitized, potentially allowing for SQL injection."
+v1,llm,3,sqli,do_login,low,model:type,True,LOW [SEVERITY] SQL Injection in do_login: The function is directly injecting user and password parameters into a SQL query without proper sanitization.
+v1,llm,4,sqli,do_login,medium,model:type,True,"MEDIUM [SEVERITY] SQL Injection in do_login: The function does not properly escape user input, potentially leading to SQL injection."
+v1,llm,4,missing-type-hint-for-function-parameters,do_login,low,model:slug,False,"LOW [SEVERITY] Missing type hint for function parameters in do_login: The function parameters are not explicitly typed, which can lead to type errors."
+v1,llm,4,missing-type-hint-for-function-return-type,do_login,low,model:slug,False,"LOW [SEVERITY] Missing type hint for function return type in do_login: The function return type is not explicitly typed, which can lead to type errors."
+v1,llm,4,missing-type-hint-for-function-parameters,do_ping,low,model:slug,False,"LOW [SEVERITY] Missing type hint for function parameters in do_ping: The function parameters are not explicitly typed, which can lead to type errors."
+v1,llm,4,missing-type-hint-for-function-return-type,do_ping,low,model:slug,False,"LOW [SEVERITY] Missing type hint for function return type in do_ping: The function return type is not explicitly typed, which can lead to type errors."
+v1,llm,5,sqli,do_login,low,model:type,True,"LOW [SEVERITY] SQL Injection in do_login: The query does not properly escape user inputs, which can lead to SQL injection if user inputs are not validated or sanitized."
+v1,llm,5,sqli,do_ping,low,model:type,False,"LOW [SEVERITY] SQL Injection in do_ping: The query does not properly escape user inputs, which can lead to SQL injection if user inputs are not validated or sanitized."
+v2,llm,0,sqli,do_login,high,model:type,True,[HIGH] SQL Injection in do_login: The function is vulnerable to SQL injection because the user and pw parameters are directly used in the SQL query without proper sanitization.
+v2,llm,0,hardcoded-secret,make_db,low,model:prose,False,[LOW] Code Review: The `make_db` function uses a hardcoded secret (`CANARY_SECRET`) which could be a security risk if the secret is not changed.
+v2,llm,1,sqli,do_login,high,model:reason,True,[HIGH] Injection in do_login: The function is vulnerable to SQL injection by directly using user input in the SQL query without proper sanitization.
+v2,llm,1,security-misconfiguration,main,low,model:type,False,[LOW] Security Misconfiguration in main: The function is running on a public port (8000) which is not secure. This could be exploited for command injection or other attacks.
+v2,llm,2,sqli,do_login,low,model:reason,True,LOW do_login in do_login: The function is vulnerable to SQL injection due to the direct use of user input in the SQL query without proper sanitization.
+v2,llm,2,cmdi,do_ping,low,model:reason,True,"LOW do_ping in do_ping: The function is vulnerable to command injection if the `host` parameter contains shell metacharacters, as it directly constructs a system command without proper validation or sanitization."
+v2,llm,3,sqli,do_login,low,model:reason,True,LOW do_login in do_login: The function is vulnerable to SQL injection if the `pw` parameter is not properly sanitized.
+v2,llm,3,cmdi,do_ping,low,model:reason,True,LOW do_ping in do_ping: The function is vulnerable to command injection if the `host` parameter contains shell metacharacters.
+v2,llm,4,sqli,do_login,medium,model:type,True,[MEDIUM] SQL Injection in do_login: Query is vulnerable to SQL injection due to direct string concatenation of user input.
+v2,llm,4,missing-content-security-policy,Handler,low,model:slug,False,"[LOW] Missing Content Security Policy in Handler: The server does not enforce a Content Security Policy, which can lead to various security risks like XSS and script injection."
+v2,llm,5,sqli,do_login,low,model:reason,True,LOW do_login in do_login: SQL query may be vulnerable to SQL injection if user and pw are directly used in the query.
+v2,llm,5,sqli,do_ping,low,model:reason,False,LOW do_ping in do_ping: SQL query may be vulnerable to SQL injection if host is directly used in the query.
