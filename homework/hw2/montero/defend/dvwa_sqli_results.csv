@@ -1,0 +1,5 @@
+payload,fixed_successes,trials,error
+1 OR 1=1,0,3,
+1/**/OR/**/1=1,0,3,
+1 OR TRUE,0,3,
+1 OR 2>1,0,3,

@@ -1,0 +1,133 @@
+{
+  "version": "1.183.0",
+  "results": [
+    {
+      "check_id": "hw2-command-string",
+      "path": "/src/exec_medium.php",
+      "start": {
+        "line": 23,
+        "col": 10,
+        "offset": 512
+      },
+      "end": {
+        "line": 23,
+        "col": 47,
+        "offset": 549
+      },
+      "extra": {
+        "message": "User-controlled target concatenated into a shell command.",
+        "metadata": {},
+        "severity": "ERROR",
+        "fingerprint": "requires login",
+        "lines": "requires login",
+        "validation_state": "NO_VALIDATOR",
+        "engine_kind": "OSS"
+      }
+    },
+    {
+      "check_id": "hw2-reflected-xss",
+      "path": "/src/xss_medium.php",
+      "start": {
+        "line": 11,
+        "col": 2,
+        "offset": 241
+      },
+      "end": {
+        "line": 11,
+        "col": 38,
+        "offset": 277
+      },
+      "extra": {
+        "message": "Name enters an HTML response without output encoding.",
+        "metadata": {},
+        "severity": "ERROR",
+        "fingerprint": "requires login",
+        "lines": "requires login",
+        "validation_state": "NO_VALIDATOR",
+        "engine_kind": "OSS"
+      }
+    }
+  ],
+  "errors": [],
+  "paths": {
+    "scanned": [
+      "/src/exec_medium.php",
+      "/src/sqli_fixed.php",
+      "/src/sqli_medium.php",
+      "/src/xss_medium.php"
+    ]
+  },
+  "time": {
+    "rules": [],
+    "rules_parse_time": 0.0141448974609375,
+    "profiling_times": {
+      "config_time": 1.6091020107269287,
+      "core_time": 2.992640733718872,
+      "ignores_time": 0.0002353191375732422,
+      "total_time": 4.748496055603027
+    },
+    "parsing_time": {
+      "total_time": 0.3825981616973877,
+      "per_file_time": {
+        "mean": 0.09564954042434692,
+        "std_dev": 5.034271294945826e-05
+      },
+      "very_slow_stats": {
+        "time_ratio": 0.0,
+        "count_ratio": 0.0
+      },
+      "very_slow_files": []
+    },
+    "scanning_time": {
+      "total_time": 0.6810150146484375,
+      "per_file_time": {
+        "mean": 0.17025375366210938,
+        "std_dev": 2.852316677603998e-05
+      },
+      "very_slow_stats": {
+        "time_ratio": 0.0,
+        "count_ratio": 0.0
+      },
+      "very_slow_files": []
+    },
+    "matching_time": {
+      "total_time": 0.03467988967895508,
+      "per_file_and_rule_time": {
+        "mean": 0.00866997241973877,
+        "std_dev": 2.5230007182130976e-05
+      },
+      "very_slow_stats": {
+        "time_ratio": 0.0,
+        "count_ratio": 0.0
+      },
+      "very_slow_rules_on_files": []
+    },
+    "tainting_time": {
+      "total_time": 0.0,
+      "per_def_and_rule_time": {
+        "mean": 0.0,
+        "std_dev": 0.0
+      },
+      "very_slow_stats": {
+        "time_ratio": 0.0,
+        "count_ratio": 0.0
+      },
+      "very_slow_rules_on_defs": []
+    },
+    "fixpoint_timeouts": [],
+    "prefiltering": {
+      "project_level_time": 0.0,
+      "file_level_time": 0.0,
+      "rules_with_project_prefilters_ratio": 0.0,
+      "rules_with_file_prefilters_ratio": 1.0,
+      "rules_selected_ratio": 0.3333333333333333,
+      "rules_matched_ratio": 0.3333333333333333
+    },
+    "targets": [],
+    "total_bytes": 0,
+    "max_memory_bytes": 108909312
+  },
+  "engine_requested": "OSS",
+  "skipped_rules": [],
+  "profiling_results": []
+}
