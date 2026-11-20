@@ -1,0 +1,5 @@
+field,input,rule
+search_or_name,i want to select the union option on the benefits form,UNION/SELECT words
+search_or_name,drop table tennis lessons for beginners,DROP TABLE words
+search_or_name,reserve the drop table at the makerspace friday,DROP TABLE words
+search_or_name,my order number is 1=1-2024 please help,numeric equality
