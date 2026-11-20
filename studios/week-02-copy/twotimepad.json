@@ -1,0 +1,7 @@
+{
+  "_comment": "Two ciphertexts encrypted under ONE reused one-time-pad key (a 'two-time pad'). This is exactly what an attacker intercepts: two ciphertexts, no key, no plaintext. Task 3 recovers both plaintexts by crib-dragging. Same messages/key as the Session-A notebook (week-02-guarantees.ipynb); the key is a fixed seed (random.Random(20260806), 80 bytes) so the data is reproducible and laptop-only.",
+  "n": 72,
+  "cribs": ["please", "target", " the "],
+  "c1": "cfe6b195607399e5bb81a8753acd30e019481bf777d477aca6131a7039e4020530498d238662f8232bd1e3883b4acf9f92853a734403e61f4fbd191e9365a794b93c911dd43ae77f",
+  "c2": "cbe2b1d47f77ccfcb99ded6475c42ce000575aff6cd225edbb124c7332a112522b019c6b8023f8622edeef907e03d59f87807f325d0ded4b41f2094c8e69a5d1ee2d9b18d833eb2b"
+}
