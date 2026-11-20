@@ -1,0 +1,8 @@
+test,payload,passed,evidence
+SQLi Part-A payload,admin' OR '1'='1,True,"{""ok"": false}"
+Benign apostrophe username,o'brien,True,"{""ok"": false}"
+XSS Part-A baseline,<script>alert(1)</script>,True,"<html><body><h1>Hello, &lt;script&gt;alert(1)&lt;/script&gt;!</h1></body></html>"
+B1-XSS-01,<a href=jav&#x61;script:alert(1)>click</a>,True,"<html><body><h1>Hello, &lt;a href=jav&amp;#x61;script:alert(1)&gt;click&lt;/a&gt;!</h1></body></html>"
+B1-XSS-02,<a href=j&#97;vascript:alert(1)>click</a>,True,"<html><body><h1>Hello, &lt;a href=j&amp;#97;vascript:alert(1)&gt;click&lt;/a&gt;!</h1></body></html>"
+B1-XSS-03,<a href=java&#x73;cript:alert(1)>click</a>,True,"<html><body><h1>Hello, &lt;a href=java&amp;#x73;cript:alert(1)&gt;click&lt;/a&gt;!</h1></body></html>"
+CMDi Part-A payload,127.0.0.1; whoami,True,"{""would_run"": null, ""injection_detected"": false, ""rejected"": true, ""note"": ""host '127.0.0.1; whoami' does not match the hostname/IP allowlist; refused""}"
