@@ -14,6 +14,8 @@ it watches the cipher's confidentiality guarantee COLLAPSE the instant the
 plaintext is English — because English leaks its letter statistics through any
 substitution. Naming that assumption is naming the attack (Kerckhoffs, week 1).
 """
+import random
+
 from cipher import (ALPHABET, ENGLISH_FREQ, apply_guess, letter_counts, score)
 
 
@@ -36,8 +38,9 @@ def frequency_guess_key(ciphertext):
         letters, commonest first.
       - ``zip`` the two rankings.
     """
-    # TODO: build and return the frequency-rank decryption map.
-    raise NotImplementedError
+    cipher_by_freq = [sym for sym, _ in letter_counts(ciphertext).most_common()]
+    english_by_freq = sorted(ENGLISH_FREQ, key=ENGLISH_FREQ.get, reverse=True)
+    return {sym: eng for sym, eng in zip(cipher_by_freq, english_by_freq)}
 
 
 def crack(ciphertext, restarts=8, iters=3000, seed=0):
@@ -65,8 +68,38 @@ def crack(ciphertext, restarts=8, iters=3000, seed=0):
     NOTE: nothing in this function may reference the true key or the plaintext.
     The only inputs are the ciphertext and the public ``score`` / ``ENGLISH_FREQ``.
     """
-    # TODO: implement the random-restart hill climb described above.
-    raise NotImplementedError
+    rng = random.Random(seed)
+    base = frequency_guess_key(ciphertext)
+
+    best_key, best_score = None, float("-inf")
+    for _ in range(restarts):
+        # 2. complete the frequency guess into a full permutation over ALPHABET
+        key = dict(base)
+        used = set(key.values())
+        free_letters = [c for c in ALPHABET if c not in used]
+        rng.shuffle(free_letters)
+        for sym in ALPHABET:
+            if sym not in key:
+                key[sym] = free_letters.pop()
+
+        # 3. current score
+        current = score(apply_guess(ciphertext, key))
+
+        # 4. hill-climb: swap two assignments, keep the swap only if it helps
+        for _ in range(iters):
+            a, b = rng.sample(ALPHABET, 2)
+            key[a], key[b] = key[b], key[a]
+            trial = score(apply_guess(ciphertext, key))
+            if trial > current:
+                current = trial
+            else:
+                key[a], key[b] = key[b], key[a]  # revert
+
+        # 5. track the best key across restarts
+        if current > best_score:
+            best_key, best_score = dict(key), current
+
+    return best_key
 
 
 # ---- Task: defeat your own attack (analysis, no test) -----------------------
