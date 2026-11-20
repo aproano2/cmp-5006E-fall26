@@ -1,0 +1,10 @@
+tool,run,rule,location,verdict,raw
+sqlmap,level3-risk3,sqli,do_login,true positive,"POST /login: boolean-based blind, error-based, time-based blind, UNION query"
+llm,run1,sqli,do_login,true positive,FINDING | SQLInjection | do_login | HIGH | `admin` | Canary secret is hardcoded and exposed in SQL query. |
+llm,run1,sqli,do_login,true positive,FINDING | SQLInjection | do_login | HIGH | `s3cr3t` | User's password is hardcoded and exposed in SQL query. |
+llm,run1,xss,do_login,false positive,FINDING | XSS | do_login | MEDIUM | 's3cr3t' | Password is passed through `do_reflect` and becomes a user input. |
+llm,run1,sqli,do_reflect,false positive,FINDING | SQLInjection | do_reflect | MEDIUM | 'ordinary-row' | Canary secret is hardcoded and exposed in SQL query. |
+llm,run1,sqli,do_reflect,false positive,FINDING | SQLInjection | do_reflect | MEDIUM | 'alice' | User's name is hardcoded and exposed in SQL query. |
+llm,run1,sqli,do_ping,false positive,FINDING | SQLInjection | do_ping | MEDIUM | 'ordinary-row' | Canary secret is hardcoded and exposed in SQL query. |
+llm,run1,sqli,do_ping,false positive,FINDING | SQLInjection | do_ping | MEDIUM | 'alice' | User's name is hardcoded and exposed in SQL query. |
+llm,run2,sqli,do_login,true positive,"FINDING | SQL Injection | do_login | LOW | ""admin"" | SQL injection vulnerability when using the `do_login` function without proper input validation."
