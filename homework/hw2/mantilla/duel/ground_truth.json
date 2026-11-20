@@ -1,0 +1,32 @@
+{
+  "_comment": "Hand-built ground truth for labs/vuln-web/app/vulnweb_app.py. Written by reading the source line by line BEFORE any scanner or LLM was run, and frozen before their outputs were seen. Keys are (rule, location) the way seclab.scan.ScanResult.key() normalizes them; location = the function that contains the bug. Cross-checked afterwards against the instructor fixture ../../duel-2-web/ground_truth.json: the 3 scored findings are identical (see score.py).",
+  "target": "labs/vuln-web/app/vulnweb_app.py",
+  "findings": [
+    {"rule": "sqli", "location": "do_login",
+     "evidence": "query = f\"... WHERE user = '{user}' AND pw = '{pw}'\" then DB.execute(query): user input becomes SQL. Confirmed dynamically in Part A (canary leak)."},
+    {"rule": "xss", "location": "do_reflect",
+     "evidence": "return f\"<html>...Hello, {name}!...\": query parameter placed into HTML with no encoding. Confirmed in Part A (live <script>)."},
+    {"rule": "cmdi", "location": "do_ping",
+     "evidence": "command = f\"ping -c 1 {host}\": host concatenated into a shell command line. Execution is simulated, but the data-into-command-context bug is real. Confirmed in Part A."}
+  ],
+  "true_negatives": [
+    {"rule": "xss", "location": "do_reflect_safe",
+     "evidence": "html.escape(name) before interpolation: NOT vulnerable. Flagging it is a false positive."}
+  ],
+  "not_present": [
+    {"rule": "broken-access-control",
+     "evidence": "There is no authentication, session, role or ownership code anywhere in the file, so there is no access-control decision that could be broken. The SQLi lets an anonymous user read admin data, but that is an injection bug (A03) whose impact looks like an access-control failure, not an A01 bug of its own."}
+  ],
+  "out_of_scope_real": [
+    {"rule": "information-disclosure", "location": "do_login",
+     "evidence": "On sqlite3.Error the response returns the DB error text AND the full SQL query (CWE-209). Real, but not one of the three intentional sinks."},
+    {"rule": "plaintext-password", "location": "make_db",
+     "evidence": "Passwords stored and compared in cleartext (CWE-256)."},
+    {"rule": "hardcoded-credentials", "location": "make_db",
+     "evidence": "Default admin password 's3cr3t' seeded from source (CWE-798). It is lab fixture data, but in a real app it would be a finding."}
+  ],
+  "scoring_rules": {
+    "strict": "TP = (rule, location) in findings. Anything else, including out_of_scope_real, counts as FP. This is the number reported as the headline.",
+    "adjusted": "Same, but only findings whose exact normalized (rule, location) key is in out_of_scope_real are removed before scoring (neither TP nor FP). A matching rule at a different location remains subject to scoring."
+  }
+}

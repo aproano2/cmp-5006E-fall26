@@ -1,0 +1,7 @@
+run,variant,tp,fp,fn,precision,recall,f1
+original_t0-a,original,3,0,0,1.0,1.0,1.0
+original_t0-b,original,3,0,0,1.0,1.0,1.0
+original_t07-s1,original,3,0,0,1.0,1.0,1.0
+stripped_t0-a,stripped,3,1,0,0.75,1.0,0.857
+stripped_t0-b,stripped,3,0,0,1.0,1.0,1.0
+stripped_t07-s1,stripped,3,1,0,0.75,1.0,0.857
