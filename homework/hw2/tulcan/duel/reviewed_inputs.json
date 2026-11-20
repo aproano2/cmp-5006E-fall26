@@ -1,0 +1,6 @@
+{
+  "frozen_at_utc": "2026-11-06T06:15:14.389661+00:00",
+  "source_sha256": "acc8fe8e1f7e743555cfb3e5e02d689a817b3e2185a509cde5c10773fe2dfb68",
+  "ground_truth_sha256": "370de92b611f9e3553fc912f13f7df9ebac9c9100cd9fb093ece9fcc33efcd35",
+  "method": "Manual source review, prior historical-results exposure disclosed in ground_truth_manual.json"
+}

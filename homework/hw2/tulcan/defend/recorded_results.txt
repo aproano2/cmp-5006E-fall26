@@ -1,0 +1,53 @@
+Archived outputs from Santiago original notebook execution.
+Not outputs of the revised notebook.
+
+CELL 9
+BLOCKED  numeric SQL tautology    '1 OR 1=1'
+BLOCKED  script tag               '<ScRiPt>window.__HW2_XSS__=1</ScRiPt>'
+BLOCKED  shell metacharacter      '127.0.0.1 | whoami'
+Coverage on Part-A payloads: 3/3 = 100%
+
+CELL 10
+  [  1] CONFIRMED  3/3    sqli             '1/**/OR/**/1=1'
+  [  1] CONFIRMED  3/3    xss              '<img src=x onerror=window.__HW2_XSS_BYPA'
+  [  1] CONFIRMED  3/3    cmdi             '127.0.0.1\nwhoami'
+WAF bypass rate: 3/3 = 100% for the chosen same-intent mutations.
+
+CELL 11
+
+CELL 12
+False positives: 2/26 = 7.7%
+  [DROP TABLE] 'drop table tennis lessons for beginners'
+  [DROP TABLE] 'reserve the drop table at the makerspace friday'
+
+CELL 13
+
+CELL 14
+
+CELL 15
+  [  1] no effect  0/3    sqli             '1 OR 1=1'
+  [  2] no effect  0/3    sqli             '1/**/OR/**/1=1'
+Impossible SQLi result: 0/2 attack or bypass payloads produced the additional row.
+DVWA restored to Medium.
+
+CELL 16
+
+CELL 17
+  [  1] no effect  0/3    xss              '<ScRiPt>window.__HW2_XSS__=1</ScRiPt>'
+  [  1] no effect  0/3    xss              '<img src=x onerror=window.__HW2_XSS_BYPA'
+Impossible XSS result: 0/2 attack or bypass payloads retained an executable HTML context.
+DVWA restored to Medium.
+
+CELL 18
+
+CELL 19
+  [  1] no effect  0/3    cmdi             '127.0.0.1 | whoami'
+  [  1] no effect  0/3    cmdi             '127.0.0.1\nwhoami'
+Impossible command-injection result: 0/2 attack or bypass payloads produced whoami output.
+DVWA restored to Medium.
+
+CELL 20
+
+CELL 21
+Impossible benign controls: 3/3 functional and 3/3 negative under attack oracles.
+DVWA restored to Medium.
