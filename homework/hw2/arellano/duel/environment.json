@@ -1,0 +1,324 @@
+{
+  "python": "3.14.7 (tags/v3.14.7:823f032, Aug  5 2026, 10:51:32) [MSC v.1944 64 bit (AMD64)]",
+  "docker": "29.7.2",
+  "images": [
+    {
+      "Id": "sha256:8029450682bd70e2e8cd1ffe8e46dd1885ff2a913296091cebfa8ba0a7d36498",
+      "RepoTags": [
+        "ghcr.io/digininja/dvwa:latest"
+      ],
+      "RepoDigests": [
+        "ghcr.io/digininja/dvwa@sha256:8029450682bd70e2e8cd1ffe8e46dd1885ff2a913296091cebfa8ba0a7d36498"
+      ],
+      "Comment": "buildkit.dockerfile.v0",
+      "Created": "2026-10-18T17:12:56.903371541Z",
+      "Config": {
+        "ExposedPorts": {
+          "80/tcp": {}
+        },
+        "Env": [
+          "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+          "PHPIZE_DEPS=autoconf \t\tdpkg-dev \t\tfile \t\tg++ \t\tgcc \t\tlibc-dev \t\tmake \t\tpkg-config \t\tre2c",
+          "PHP_INI_DIR=/usr/local/etc/php",
+          "APACHE_CONFDIR=/etc/apache2",
+          "APACHE_ENVVARS=/etc/apache2/envvars",
+          "PHP_CFLAGS=-fstack-protector-strong -fpic -fpie -O2 -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64",
+          "PHP_CPPFLAGS=-fstack-protector-strong -fpic -fpie -O2 -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64",
+          "PHP_LDFLAGS=-Wl,-O1 -pie",
+          "GPG_KEYS=1198C0117593497A5EC5C199286AF1F9897469DC 49D9AF6BC72A80D6691719C8AA23F5BE9C7097D4 D95C03BC702BE9515344AE3374E44BC9067701A5",
+          "PHP_VERSION=8.5.11",
+          "PHP_URL=https://www.php.net/distributions/php-8.5.11.tar.xz",
+          "PHP_ASC_URL=https://www.php.net/distributions/php-8.5.11.tar.xz.asc",
+          "PHP_SHA256=d9be75c08e8c316f4c8f4194d8fbe1750a15f6a6d9d4e3fe72082abeeb800360"
+        ],
+        "Entrypoint": [
+          "docker-php-entrypoint"
+        ],
+        "Cmd": [
+          "apache2-foreground"
+        ],
+        "WorkingDir": "/var/www/html",
+        "Labels": {
+          "org.opencontainers.image.description": "DVWA pre-built image.",
+          "org.opencontainers.image.licenses": "gpl-3.0",
+          "org.opencontainers.image.source": "https://github.com/digininja/DVWA"
+        },
+        "StopSignal": "SIGWINCH"
+      },
+      "Architecture": "amd64",
+      "Os": "linux",
+      "Size": 212897184,
+      "RootFS": {
+        "Type": "layers",
+        "Layers": [
+          "sha256:15f1c8eb1ab18eae260c7fb6296434cbe1ff0e1e30fd814ae92a80dd54005e62",
+          "sha256:eb2a26bdebbcf1c267e8ad4120bc108e9d7b227f57aa3b674dfef53845cc68d3",
+          "sha256:5a6eddfbbc498572676d0e3cc29c76c92d2004ff655e5bbf685bbb9e587ff23c",
+          "sha256:10175ea7be8d151f5c0419192f4100e25f1357bd41924f928aaf74b4f4808fe0",
+          "sha256:eb10d5a626c8fbf2676e6d471370468b060fa780363210d146dbc59a58356c64",
+          "sha256:044afaaa7b6655591da7b1e2e38cc94658ef1f1d1b91a206365a11460830156f",
+          "sha256:3da61326bf53379edaaad30d5b6c271abb0fea857a8d4f028dc5a9c88a94ee4e",
+          "sha256:cf8d2ed22684c8292317a05dcda1f82d1d95f71aa7584300633de5c98346bdaa",
+          "sha256:a0bf6e9a604e556d7c8293053f66bc689bd9c12859ba0266c71eec0f62a860a4",
+          "sha256:ff04d33e640a12dec37678a333c1ab5787d556219d37794d21df8ca379cb8339",
+          "sha256:43155d7b94aed2f5c0efca15728783bac4c6fc939979087eae402d719309f441",
+          "sha256:ad68035fd3915966fb69cb98574364a7c00369a2353d766c91beccc2259fb266",
+          "sha256:964e9b2bc65a8d466b3f54914c97fdb533cd6787488f25cd7a8a43496f77fadb",
+          "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef",
+          "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef",
+          "sha256:f694edbab02875d14a4b87bc4b39c2f41251873ed9f0a0c4f175162e795c248c",
+          "sha256:ac2ff4aa314d2a3e00bab2a52ab68486970fcfd5a181e76ae39d31ba0eed4730",
+          "sha256:8684bd83f5800558ab3f16eed250255b711241f633300026a5c30ed20ed88678",
+          "sha256:f0dcf93ee9b91da96dd1fb5ace4e6ffd7c221bf37a40f1cd9fc0c7fe44026303",
+          "sha256:b7086b73a64b1d041d489620eb6763fda75586cbbd111e9d27887c351a3144fe"
+        ]
+      },
+      "Metadata": {
+        "LastTagTime": "2026-11-06T05:49:46.045364236Z"
+      },
+      "Descriptor": {
+        "mediaType": "application/vnd.oci.image.index.v1+json",
+        "digest": "sha256:8029450682bd70e2e8cd1ffe8e46dd1885ff2a913296091cebfa8ba0a7d36498",
+        "size": 1609
+      },
+      "Identity": {
+        "Pull": [
+          {
+            "Repository": "ghcr.io/digininja/dvwa"
+          }
+        ]
+      }
+    },
+    {
+      "Id": "sha256:d769e37960821dfdcf096954f6e7ac89f747e116c1bba98e48edd265dfc7deae",
+      "RepoTags": [
+        "mariadb:10"
+      ],
+      "RepoDigests": [
+        "mariadb@sha256:d769e37960821dfdcf096954f6e7ac89f747e116c1bba98e48edd265dfc7deae"
+      ],
+      "Comment": "buildkit.dockerfile.v0",
+      "Created": "2026-10-26T23:25:18.645832857Z",
+      "Config": {
+        "ExposedPorts": {
+          "3306/tcp": {}
+        },
+        "Env": [
+          "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+          "GOSU_VERSION=1.19",
+          "LANG=C.UTF-8",
+          "MARIADB_VERSION=1:10.11.19+maria~ubu2204"
+        ],
+        "Entrypoint": [
+          "docker-entrypoint.sh"
+        ],
+        "Cmd": [
+          "mariadbd"
+        ],
+        "Volumes": {
+          "/var/lib/mysql": {}
+        },
+        "Labels": {
+          "org.opencontainers.image.authors": "MariaDB Community",
+          "org.opencontainers.image.base.name": "docker.io/library/ubuntu:jammy",
+          "org.opencontainers.image.description": "MariaDB Database for relational SQL",
+          "org.opencontainers.image.documentation": "https://hub.docker.com/_/mariadb/",
+          "org.opencontainers.image.licenses": "GPL-2.0",
+          "org.opencontainers.image.source": "https://github.com/MariaDB/mariadb-docker",
+          "org.opencontainers.image.title": "MariaDB Database",
+          "org.opencontainers.image.url": "https://github.com/MariaDB/mariadb-docker",
+          "org.opencontainers.image.vendor": "MariaDB Community",
+          "org.opencontainers.image.version": "10.11.19"
+        }
+      },
+      "Architecture": "amd64",
+      "Os": "linux",
+      "Size": 104174952,
+      "RootFS": {
+        "Type": "layers",
+        "Layers": [
+          "sha256:297a592b66593a3dddc39e7970a718cc1cbb04c8a9b904009b33eb623dafc588",
+          "sha256:c0f7c997f4de0929002af4282edc57c99be914d6612313aad6fc324775f562c2",
+          "sha256:0d45c66019c252783437f5bf7789c8acdfa08b024dbc00d870cce7d55e7a8e8d",
+          "sha256:0a16cf157b260855badb268217f29006813d43c152a00fd86e1f4ca0bab576b3",
+          "sha256:8333d4d8796953c731d03d7edad2f4311f740739995cfe8027ad4b91b8eb3cc7",
+          "sha256:97707411541afbe4303246380750320ae0dd33697520148c2bfd2a557413297e",
+          "sha256:f132e70a11cb522c2ddf03895fcc8c4f77ff9240745b34917f8d91bb34d063aa",
+          "sha256:8ee245e068770fdef0eb0bb1669db6d7a11220a09a9d35bc9ce0606fc3f88e48"
+        ]
+      },
+      "Metadata": {
+        "LastTagTime": "2026-11-06T05:27:25.013560779Z"
+      },
+      "Descriptor": {
+        "mediaType": "application/vnd.oci.image.index.v1+json",
+        "digest": "sha256:d769e37960821dfdcf096954f6e7ac89f747e116c1bba98e48edd265dfc7deae",
+        "size": 5141
+      },
+      "Identity": {
+        "Pull": [
+          {
+            "Repository": "docker.io/library/mariadb"
+          }
+        ]
+      }
+    }
+  ],
+  "dvwa_source_commit": "see image RepoDigests",
+  "tool_images": [
+    {
+      "Id": "sha256:2e45517a85e13a9cca14a2a00df6bb48affd66b8ebfae1b0991cd57578362fb0",
+      "RepoTags": [
+        "semgrep/semgrep:latest"
+      ],
+      "RepoDigests": [
+        "semgrep/semgrep@sha256:2e45517a85e13a9cca14a2a00df6bb48affd66b8ebfae1b0991cd57578362fb0"
+      ],
+      "Comment": "buildkit.dockerfile.v0",
+      "Created": "2026-10-29T18:33:30.910936728Z",
+      "Config": {
+        "Env": [
+          "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+          "SEMGREP_IN_DOCKER=1",
+          "SEMGREP_USER_AGENT_APPEND=Docker",
+          "PYTHONIOENCODING=utf8",
+          "PYTHONUNBUFFERED=1",
+          "DOCKER_OTEL_RESOURCE_ATTRIBUTES=vcs.ref.head.name=release-1.183.0,vcs.ref.head.revision=08c107344d9fcd43c8febfcabd6c68abeb1b19f4,vcs.repository.url.full=github.com/semgrep/semgrep-proprietary,docker.base_image=alpine:3.23",
+          "DD_SERVICE=semgrep-core",
+          "TSAN_OPTIONS=exitcode=0 report_signal_unsafe=0"
+        ],
+        "Cmd": [
+          "semgrep",
+          "--help"
+        ],
+        "WorkingDir": "/src",
+        "Labels": {
+          "maintainer": "support@semgrep.com",
+          "org.opencontainers.image.revision": "08c107344d9fcd43c8febfcabd6c68abeb1b19f4",
+          "org.opencontainers.image.source": "https://github.com/semgrep/semgrep-proprietary"
+        },
+        "ArgsEscaped": true
+      },
+      "Architecture": "amd64",
+      "Os": "linux",
+      "Size": 433392138,
+      "RootFS": {
+        "Type": "layers",
+        "Layers": [
+          "sha256:54ea9baa1bbd7651dbda5c61569dad60fa601c73e5b784e154e8ba0f314e84fd",
+          "sha256:6ae250a4915b4dc562b356cd19433402e807410b6844b7216a50341eecddd028",
+          "sha256:8e13c77e390042f32b8a18ce8e52b2f5a8c5b0b4255519d144f2a7196a772846",
+          "sha256:23f14e9434fa982e0ab4654837f273164a4a6a874bc3b09d4285943e9addb74d",
+          "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef",
+          "sha256:480a855998f454acacfa33b97cf64f24f885994fca2f97db5f615804b95c3845",
+          "sha256:21aab3a3a0819334ad8f56582080738e654354c1eba1df2962c2324984328ce0",
+          "sha256:2818e72e8799e609e0da3e2b80268a2ef6c7a8eb8b88e419c5d57c1350484ee1",
+          "sha256:02cb4e8215cc3242a64c3f31729322140ae89dc3d2c3cafbe2a450fadbe6b9b3",
+          "sha256:8ff41d7b267a58d9a70e21c894258846c585995efabf21f8111052e67285644f",
+          "sha256:bb5d52769c435ae27592058a15a76ed68d1f1273b6423abe7a598de5ce4b0bcc",
+          "sha256:69b3b366bdd3fa7d0ed6e5b3675757166e61380f9a354a5abce8a82c5a701f47",
+          "sha256:98c1027f4cc7f9ae1614da12e7e0f0df97c5c7eb30769483ef418b7031d17515",
+          "sha256:adb2bdc849c5de506b829e925ea9b8e5b364155bbf3ea41a90aa1131015ea34e",
+          "sha256:2a5deadbc1e2ce034c9a8213212ff354dd04fca61b63abcec253f1c413ee61ea"
+        ]
+      },
+      "Metadata": {
+        "LastTagTime": "2026-11-06T05:58:26.137181692Z"
+      },
+      "Descriptor": {
+        "mediaType": "application/vnd.oci.image.index.v1+json",
+        "digest": "sha256:2e45517a85e13a9cca14a2a00df6bb48affd66b8ebfae1b0991cd57578362fb0",
+        "size": 1609
+      },
+      "Identity": {
+        "Pull": [
+          {
+            "Repository": "docker.io/semgrep/semgrep"
+          }
+        ]
+      }
+    },
+    {
+      "Id": "sha256:5a84f1bb6c4868f80fe02b104bc31cf48a07d5b5d8812870ada9fb7b561ed284",
+      "RepoTags": [
+        "alpine/ollama:latest"
+      ],
+      "RepoDigests": [
+        "alpine/ollama@sha256:5a84f1bb6c4868f80fe02b104bc31cf48a07d5b5d8812870ada9fb7b561ed284"
+      ],
+      "Comment": "buildkit.dockerfile.v0",
+      "Created": "2026-11-01T11:40:30.051244673Z",
+      "Author": "github.com/chainguard-dev/apko",
+      "Config": {
+        "User": "0",
+        "ExposedPorts": {
+          "11434/tcp": {}
+        },
+        "Env": [
+          "PATH=/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/sbin:/sbin:/bin",
+          "SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt",
+          "OLLAMA_HOST=0.0.0.0"
+        ],
+        "Entrypoint": [
+          "/usr/bin/ollama"
+        ],
+        "Cmd": [
+          "serve"
+        ],
+        "Labels": {
+          "dev.chainguard.image.title": "wolfi-base",
+          "dev.chainguard.package.main": "",
+          "org.opencontainers.image.authors": "Chainguard Team https://www.chainguard.dev/",
+          "org.opencontainers.image.created": "2026-11-01T11:39:06.901Z",
+          "org.opencontainers.image.description": "Minimal CPU-only Ollama Docker Image",
+          "org.opencontainers.image.licenses": "MIT",
+          "org.opencontainers.image.revision": "",
+          "org.opencontainers.image.source": "https://github.com/alpine-docker/ollama",
+          "org.opencontainers.image.title": "ollama",
+          "org.opencontainers.image.url": "https://github.com/alpine-docker/ollama",
+          "org.opencontainers.image.vendor": "Chainguard",
+          "org.opencontainers.image.version": "edge"
+        },
+        "ArgsEscaped": true
+      },
+      "Architecture": "amd64",
+      "Os": "linux",
+      "Size": 43716047,
+      "RootFS": {
+        "Type": "layers",
+        "Layers": [
+          "sha256:1a61f73c448f28a85e39e210710b398514822d4b2c2aadf0b9288c5888b3c490",
+          "sha256:81ac36f4bee4102128a3f1f63d1a2a057922351d656f4a4fcdb1b92cd28a95f2",
+          "sha256:cf8652f933d60f590ac714d600863f58f45de00c1395bac22ae84c45bb7cbfdf",
+          "sha256:6e407bcb887726ad7e338d379446cbf49f43f2fd46cfa16e15d9d792b459704b",
+          "sha256:24f670d1e337828fb932901ca6194de50c22b1327ee9a684bc1318e7bdbfd1f7",
+          "sha256:23b8acc2761856c83ab88de021a6cca96bc60ef3caa5521365a390cd8e0ef69e",
+          "sha256:a3ec0de16e61b5ea5db4a7c6a077103887af496a300c96e02c8186f189fb2b41",
+          "sha256:5215e8ec94700a54bbbbbf967cb192ef56ab5ea8ba6abdf2fa2ca6b64fd09be6",
+          "sha256:2af97d351f066d95be4835564d4e9445047a023e1f572d129b8462635b998e05",
+          "sha256:54eab89300f9904267e4dec0048a2466671ec180be20959e153e41d6bb07134e",
+          "sha256:869e47e811459d6066749f1ee4ca85f2a82e7a9b6df6ecb42af672c11ffab619",
+          "sha256:7f5a9b465aff50832a8fac9d4bcc24f61609607afcbe3f698f48b26c98a578c6",
+          "sha256:7b5428597c541840193c36b06ea4568a7d8a2934b0dbc830e9c76eef55cdb96a",
+          "sha256:7c36404f97b7c2bb578916340b32b727c8f6d02fea3b885c006f6def09cb056f"
+        ]
+      },
+      "Metadata": {
+        "LastTagTime": "2026-11-06T06:04:41.079696396Z"
+      },
+      "Descriptor": {
+        "mediaType": "application/vnd.oci.image.index.v1+json",
+        "digest": "sha256:5a84f1bb6c4868f80fe02b104bc31cf48a07d5b5d8812870ada9fb7b561ed284",
+        "size": 1609
+      },
+      "Identity": {
+        "Pull": [
+          {
+            "Repository": "docker.io/alpine/ollama"
+          }
+        ]
+      }
+    }
+  ],
+  "ollama_version": "ollama version is 0.40.13"
+}
