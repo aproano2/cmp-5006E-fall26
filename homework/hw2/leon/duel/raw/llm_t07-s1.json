@@ -1,0 +1,8 @@
+{
+  "run": "t07-s1",
+  "model": "qwen3.8:27b",
+  "temperature": 0.7,
+  "seed": 1,
+  "elapsed_s": 199.8,
+  "text": "[\n  {\n    \"vulnerability\": \"SQL injection\",\n    \"function\": \"do_login\",\n    \"severity\": \"HIGH\",\n    \"reason\": \"User-supplied 'user' and 'pw' values are interpolated directly into the SQL query via an f-string, allowing an attacker to bypass authentication or extract arbitrary data (e.g., ' OR '1'='1).\"\n  },\n  {\n    \"vulnerability\": \"Reflected Cross-Site Scripting (XSS)\",\n    \"function\": \"do_reflect\",\n    \"severity\": \"MEDIUM\",\n    \"reason\": \"The 'name' query-parameter value is embedded into the HTML response without any encoding or sanitization, enabling injection of arbitrary client-side script.\"\n  },\n  {\n    \"vulnerability\": \"OS Command Injection\",\n    \"function\": \"do_ping\",\n    \"severity\": \"HIGH\",\n    \"reason\": \"The 'host' value is concatenated directly into a shell command string (ping -c 1 {host}), so shell metacharacters in the input can inject and execute arbitrary commands.\"\n  },\n  {\n    \"vulnerability\": \"Information Disclosure\",\n    \"function\": \"do_login\",\n    \"severity\": \"MEDIUM\",\n    \"reason\": \"On a SQL error the handler returns the full query text and database error message to the client, leaking schema details and aiding further exploitation.\"\n  },\n  {\n    \"vulnerability\": \"Excessive Data Exposure in Response\",\n    \"function\": \"do_login\",\n    \"severity\": \"MEDIUM\",\n    \"reason\": \"A successful (or SQLi-bypassed) login returns the entire row including the 'secret' column, exposing sensitive credentials/session tokens to the caller.\"\n  }\n]"
+}
