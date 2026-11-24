@@ -1,0 +1,9 @@
+```plaintext
+FINDING | SQLInjection | do_login | HIGH | `admin` | Canary secret is hardcoded and exposed in SQL query. |
+FINDING | SQLInjection | do_login | HIGH | `s3cr3t` | User's password is hardcoded and exposed in SQL query. |
+FINDING | XSS | do_login | MEDIUM | 's3cr3t' | Password is passed through `do_reflect` and becomes a user input. |
+FINDING | SQLInjection | do_reflect | MEDIUM | 'ordinary-row' | Canary secret is hardcoded and exposed in SQL query. |
+FINDING | SQLInjection | do_reflect | MEDIUM | 'alice' | User's name is hardcoded and exposed in SQL query. |
+FINDING | SQLInjection | do_ping | MEDIUM | 'ordinary-row' | Canary secret is hardcoded and exposed in SQL query. |
+FINDING | SQLInjection | do_ping | MEDIUM | 'alice' | User's name is hardcoded and exposed in SQL query. |
+```
