@@ -1,0 +1,6 @@
+{
+  "command": "semgrep scan --config /Users/josueponce15/Downloads/cmp-5006E-fall26-1/homework/hw2/rodriguez_felipe/duel/semgrep.yml --json /Users/josueponce15/Downloads/cmp-5006E-fall26-1/labs/vuln-web/app/vulnweb_app.py",
+  "returncode": 0,
+  "matches": 2,
+  "stderr": "               \n               \n\u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n\u2502 Scan Status \u2502\n\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518\n  Scanning 1 file tracked by git with 2 Code rules:\n  Scanning 1 file with 2 python rules.\n                \n                \n\u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n\u2502 Scan Summary \u2502\n\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518\n\u2705 Scan completed successfully.\n \u2022 Findings: 2 (2 blocking)\n \u2022 Rules run: 2\n \u2022 Targets scanned: 1\n \u2022 Parsed lines: ~100.0%\n \u2022 No ignore information available\nRan 2 rules on 1 file: 2 findings.\n"
+}
