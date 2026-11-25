@@ -1,0 +1,12 @@
+{
+  "waf_blocked": 1,
+  "waf_total": 1,
+  "bypasses_through": 3,
+  "bypasses_confirmed": 3,
+  "bypass_total": 3,
+  "false_positives": 4,
+  "benign_total": 26,
+  "false_positive_rate": 0.15384615384615385,
+  "positive_model_successes": 0,
+  "positive_model_total": 4
+}
