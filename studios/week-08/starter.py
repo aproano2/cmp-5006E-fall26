@@ -10,9 +10,12 @@ Nothing you write breaks a cryptographic primitive. Every exploit substitutes an
 artifact behind a name the victim trusted; every fix pins the artifact instead of
 trusting the name.
 """
+import hmac
+import json
+import hashlib
 from data import (internal_registry, public_registry, LOCKFILE,
-                   dep_graph, KNOWN_BAD)
-from supplychain import b64, make_token
+                   dep_graph, KNOWN_BAD, SECRET)
+from supplychain import b64, make_token, b64d
 
 
 # ---- Task 1a: dependency confusion — the naive resolver (the bug) -----------
@@ -32,7 +35,22 @@ def resolve_highest_version(pkg: str):
     """
     # TODO: gather candidates from both registries and return the highest-version
     #       one, ignoring the source (that omission IS the vulnerability).
-    raise NotImplementedError
+    candidates = []
+    
+    if pkg in internal_registry:
+        candidates.append(("internal", internal_registry[pkg]))
+    if pkg in public_registry:
+        candidates.append(("public", public_registry[pkg]))
+
+    if not candidates:
+        return None
+
+    def version_key(candidate):
+        version_str = candidate[1]
+        return tuple(int(x) for x in version_str.split("."))
+
+    best_candidate = max(candidates, key=version_key)
+    return best_candidate
 
 
 # ---- Task 1b: the pin — resolve against the lockfile (the fix) --------------
@@ -49,7 +67,18 @@ def resolve_pinned(pkg: str, candidate_hash: str, candidate_source: str):
     """
     # TODO: look up LOCKFILE[pkg]; refuse if missing, on source mismatch, or on
     #       hash mismatch; accept only the exact vetted artifact.
-    raise NotImplementedError
+    if pkg not in LOCKFILE:
+        return (False, f"Package '{pkg}' is not present in lockfile")
+
+    entry = LOCKFILE[pkg]
+
+    if candidate_source != entry["source"]:
+        return (False, f"Source mismatch for '{pkg}': expected {entry['source']}, got {candidate_source}")
+
+    if candidate_hash != entry["sha256"]:
+        return (False, f"Hash mismatch for '{pkg}': expected {entry['sha256']}, got {candidate_hash}")
+
+    return (True, "Artifact verified against lockfile")
 
 
 # ---- Task 2: SBOM — build the transitive list, then query it for a CVE ------
@@ -63,7 +92,16 @@ def build_sbom(root: str, graph: dict) -> list:
     set, then ``sorted(...)`` it. Do not include ``root`` itself.
     """
     # TODO: collect every reachable dependency of root and return it sorted.
-    raise NotImplementedError
+    visited = set()
+
+    def dfs(node):
+        for dep in graph.get(node, []):
+            if dep not in visited:
+                visited.add(dep)
+                dfs(dep)
+
+    dfs(root)
+    return sorted(list(visited))
 
 
 def cve_affected(sbom: list, known_bad: set) -> list:
@@ -72,7 +110,8 @@ def cve_affected(sbom: list, known_bad: set) -> list:
     SBOM this is an instant query; without one it is days of grepping build logs.
     """
     # TODO: return the sorted intersection of the sbom with known_bad.
-    raise NotImplementedError
+    affected = set(sbom).intersection(set(known_bad))
+    return sorted(list(affected))
 
 
 # ---- Task 3a: forge an alg=none admin token (the attack) --------------------
@@ -88,7 +127,13 @@ def forge_alg_none_admin() -> str:
     """
     # TODO: base64url a {"alg":"none","typ":"JWT"} header and a
     #       {"user":"alice","role":"admin"} payload; join with an empty sig.
-    raise NotImplementedError
+    header_dict = {"alg": "none", "typ": "JWT"}
+    payload_dict = {"user": "alice", "role": "admin"}
+
+    header_b64 = b64(json.dumps(header_dict).encode())
+    payload_b64 = b64(json.dumps(payload_dict).encode())
+
+    return f"{header_b64}.{payload_b64}."
 
 
 # ---- Task 3b: the pin — verify with a server-side algorithm (the fix) -------
@@ -105,7 +150,35 @@ def verify_secure(token: str, expected_alg: str = "HS256"):
     """
     # TODO: split the token; reject if header alg != expected_alg; recompute the
     #       HS256 signature under SECRET and compare with hmac.compare_digest.
-    raise NotImplementedError
+    parts = token.split(".")
+    if len(parts) != 3:
+        return None
+
+    header_b64, payload_b64, sig_b64 = parts
+
+    try:
+        header_bytes = b64d(header_b64)
+        header = json.loads(header_bytes.decode())
+    except Exception:
+        return None
+
+    # Fijar/Validar el algoritmo desde el servidor
+    if header.get("alg") != expected_alg:
+        return None
+
+    # Para HS256, recalcular y verificar la firma usando hmac.compare_digest
+    if expected_alg == "HS256":
+        signing_input = f"{header_b64}.{payload_b64}".encode()
+        expected_sig = b64(hmac.new(SECRET, signing_input, hashlib.sha256).digest())
+
+        if not hmac.compare_digest(sig_b64, expected_sig):
+            return None
+
+    try:
+        payload_bytes = b64d(payload_b64)
+        return json.loads(payload_bytes.decode())
+    except Exception:
+        return None
 
 
 if __name__ == "__main__":

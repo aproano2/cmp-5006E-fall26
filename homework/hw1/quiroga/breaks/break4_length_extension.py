@@ -54,3 +54,4 @@ print("  tag  :", forged_tag)
 print("  verify_token(data, tag) ->", verify_token(forged_msg, forged_tag))
 print("  The forged data still starts with 'user=alice&role=user' and ends with '&role=admin';")
 print("  a parser that keeps the LAST role= value (typical for query strings) sees role=admin.")
+#

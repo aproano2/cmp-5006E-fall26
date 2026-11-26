@@ -11,6 +11,7 @@ tests must pass, INCLUDING the two that pin the week's spine against each other:
 
 Nothing here touches real personal data — every dataset is synthetic (``data.py``).
 """
+from collections import Counter
 from privacy import quasi_id, generalize, laplace_noise, membership_guess
 
 
@@ -33,7 +34,26 @@ def reidentify(released, voter_roll):
     """
     # TODO: count quasi-ids, collect the unique released rows, take the first as
     #       the victim, and link its quasi-id to a name via the voter roll.
-    raise NotImplementedError
+    counts = Counter(quasi_id(r) for r in released)
+    unique_rows = [r for r in released if counts[quasi_id(r)] == 1]
+    fraction_unique = len(unique_rows) / len(released) if released else 0.0
+ 
+    # Public auxiliary data: quasi-id -> name. Only trust a link when the qid is
+    # also unique in the voter roll (otherwise the "link" is ambiguous).
+    aux_counts = Counter(quasi_id(v) for v in voter_roll)
+    qid_to_name = {quasi_id(v): v["name"] for v in voter_roll
+                   if aux_counts[quasi_id(v)] == 1}
+ 
+    victim, victim_name = None, None
+    for r in unique_rows:                      # first unique row that NAME-links
+        name = qid_to_name.get(quasi_id(r))
+        if name is not None:
+            victim, victim_name = r, name
+            break
+ 
+    return {"fraction_unique": fraction_unique,
+            "victim": victim,
+            "victim_name": victim_name}
 
 
 # ---- Task 2: k-anonymize, then break it with the homogeneity attack --------
@@ -51,7 +71,10 @@ def homogeneity_attack(group):
     no unique row) and did NOT do (bound what the attacker learns).
     """
     # TODO: collect the distinct diagnoses; if there is exactly one, return it.
-    raise NotImplementedError
+    diagnoses = {m["diagnosis"] for m in group}
+    if len(diagnoses) == 1:
+        return diagnoses.pop()      # every member shares it -> it leaks for all
+    return None
 
 
 # ---- Task 3: differential privacy — a statable guarantee -------------------
@@ -66,7 +89,10 @@ def noisy_count(true_count, eps, rng):
     Hint: ``true_count + laplace_noise(1.0 / eps, rng)``.
     """
     # TODO: add Laplace noise at scale 1/eps to the true count.
-    raise NotImplementedError
+    if eps <= 0:
+        raise ValueError("epsilon must be > 0")
+    sensitivity = 1.0                # one person changes a count by at most 1
+    return float(true_count + laplace_noise(sensitivity / eps, rng))
 
 
 # ---- Task 4: membership inference on the simulated model -------------------
@@ -82,7 +108,14 @@ def membership_inference(probe, thresholds):
     involved. For a 'diabetes model', being in the training set IS the secret.
     """
     # TODO: for each threshold, compute accuracy over the probe; return the best.
-    raise NotImplementedError
+    best_t, best_acc = None, -1.0
+    for t in thresholds:
+        correct = sum(1 for rec in probe
+                      if membership_guess(rec, t) == rec["member"])
+        acc = correct / len(probe)
+        if acc > best_acc:
+            best_t, best_acc = t, acc
+    return {"best_threshold": best_t, "accuracy": best_acc}
 
 
 if __name__ == "__main__":
