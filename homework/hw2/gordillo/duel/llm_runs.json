@@ -1,0 +1,60 @@
+[
+  {
+    "run": 1,
+    "backend": "ollama",
+    "model": "qwen3.5:4b",
+    "temperature": 0.8,
+    "seed": 17,
+    "elapsed_seconds": 3.582,
+    "raw_response": "RULE | LOCATION | SEVERITY | SHORT REASON\nsqli | do_login | HIGH | SQL injection via string formatting in WHERE clause bypasses authentication and leaks secrets.\nxss | do_reflect | MEDIUM | Reflected XSS by directly interpolating unsanitized user input into HTML output.\ncmdi | do_ping | HIGH | Command injection risk from concatenating untrusted input into a shell-style command string.",
+    "findings": [
+      {
+        "rule": "sqli",
+        "location": "do_login",
+        "severity": "high",
+        "raw": "sqli | do_login | HIGH | SQL injection via string formatting in WHERE clause bypasses authentication and leaks secrets."
+      },
+      {
+        "rule": "xss",
+        "location": "do_reflect",
+        "severity": "medium",
+        "raw": "xss | do_reflect | MEDIUM | Reflected XSS by directly interpolating unsanitized user input into HTML output."
+      },
+      {
+        "rule": "cmdi",
+        "location": "do_ping",
+        "severity": "high",
+        "raw": "cmdi | do_ping | HIGH | Command injection risk from concatenating untrusted input into a shell-style command string."
+      }
+    ]
+  },
+  {
+    "run": 2,
+    "backend": "ollama",
+    "model": "qwen3.5:4b",
+    "temperature": 0.8,
+    "seed": 83,
+    "elapsed_seconds": 3.328,
+    "raw_response": "RULE | do_login | sqli | SQL injection via string formatting allows bypassing authentication and leaking the secret flag.\nRULE | do_reflect | xss | Reflected XSS because unsanitized user input is directly interpolated into an HTML response body.\nRULE | do_ping | cmdi | Command injection vulnerability where untrusted host input is concatenated into a shell command context.",
+    "findings": [
+      {
+        "rule": "sqli",
+        "location": "do_login",
+        "severity": "unknown",
+        "raw": "RULE | do_login | sqli | SQL injection via string formatting allows bypassing authentication and leaking the secret flag."
+      },
+      {
+        "rule": "xss",
+        "location": "do_reflect",
+        "severity": "unknown",
+        "raw": "RULE | do_reflect | xss | Reflected XSS because unsanitized user input is directly interpolated into an HTML response body."
+      },
+      {
+        "rule": "cmdi",
+        "location": "do_ping",
+        "severity": "unknown",
+        "raw": "RULE | do_ping | cmdi | Command injection vulnerability where untrusted host input is concatenated into a shell command context."
+      }
+    ]
+  }
+]
