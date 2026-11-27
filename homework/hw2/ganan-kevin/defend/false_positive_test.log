@@ -1,0 +1,8 @@
+Benign entries checked: 26
+False positives: 5 (19.23%)
+  [login_username] "o'brien" -> '
+  [login_username] "d'angelo" -> '
+  [search_or_name] 'drop table tennis lessons for beginners' -> (?i)\bdrop\b.{0,10}\btable\b
+  [search_or_name] 'reserve the drop table at the makerspace friday' -> (?i)\bdrop\b.{0,10}\btable\b
+  [search_or_name] 'quotes about resilience: "don\'t give up"' -> '
+Wrote ./defend/fp_report.json and ./defend/benign_traffic_results.csv
