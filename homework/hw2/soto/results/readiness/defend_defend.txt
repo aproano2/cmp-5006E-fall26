@@ -1,0 +1,23 @@
+  -> wrote results/defense_attacks.csv (10 rows)
+  -> wrote results/waf_false_positives.csv (26 rows)
+
+  attacks that work with no defense: 9 (5 from Part A, 4 bypasses)
+
+  WAF_V1
+    coverage on Part-A payloads : 5/5 blocked
+    bypasses that still land    : 4/4
+    false positives (login_username ): 0/9 = 0%  []
+    false positives (whole corpus   ): 0/26 = 0%  []
+
+  WAF_V2
+    coverage on Part-A payloads : 5/5 blocked
+    bypasses that still land    : 0/4
+    false positives (login_username ): 2/9 = 22%  ["o'brien", "d'angelo"]
+    false positives (whole corpus   ): 8/26 = 31%  ["o'brien", "d'angelo", 'i want to select the union option on the benefits form', 'drop table tennis lessons for beginners']
+
+  PARAMETERIZED: 0/9 attacks land
+    admin / s3cr3t (correct password)    -> True
+    o'brien / x on VULNERABLE app        -> {"error": "sql error: near \"brien\": sy
+    o'brien / x on FIXED app             -> {"ok": false}
+
+  PART B OK

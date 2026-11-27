@@ -1,0 +1,79 @@
+  our ground truth == instructor fixture (scored findings): True
+
+  STRICT (headline):
+  tool             TP   FP   FN    prec  recall     F1
+  ----------------------------------------------------
+  semgrep           0    0    3      0%      0%   0.00
+  bandit            1    2    2     33%     33%   0.33
+  sqlmap            1    0    2    100%     33%   0.50
+  llm:t0-a          3    4    0     43%    100%   0.60
+  llm:t0-b          3    4    0     43%    100%   0.60
+  llm:t07-s1        3    1    0     75%    100%   0.86
+  llm:t07-s2        3    1    0     75%    100%   0.86
+  llm:t07-s3        3    1    0     75%    100%   0.86
+
+  Read this like a security engineer, not a leaderboard:
+
+  - HIGH RECALL, LOW PRECISION (finds everything, cries wolf): an LLM often lands
+    here. Every false positive is analyst time; a tool that reports 40 bugs where
+    6 are real will be ignored within a week.
+  - HIGH PRECISION, LOW RECALL (quiet but misses things): a narrow ruleset often
+    lands here. What it misses is what hurts you.
+  - The interesting cell is the FALSE POSITIVES the LLM invented and the TRUE bugs
+    the scanner MISSED. Print both and read them out loud — that comparison is the
+    deliverable, not the F1 score.
+
+  semgrep missed (real bugs it did not report):
+      ('cmdi', 'do_ping')
+      ('sqli', 'do_login')
+      ('xss', 'do_reflect')
+
+  bandit false positives (hallucinated / wrong):
+      ('bind-all-interfaces', 'main')
+      ('hardcoded-credentials', '<module>')
+
+  bandit missed (real bugs it did not report):
+      ('cmdi', 'do_ping')
+      ('xss', 'do_reflect')
+
+  sqlmap missed (real bugs it did not report):
+      ('cmdi', 'do_ping')
+      ('xss', 'do_reflect')
+
+  llm:t0-a false positives (hallucinated / wrong):
+      ('bind-all-interfaces', 'main')
+      ('csrf', 'do_post')
+      ('information-disclosure', 'do_login')
+      ('missing-rate-limiting', 'do_post')
+
+  llm:t0-b false positives (hallucinated / wrong):
+      ('bind-all-interfaces', 'main')
+      ('csrf', 'do_post')
+      ('information-disclosure', 'do_login')
+      ('missing-rate-limiting', 'do_post')
+
+  llm:t07-s1 false positives (hallucinated / wrong):
+      ('information-disclosure', 'do_login')
+
+  llm:t07-s2 false positives (hallucinated / wrong):
+      ('information-disclosure', 'do_login')
+
+  llm:t07-s3 false positives (hallucinated / wrong):
+      ('information-disclosure', 'do_login')
+
+  ADJUSTED (real-but-out-of-scope findings removed):
+    semgrep        P=0% R=0% F1=0.00
+    bandit         P=33% R=33% F1=0.33
+    sqlmap         P=100% R=33% F1=0.50
+    llm:t0-a       P=50% R=100% F1=0.67
+    llm:t0-b       P=50% R=100% F1=0.67
+    llm:t07-s1     P=100% R=100% F1=1.00
+    llm:t07-s2     P=100% R=100% F1=1.00
+    llm:t07-s3     P=100% R=100% F1=1.00
+  -> wrote results/duel_scores.csv (8 rows)
+  -> wrote results/duel_findings.csv (30 rows)
+
+  LLM non-determinism over 5 runs:
+    findings in EVERY run: [('cmdi', 'do_ping'), ('information-disclosure', 'do_login'), ('sqli', 'do_login'), ('xss', 'do_reflect')]
+    findings in SOME run : [('bind-all-interfaces', 'main'), ('csrf', 'do_post'), ('missing-rate-limiting', 'do_post')]
+  -> wrote results/llm_nondeterminism.csv (7 rows)
