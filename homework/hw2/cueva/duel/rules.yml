@@ -1,0 +1,16 @@
+rules:
+  - id: sqli
+    languages: [python]
+    severity: WARNING
+    message: SQL string interpolation on a single line
+    pattern-regex: 'f"SELECT[^\r\n]*\{'
+  - id: xss
+    languages: [python]
+    severity: WARNING
+    message: Name interpolated into an HTML response
+    pattern-regex: 'return f"<html>[^\r\n]*\{name\}'
+  - id: cmdi
+    languages: [python]
+    severity: WARNING
+    message: Host interpolated into a command string
+    pattern-regex: 'command = f"ping -c 1 \{host\}"'

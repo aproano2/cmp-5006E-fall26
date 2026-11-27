@@ -1,0 +1,47 @@
+{
+  "semgrep": {
+    "tp": 2,
+    "fp": 0,
+    "fn": 1,
+    "precision": 1.0,
+    "recall": 0.6666666666666666,
+    "f1": 0.8,
+    "false_positives": [],
+    "missed": [
+      [
+        "sqli",
+        "do_login"
+      ]
+    ]
+  },
+  "llm_run_1": {
+    "tp": 3,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0,
+    "false_positives": [],
+    "missed": []
+  },
+  "llm_run_2": {
+    "tp": 2,
+    "fp": 1,
+    "fn": 1,
+    "precision": 0.6666666666666666,
+    "recall": 0.6666666666666666,
+    "f1": 0.6666666666666666,
+    "false_positives": [
+      [
+        "command injection (simulated)",
+        "do_ping"
+      ]
+    ],
+    "missed": [
+      [
+        "cmdi",
+        "do_ping"
+      ]
+    ]
+  }
+}
