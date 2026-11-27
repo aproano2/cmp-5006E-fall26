@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='utf-8'?>
+<request-response run_id="059f8eef14ac41c1b2f5cb2380871b54" sequence="76" phase="B.2-policy-endpoint-bypass" target="http://127.0.0.1:38045">
+  <request method="POST" path="/policy">
+    <body encoding="json">{"allow": ["get_faq"]}</body>
+  </request>
+  <response status="200">
+    <body encoding="json">{"allow": ["get_faq"]}</body>
+  </response>
+</request-response>
