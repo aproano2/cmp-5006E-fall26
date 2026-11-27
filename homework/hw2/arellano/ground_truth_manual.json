@@ -1,0 +1,12 @@
+{
+  "target": "DVWA Medium PHP sources in duel/dvwa_source, plus our SQLi patch as a negative control",
+  "method": "Manual source review on 2026-11-06 before the new PHP tool runs. Prior vuln-web results and instructor fixtures were known; this new reference is based on DVWA PHP code, not outputs of the tools being scored. AI-assisted review; group members must review before submission.",
+  "findings": [
+    {"rule": "sqli", "location": "sqli_medium.php", "note": "mysqli_real_escape_string escapes quoted-string syntax, but ID enters an unquoted numeric expression. OR/comment/boolean variants expand row selection. MySQL and SQLite branches both build query text with input."},
+    {"rule": "xss", "location": "xss_medium.php", "note": "str_replace removes exactly lowercase <script>. Mixed-case script markup survives and name enters an HTML pre element without output encoding."},
+    {"rule": "cmdi", "location": "exec_medium.php", "note": "The filter removes && and semicolon, but pipe and newline survive in target. target concatenates into shell_exec(ping ...), permitting whoami output."}
+  ],
+  "true_negatives": [{"location": "sqli_fixed.php", "note": "Our patch uses a constant statement and mysqli_stmt_bind_param, then HTML-encodes ID and names. Focused injection control, not a claim about CSRF or the entire app."}],
+  "not_present": [{"rule": "broken-access-control", "note": "These snippets provide no role/ownership policy to establish a distinct violation. DVWA authentication is outside the snippets; no observed A01 finding does not prove the whole app has none."}],
+  "scoring": "One key per class and file; duplicate database branches count once. Unexpected findings need source review, not silent ground-truth relabeling."
+}

@@ -1,0 +1,5 @@
+case,payload,waf_blocked,vulnerable_successes,waf_successes,fixed_successes,trials
+part-a,1 OR 1=1,True,3,0,0,3
+comment-separators,1/**/OR/**/1=1,False,3,3,0,3
+boolean-constant,1 OR TRUE,False,3,3,0,3
+comparison-operator,1 OR 2>1,False,3,3,0,3
