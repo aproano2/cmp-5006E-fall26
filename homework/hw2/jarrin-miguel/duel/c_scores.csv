@@ -1,0 +1,4 @@
+tool,run,reported,tp,fp,fn,precision,recall,f1,false_positives,missed
+sqlmap,level3-risk3,1,1,0,2,1.0,0.33,0.5,,cmdi@do_ping xss@do_reflect
+llm,run1,4,1,3,2,0.25,0.33,0.29,sqli@do_ping sqli@do_reflect xss@do_login,cmdi@do_ping xss@do_reflect
+llm,run2,1,1,0,2,1.0,0.33,0.5,,cmdi@do_ping xss@do_reflect
