@@ -1,0 +1,33 @@
+{
+  "target": "labs/vuln-web/app/vulnweb_app.py",
+  "method": "Built by reading the target source before scoring either tool.",
+  "findings": [
+    {
+      "rule": "sqli",
+      "location": "do_login",
+      "evidence": "The SQL query interpolates user and pw into the query string."
+    },
+    {
+      "rule": "xss",
+      "location": "do_reflect",
+      "evidence": "The name value is returned in HTML without output encoding."
+    },
+    {
+      "rule": "cmdi",
+      "location": "do_ping",
+      "evidence": "The host value is concatenated into a shell command string."
+    }
+  ],
+  "true_negatives": [
+    {
+      "location": "do_reflect_safe",
+      "reason": "This function applies html.escape before returning the value."
+    }
+  ],
+  "not_present": [
+    {
+      "rule": "broken-access-control",
+      "reason": "The target has no sessions, user roles, or protected routes to evaluate."
+    }
+  ]
+}

