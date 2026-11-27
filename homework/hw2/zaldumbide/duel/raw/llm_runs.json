@@ -1,0 +1,26 @@
+[
+  {
+    "run": "run1",
+    "model": "qwen2.5:1.5b",
+    "temperature": 0.8,
+    "seed": 1,
+    "meta": {
+      "eval_count": 221,
+      "done_reason": "stop"
+    },
+    "prompt_sha256": "4f126b79e8e8f8c69fd24b6a1879297802356042280aa50fadaf84568daf9407",
+    "text": "```plaintext\nFINDING | SQLInjection | do_login | HIGH | `admin` | Canary secret is hardcoded and exposed in SQL query. |\nFINDING | SQLInjection | do_login | HIGH | `s3cr3t` | User's password is hardcoded and exposed in SQL query. |\nFINDING | XSS | do_login | MEDIUM | 's3cr3t' | Password is passed through `do_reflect` and becomes a user input. |\nFINDING | SQLInjection | do_reflect | MEDIUM | 'ordinary-row' | Canary secret is hardcoded and exposed in SQL query. |\nFINDING | SQLInjection | do_reflect | MEDIUM | 'alice' | User's name is hardcoded and exposed in SQL query. |\nFINDING | SQLInjection | do_ping | MEDIUM | 'ordinary-row' | Canary secret is hardcoded and exposed in SQL query. |\nFINDING | SQLInjection | do_ping | MEDIUM | 'alice' | User's name is hardcoded and exposed in SQL query. |\n```"
+  },
+  {
+    "run": "run2",
+    "model": "qwen2.5:1.5b",
+    "temperature": 0.8,
+    "seed": 2,
+    "meta": {
+      "eval_count": 113,
+      "done_reason": "stop"
+    },
+    "prompt_sha256": "4f126b79e8e8f8c69fd24b6a1879297802356042280aa50fadaf84568daf9407",
+    "text": "FINDING | SQL Injection | do_login | LOW | \"admin\" | SQL injection vulnerability when using the `do_login` function without proper input validation.\n\nFINDING | None | NONE | NONE | | No known vulnerabilities found in the provided code.\n\nFINDING | None | NONE | NONE | | No known vulnerabilities found in the provided code.\n\nFINDING | None | NONE | NONE | | No known vulnerabilities found in the provided code.\n\nFINDING | None | NONE | NONE | | No known vulnerabilities found in the provided code."
+  }
+]
