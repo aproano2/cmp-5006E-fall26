@@ -11,7 +11,14 @@ All work is local — see [`../../../resources/ethics-and-scope.md`](../../../re
 | File | What it is |
 |---|---|
 | `attack/attack_partA.py` | Part A: lands the 4 attacks on T1 and confirms each with a `seclab.attack` oracle, 5 trials each |
-| `attack/a_results.csv` | Part A: reliability (k/5) of every payload, including the benign controls |
+| `attack/a_results.csv` | Part A: reliability (k/5) of every payload, including the benign controls (second run) |
+| `attack/a_results_original.csv` | Part A: first run, the numbers quoted in the Part A text |
+| `defense/defend_partB1.py` | Part B1: defense sweep over the four `/defense` levels and the bypass attempts |
+| `defense/b1_defense_sweep.csv` | Part B1: block rate per attack and defense level |
+| `defense/b1_bypass_results.csv` | Part B1: bypass reliability against the combined defense |
+| `defense/b1_raw_trials.csv` | Part B1: every trial with its full response |
+| `defense/defend_partB2.py` | Part B2: least privilege policy and the containment trials |
+| `honesty.md` | Part C: where our red team might be unfair |
 | `AI_LOG.md` | AI use log |
 
 ## Bring up the target
@@ -179,6 +186,14 @@ deputy (OWASP LLM06 Excessive Agency).
 
 ## Part B1 — Model-Level Defense (Raises Cost, No Guarantee)
 
+Everything for this part is in the `defense/` folder. It needs the target up (see
+above) and imports the helpers from `attack/attack_partA.py`. From inside the
+`defense` folder:
+
+```bash
+PYTHONPATH=../../../..:../attack python defend_partB1.py
+```
+
 ### Defense Configuration and Methodology
 
 Four defense levels were evaluated using T1's `/defense` endpoint:
@@ -240,6 +255,8 @@ However, some responses classified as successful during the latest execution con
 One trial produced a recoverable representation of the complete confidential note.
 
 The response also contained a backend timeout annotation. Although the information was recoverable, the infrastructure error introduces uncertainty regarding the execution of that trial.
+
+The response starts with `[backend error: timed out]`, which is the text T1 adds when the Ollama call fails and it answers with the deterministic mock instead (`generate()` in `vulnllm_app.py`). So this trial was answered by the mock, not by the model. Counting only the responses of the real model, the base64 bypass reached 0/5.
 
 The result is therefore reported with this qualification.
 
@@ -310,6 +327,14 @@ However, inconsistent results, oracle limitations, recoverable confidential info
 **Model-level defenses raise the cost of an attack, but architectural controls are necessary to establish an enforceable security boundary.**
 
 ## Part B2 — Architectural Containment
+
+Everything for this part is in the `defense/` folder. It needs the target up (see
+above) and imports the helpers from `attack/attack_partA.py`. From inside the
+`defense` folder:
+
+```bash
+PYTHONPATH=../../../..:../attack python defend_partB2.py
+```
 
 ### Least-Privilege Policy
 

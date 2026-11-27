@@ -65,7 +65,8 @@ the ones that already landed below 5/5:
   drives reliability.
 - **The B1 bypasses.** Spelled-out **2/5** and base64 **1/5** against the combined
   defense are our weakest numbers and the most fragile; base64 also fired on a trial
-  that carried a backend timeout (see C5). We would not bet the grade on either
+  that carried a backend timeout. That trial was answered by T1's mock fallback, not
+  by the model, so against the real model base64 was 0/5. We would not bet the grade on either
   reproducing.
 
 The findings we stand behind without qualification are RAG exfiltration and the
