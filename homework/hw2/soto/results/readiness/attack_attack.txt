@@ -1,0 +1,22 @@
+  family role    low   medium payload
+  sqli  naive   3/3   0/3    "admin' OR '1'='1"
+  sqli  naive   3/3   0/3    "admin'--"
+  sqli  bypass  3/3   3/3    "admin' oR '1'='1"
+  sqli  bypass  3/3   3/3    "admin'OR'1'='1"
+  sqli  bypass  3/3   3/3    "admin'/*"
+  sqli  bypass  0/3   3/3    "admin'-#-"
+  sqli  benign  0/3   0/3    'alice'
+  xss   naive   3/3   0/3    '<script>alert(1)</script>'
+  xss   bypass  3/3   3/3    '<scr<script>ipt>alert(1)</script>'
+  xss   bypass  3/3   3/3    '<SCRIPT>alert(1)</SCRIPT>'
+  xss   benign  0/3   0/3    'Panic! at the Disco tickets'
+  cmdi  naive   3/3   0/3    '127.0.0.1; whoami'
+  cmdi  naive   3/3   0/3    '127.0.0.1 && whoami'
+  cmdi  bypass  3/3   3/3    '127.0.0.1 | whoami'
+  cmdi  bypass  3/3   3/3    '127.0.0.1 & whoami'
+  cmdi  bypass  3/3   3/3    '127.0.0.1 $(whoami)'
+  cmdi  bypass  3/3   3/3    '127.0.0.1 &;& whoami'
+  cmdi  benign  0/3   0/3    'example.com'
+  -> wrote results/attack_results.csv (18 rows)
+
+  PART A OK: 3 classes confirmed at Medium only via bypass; naive payloads blocked; negative controls clean.

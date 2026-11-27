@@ -1,0 +1,41 @@
+{
+  "technical_checks_passed": true,
+  "scope": "Saved-output reproduction and HTTP replay; not grading acceptance",
+  "python": "3.15.0",
+  "original_csvs_reproduced": 6,
+  "renamed_folder_reproduction": true,
+  "target_sha256": "fd87ee62ede6fd83befb5b37b8a0f8335f86178522c3ab1480b7d56aa0ae257e",
+  "replay_rows": 294,
+  "http_replay_trials": 882,
+  "control_rows": 14,
+  "confirmed_after_sql_only_fix": {
+    "fixed_low": {
+      "sqli": 0,
+      "xss": 3,
+      "cmdi": 6
+    },
+    "fixed_after_medium": {
+      "sqli": 0,
+      "xss": 2,
+      "cmdi": 4
+    }
+  },
+  "sqli_bypasses_of_waf_before_medium": [
+    "admin'-#-",
+    "x' IS NOT 'y",
+    "admin' AND 1/*"
+  ],
+  "supplementary_coverage": {
+    "distinct_inputs": 20,
+    "confirmed_by_configuration": {
+      "low": 20,
+      "medium": 0,
+      "waf_v1_low": 0,
+      "waf_v2_low": 0,
+      "fixed_low": 0,
+      "fixed_after_medium": 0,
+      "waf_v1_before_medium": 0
+    }
+  },
+  "distinct_sql_payload_texts": 30
+}

