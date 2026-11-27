@@ -1,0 +1,650 @@
+[
+  {
+    "mode": "original",
+    "group": "A_control",
+    "family": "sqli",
+    "payload": "admin' OR 1=1--",
+    "status": 200,
+    "body": "{\"ok\": true, \"rows\": [[\"admin\", \"FLAG-sqli-9f2c-admin-session\"], [\"alice\", \"ordinary-row\"]]}"
+  },
+  {
+    "mode": "original",
+    "group": "A_control",
+    "family": "sqli",
+    "payload": "admin' OR 1=1--",
+    "status": 200,
+    "body": "{\"ok\": true, \"rows\": [[\"admin\", \"FLAG-sqli-9f2c-admin-session\"], [\"alice\", \"ordinary-row\"]]}"
+  },
+  {
+    "mode": "original",
+    "group": "A_control",
+    "family": "sqli",
+    "payload": "admin' OR 1=1--",
+    "status": 200,
+    "body": "{\"ok\": true, \"rows\": [[\"admin\", \"FLAG-sqli-9f2c-admin-session\"], [\"alice\", \"ordinary-row\"]]}"
+  },
+  {
+    "mode": "original",
+    "group": "A_control",
+    "family": "xss",
+    "payload": "<script>alert(1)</script>",
+    "status": 200,
+    "body": "<html><body><h1>Hello, <script>alert(1)</script>!</h1></body></html>"
+  },
+  {
+    "mode": "original",
+    "group": "A_control",
+    "family": "xss",
+    "payload": "<script>alert(1)</script>",
+    "status": 200,
+    "body": "<html><body><h1>Hello, <script>alert(1)</script>!</h1></body></html>"
+  },
+  {
+    "mode": "original",
+    "group": "A_control",
+    "family": "xss",
+    "payload": "<script>alert(1)</script>",
+    "status": 200,
+    "body": "<html><body><h1>Hello, <script>alert(1)</script>!</h1></body></html>"
+  },
+  {
+    "mode": "original",
+    "group": "A_control",
+    "family": "cmdi",
+    "payload": "127.0.0.1; printf CMDI_OK",
+    "status": 200,
+    "body": "{\"would_run\": \"ping -c 1 127.0.0.1; printf CMDI_OK\", \"injection_detected\": true, \"note\": \"extra command(s) smuggled in via a shell metacharacter\"}"
+  },
+  {
+    "mode": "original",
+    "group": "A_control",
+    "family": "cmdi",
+    "payload": "127.0.0.1; printf CMDI_OK",
+    "status": 200,
+    "body": "{\"would_run\": \"ping -c 1 127.0.0.1; printf CMDI_OK\", \"injection_detected\": true, \"note\": \"extra command(s) smuggled in via a shell metacharacter\"}"
+  },
+  {
+    "mode": "original",
+    "group": "A_control",
+    "family": "cmdi",
+    "payload": "127.0.0.1; printf CMDI_OK",
+    "status": 200,
+    "body": "{\"would_run\": \"ping -c 1 127.0.0.1; printf CMDI_OK\", \"injection_detected\": true, \"note\": \"extra command(s) smuggled in via a shell metacharacter\"}"
+  },
+  {
+    "mode": "original",
+    "group": "A",
+    "family": "sqli",
+    "payload": "admin' or 1=1--",
+    "status": 200,
+    "body": "{\"ok\": true, \"rows\": [[\"admin\", \"FLAG-sqli-9f2c-admin-session\"], [\"alice\", \"ordinary-row\"]]}"
+  },
+  {
+    "mode": "original",
+    "group": "A",
+    "family": "sqli",
+    "payload": "admin' or 1=1--",
+    "status": 200,
+    "body": "{\"ok\": true, \"rows\": [[\"admin\", \"FLAG-sqli-9f2c-admin-session\"], [\"alice\", \"ordinary-row\"]]}"
+  },
+  {
+    "mode": "original",
+    "group": "A",
+    "family": "sqli",
+    "payload": "admin' or 1=1--",
+    "status": 200,
+    "body": "{\"ok\": true, \"rows\": [[\"admin\", \"FLAG-sqli-9f2c-admin-session\"], [\"alice\", \"ordinary-row\"]]}"
+  },
+  {
+    "mode": "original",
+    "group": "A",
+    "family": "xss",
+    "payload": "<ScRiPt>alert(1)</ScRiPt>",
+    "status": 200,
+    "body": "<html><body><h1>Hello, <ScRiPt>alert(1)</ScRiPt>!</h1></body></html>"
+  },
+  {
+    "mode": "original",
+    "group": "A",
+    "family": "xss",
+    "payload": "<ScRiPt>alert(1)</ScRiPt>",
+    "status": 200,
+    "body": "<html><body><h1>Hello, <ScRiPt>alert(1)</ScRiPt>!</h1></body></html>"
+  },
+  {
+    "mode": "original",
+    "group": "A",
+    "family": "xss",
+    "payload": "<ScRiPt>alert(1)</ScRiPt>",
+    "status": 200,
+    "body": "<html><body><h1>Hello, <ScRiPt>alert(1)</ScRiPt>!</h1></body></html>"
+  },
+  {
+    "mode": "original",
+    "group": "A",
+    "family": "cmdi",
+    "payload": "127.0.0.1 | printf CMDI_OK",
+    "status": 200,
+    "body": "{\"would_run\": \"ping -c 1 127.0.0.1 | printf CMDI_OK\", \"injection_detected\": true, \"note\": \"extra command(s) smuggled in via a shell metacharacter\"}"
+  },
+  {
+    "mode": "original",
+    "group": "A",
+    "family": "cmdi",
+    "payload": "127.0.0.1 | printf CMDI_OK",
+    "status": 200,
+    "body": "{\"would_run\": \"ping -c 1 127.0.0.1 | printf CMDI_OK\", \"injection_detected\": true, \"note\": \"extra command(s) smuggled in via a shell metacharacter\"}"
+  },
+  {
+    "mode": "original",
+    "group": "A",
+    "family": "cmdi",
+    "payload": "127.0.0.1 | printf CMDI_OK",
+    "status": 200,
+    "body": "{\"would_run\": \"ping -c 1 127.0.0.1 | printf CMDI_OK\", \"injection_detected\": true, \"note\": \"extra command(s) smuggled in via a shell metacharacter\"}"
+  },
+  {
+    "mode": "original",
+    "group": "B1_bypass",
+    "family": "sqli",
+    "payload": "admin'--",
+    "status": 200,
+    "body": "{\"ok\": true, \"rows\": [[\"admin\", \"FLAG-sqli-9f2c-admin-session\"]]}"
+  },
+  {
+    "mode": "original",
+    "group": "B1_bypass",
+    "family": "sqli",
+    "payload": "admin'--",
+    "status": 200,
+    "body": "{\"ok\": true, \"rows\": [[\"admin\", \"FLAG-sqli-9f2c-admin-session\"]]}"
+  },
+  {
+    "mode": "original",
+    "group": "B1_bypass",
+    "family": "sqli",
+    "payload": "admin'--",
+    "status": 200,
+    "body": "{\"ok\": true, \"rows\": [[\"admin\", \"FLAG-sqli-9f2c-admin-session\"]]}"
+  },
+  {
+    "mode": "original",
+    "group": "B1_bypass",
+    "family": "sqli",
+    "payload": "admin' and pw glob '*'--",
+    "status": 200,
+    "body": "{\"ok\": true, \"rows\": [[\"admin\", \"FLAG-sqli-9f2c-admin-session\"]]}"
+  },
+  {
+    "mode": "original",
+    "group": "B1_bypass",
+    "family": "sqli",
+    "payload": "admin' and pw glob '*'--",
+    "status": 200,
+    "body": "{\"ok\": true, \"rows\": [[\"admin\", \"FLAG-sqli-9f2c-admin-session\"]]}"
+  },
+  {
+    "mode": "original",
+    "group": "B1_bypass",
+    "family": "sqli",
+    "payload": "admin' and pw glob '*'--",
+    "status": 200,
+    "body": "{\"ok\": true, \"rows\": [[\"admin\", \"FLAG-sqli-9f2c-admin-session\"]]}"
+  },
+  {
+    "mode": "original",
+    "group": "B1_bypass",
+    "family": "sqli",
+    "payload": "admin' and 2 between 1 and 3--",
+    "status": 200,
+    "body": "{\"ok\": true, \"rows\": [[\"admin\", \"FLAG-sqli-9f2c-admin-session\"]]}"
+  },
+  {
+    "mode": "original",
+    "group": "B1_bypass",
+    "family": "sqli",
+    "payload": "admin' and 2 between 1 and 3--",
+    "status": 200,
+    "body": "{\"ok\": true, \"rows\": [[\"admin\", \"FLAG-sqli-9f2c-admin-session\"]]}"
+  },
+  {
+    "mode": "original",
+    "group": "B1_bypass",
+    "family": "sqli",
+    "payload": "admin' and 2 between 1 and 3--",
+    "status": 200,
+    "body": "{\"ok\": true, \"rows\": [[\"admin\", \"FLAG-sqli-9f2c-admin-session\"]]}"
+  },
+  {
+    "mode": "waf",
+    "group": "A_control",
+    "family": "sqli",
+    "payload": "admin' OR 1=1--",
+    "status": 403,
+    "body": "{\"blocked\": \"keyword OR\"}"
+  },
+  {
+    "mode": "waf",
+    "group": "A_control",
+    "family": "sqli",
+    "payload": "admin' OR 1=1--",
+    "status": 403,
+    "body": "{\"blocked\": \"keyword OR\"}"
+  },
+  {
+    "mode": "waf",
+    "group": "A_control",
+    "family": "sqli",
+    "payload": "admin' OR 1=1--",
+    "status": 403,
+    "body": "{\"blocked\": \"keyword OR\"}"
+  },
+  {
+    "mode": "waf",
+    "group": "A_control",
+    "family": "xss",
+    "payload": "<script>alert(1)</script>",
+    "status": 200,
+    "body": "<html><body><h1>Hello, <script>alert(1)</script>!</h1></body></html>"
+  },
+  {
+    "mode": "waf",
+    "group": "A_control",
+    "family": "xss",
+    "payload": "<script>alert(1)</script>",
+    "status": 200,
+    "body": "<html><body><h1>Hello, <script>alert(1)</script>!</h1></body></html>"
+  },
+  {
+    "mode": "waf",
+    "group": "A_control",
+    "family": "xss",
+    "payload": "<script>alert(1)</script>",
+    "status": 200,
+    "body": "<html><body><h1>Hello, <script>alert(1)</script>!</h1></body></html>"
+  },
+  {
+    "mode": "waf",
+    "group": "A_control",
+    "family": "cmdi",
+    "payload": "127.0.0.1; printf CMDI_OK",
+    "status": 200,
+    "body": "{\"would_run\": \"ping -c 1 127.0.0.1; printf CMDI_OK\", \"injection_detected\": true, \"note\": \"extra command(s) smuggled in via a shell metacharacter\"}"
+  },
+  {
+    "mode": "waf",
+    "group": "A_control",
+    "family": "cmdi",
+    "payload": "127.0.0.1; printf CMDI_OK",
+    "status": 200,
+    "body": "{\"would_run\": \"ping -c 1 127.0.0.1; printf CMDI_OK\", \"injection_detected\": true, \"note\": \"extra command(s) smuggled in via a shell metacharacter\"}"
+  },
+  {
+    "mode": "waf",
+    "group": "A_control",
+    "family": "cmdi",
+    "payload": "127.0.0.1; printf CMDI_OK",
+    "status": 200,
+    "body": "{\"would_run\": \"ping -c 1 127.0.0.1; printf CMDI_OK\", \"injection_detected\": true, \"note\": \"extra command(s) smuggled in via a shell metacharacter\"}"
+  },
+  {
+    "mode": "waf",
+    "group": "A",
+    "family": "sqli",
+    "payload": "admin' or 1=1--",
+    "status": 403,
+    "body": "{\"blocked\": \"keyword OR\"}"
+  },
+  {
+    "mode": "waf",
+    "group": "A",
+    "family": "sqli",
+    "payload": "admin' or 1=1--",
+    "status": 403,
+    "body": "{\"blocked\": \"keyword OR\"}"
+  },
+  {
+    "mode": "waf",
+    "group": "A",
+    "family": "sqli",
+    "payload": "admin' or 1=1--",
+    "status": 403,
+    "body": "{\"blocked\": \"keyword OR\"}"
+  },
+  {
+    "mode": "waf",
+    "group": "A",
+    "family": "xss",
+    "payload": "<ScRiPt>alert(1)</ScRiPt>",
+    "status": 200,
+    "body": "<html><body><h1>Hello, <ScRiPt>alert(1)</ScRiPt>!</h1></body></html>"
+  },
+  {
+    "mode": "waf",
+    "group": "A",
+    "family": "xss",
+    "payload": "<ScRiPt>alert(1)</ScRiPt>",
+    "status": 200,
+    "body": "<html><body><h1>Hello, <ScRiPt>alert(1)</ScRiPt>!</h1></body></html>"
+  },
+  {
+    "mode": "waf",
+    "group": "A",
+    "family": "xss",
+    "payload": "<ScRiPt>alert(1)</ScRiPt>",
+    "status": 200,
+    "body": "<html><body><h1>Hello, <ScRiPt>alert(1)</ScRiPt>!</h1></body></html>"
+  },
+  {
+    "mode": "waf",
+    "group": "A",
+    "family": "cmdi",
+    "payload": "127.0.0.1 | printf CMDI_OK",
+    "status": 200,
+    "body": "{\"would_run\": \"ping -c 1 127.0.0.1 | printf CMDI_OK\", \"injection_detected\": true, \"note\": \"extra command(s) smuggled in via a shell metacharacter\"}"
+  },
+  {
+    "mode": "waf",
+    "group": "A",
+    "family": "cmdi",
+    "payload": "127.0.0.1 | printf CMDI_OK",
+    "status": 200,
+    "body": "{\"would_run\": \"ping -c 1 127.0.0.1 | printf CMDI_OK\", \"injection_detected\": true, \"note\": \"extra command(s) smuggled in via a shell metacharacter\"}"
+  },
+  {
+    "mode": "waf",
+    "group": "A",
+    "family": "cmdi",
+    "payload": "127.0.0.1 | printf CMDI_OK",
+    "status": 200,
+    "body": "{\"would_run\": \"ping -c 1 127.0.0.1 | printf CMDI_OK\", \"injection_detected\": true, \"note\": \"extra command(s) smuggled in via a shell metacharacter\"}"
+  },
+  {
+    "mode": "waf",
+    "group": "B1_bypass",
+    "family": "sqli",
+    "payload": "admin'--",
+    "status": 200,
+    "body": "{\"ok\": true, \"rows\": [[\"admin\", \"FLAG-sqli-9f2c-admin-session\"]]}"
+  },
+  {
+    "mode": "waf",
+    "group": "B1_bypass",
+    "family": "sqli",
+    "payload": "admin'--",
+    "status": 200,
+    "body": "{\"ok\": true, \"rows\": [[\"admin\", \"FLAG-sqli-9f2c-admin-session\"]]}"
+  },
+  {
+    "mode": "waf",
+    "group": "B1_bypass",
+    "family": "sqli",
+    "payload": "admin'--",
+    "status": 200,
+    "body": "{\"ok\": true, \"rows\": [[\"admin\", \"FLAG-sqli-9f2c-admin-session\"]]}"
+  },
+  {
+    "mode": "waf",
+    "group": "B1_bypass",
+    "family": "sqli",
+    "payload": "admin' and pw glob '*'--",
+    "status": 200,
+    "body": "{\"ok\": true, \"rows\": [[\"admin\", \"FLAG-sqli-9f2c-admin-session\"]]}"
+  },
+  {
+    "mode": "waf",
+    "group": "B1_bypass",
+    "family": "sqli",
+    "payload": "admin' and pw glob '*'--",
+    "status": 200,
+    "body": "{\"ok\": true, \"rows\": [[\"admin\", \"FLAG-sqli-9f2c-admin-session\"]]}"
+  },
+  {
+    "mode": "waf",
+    "group": "B1_bypass",
+    "family": "sqli",
+    "payload": "admin' and pw glob '*'--",
+    "status": 200,
+    "body": "{\"ok\": true, \"rows\": [[\"admin\", \"FLAG-sqli-9f2c-admin-session\"]]}"
+  },
+  {
+    "mode": "waf",
+    "group": "B1_bypass",
+    "family": "sqli",
+    "payload": "admin' and 2 between 1 and 3--",
+    "status": 200,
+    "body": "{\"ok\": true, \"rows\": [[\"admin\", \"FLAG-sqli-9f2c-admin-session\"]]}"
+  },
+  {
+    "mode": "waf",
+    "group": "B1_bypass",
+    "family": "sqli",
+    "payload": "admin' and 2 between 1 and 3--",
+    "status": 200,
+    "body": "{\"ok\": true, \"rows\": [[\"admin\", \"FLAG-sqli-9f2c-admin-session\"]]}"
+  },
+  {
+    "mode": "waf",
+    "group": "B1_bypass",
+    "family": "sqli",
+    "payload": "admin' and 2 between 1 and 3--",
+    "status": 200,
+    "body": "{\"ok\": true, \"rows\": [[\"admin\", \"FLAG-sqli-9f2c-admin-session\"]]}"
+  },
+  {
+    "mode": "positive",
+    "group": "A_control",
+    "family": "sqli",
+    "payload": "admin' OR 1=1--",
+    "status": 200,
+    "body": "{\"ok\": false, \"rows\": []}"
+  },
+  {
+    "mode": "positive",
+    "group": "A_control",
+    "family": "sqli",
+    "payload": "admin' OR 1=1--",
+    "status": 200,
+    "body": "{\"ok\": false, \"rows\": []}"
+  },
+  {
+    "mode": "positive",
+    "group": "A_control",
+    "family": "sqli",
+    "payload": "admin' OR 1=1--",
+    "status": 200,
+    "body": "{\"ok\": false, \"rows\": []}"
+  },
+  {
+    "mode": "positive",
+    "group": "A_control",
+    "family": "xss",
+    "payload": "<script>alert(1)</script>",
+    "status": 200,
+    "body": "<html><body><h1>Hello, &lt;script&gt;alert(1)&lt;/script&gt;!</h1></body></html>"
+  },
+  {
+    "mode": "positive",
+    "group": "A_control",
+    "family": "xss",
+    "payload": "<script>alert(1)</script>",
+    "status": 200,
+    "body": "<html><body><h1>Hello, &lt;script&gt;alert(1)&lt;/script&gt;!</h1></body></html>"
+  },
+  {
+    "mode": "positive",
+    "group": "A_control",
+    "family": "xss",
+    "payload": "<script>alert(1)</script>",
+    "status": 200,
+    "body": "<html><body><h1>Hello, &lt;script&gt;alert(1)&lt;/script&gt;!</h1></body></html>"
+  },
+  {
+    "mode": "positive",
+    "group": "A_control",
+    "family": "cmdi",
+    "payload": "127.0.0.1; printf CMDI_OK",
+    "status": 400,
+    "body": "{\"error\": \"invalid host\"}"
+  },
+  {
+    "mode": "positive",
+    "group": "A_control",
+    "family": "cmdi",
+    "payload": "127.0.0.1; printf CMDI_OK",
+    "status": 400,
+    "body": "{\"error\": \"invalid host\"}"
+  },
+  {
+    "mode": "positive",
+    "group": "A_control",
+    "family": "cmdi",
+    "payload": "127.0.0.1; printf CMDI_OK",
+    "status": 400,
+    "body": "{\"error\": \"invalid host\"}"
+  },
+  {
+    "mode": "positive",
+    "group": "A",
+    "family": "sqli",
+    "payload": "admin' or 1=1--",
+    "status": 200,
+    "body": "{\"ok\": false, \"rows\": []}"
+  },
+  {
+    "mode": "positive",
+    "group": "A",
+    "family": "sqli",
+    "payload": "admin' or 1=1--",
+    "status": 200,
+    "body": "{\"ok\": false, \"rows\": []}"
+  },
+  {
+    "mode": "positive",
+    "group": "A",
+    "family": "sqli",
+    "payload": "admin' or 1=1--",
+    "status": 200,
+    "body": "{\"ok\": false, \"rows\": []}"
+  },
+  {
+    "mode": "positive",
+    "group": "A",
+    "family": "xss",
+    "payload": "<ScRiPt>alert(1)</ScRiPt>",
+    "status": 200,
+    "body": "<html><body><h1>Hello, &lt;ScRiPt&gt;alert(1)&lt;/ScRiPt&gt;!</h1></body></html>"
+  },
+  {
+    "mode": "positive",
+    "group": "A",
+    "family": "xss",
+    "payload": "<ScRiPt>alert(1)</ScRiPt>",
+    "status": 200,
+    "body": "<html><body><h1>Hello, &lt;ScRiPt&gt;alert(1)&lt;/ScRiPt&gt;!</h1></body></html>"
+  },
+  {
+    "mode": "positive",
+    "group": "A",
+    "family": "xss",
+    "payload": "<ScRiPt>alert(1)</ScRiPt>",
+    "status": 200,
+    "body": "<html><body><h1>Hello, &lt;ScRiPt&gt;alert(1)&lt;/ScRiPt&gt;!</h1></body></html>"
+  },
+  {
+    "mode": "positive",
+    "group": "A",
+    "family": "cmdi",
+    "payload": "127.0.0.1 | printf CMDI_OK",
+    "status": 400,
+    "body": "{\"error\": \"invalid host\"}"
+  },
+  {
+    "mode": "positive",
+    "group": "A",
+    "family": "cmdi",
+    "payload": "127.0.0.1 | printf CMDI_OK",
+    "status": 400,
+    "body": "{\"error\": \"invalid host\"}"
+  },
+  {
+    "mode": "positive",
+    "group": "A",
+    "family": "cmdi",
+    "payload": "127.0.0.1 | printf CMDI_OK",
+    "status": 400,
+    "body": "{\"error\": \"invalid host\"}"
+  },
+  {
+    "mode": "positive",
+    "group": "B1_bypass",
+    "family": "sqli",
+    "payload": "admin'--",
+    "status": 200,
+    "body": "{\"ok\": false, \"rows\": []}"
+  },
+  {
+    "mode": "positive",
+    "group": "B1_bypass",
+    "family": "sqli",
+    "payload": "admin'--",
+    "status": 200,
+    "body": "{\"ok\": false, \"rows\": []}"
+  },
+  {
+    "mode": "positive",
+    "group": "B1_bypass",
+    "family": "sqli",
+    "payload": "admin'--",
+    "status": 200,
+    "body": "{\"ok\": false, \"rows\": []}"
+  },
+  {
+    "mode": "positive",
+    "group": "B1_bypass",
+    "family": "sqli",
+    "payload": "admin' and pw glob '*'--",
+    "status": 200,
+    "body": "{\"ok\": false, \"rows\": []}"
+  },
+  {
+    "mode": "positive",
+    "group": "B1_bypass",
+    "family": "sqli",
+    "payload": "admin' and pw glob '*'--",
+    "status": 200,
+    "body": "{\"ok\": false, \"rows\": []}"
+  },
+  {
+    "mode": "positive",
+    "group": "B1_bypass",
+    "family": "sqli",
+    "payload": "admin' and pw glob '*'--",
+    "status": 200,
+    "body": "{\"ok\": false, \"rows\": []}"
+  },
+  {
+    "mode": "positive",
+    "group": "B1_bypass",
+    "family": "sqli",
+    "payload": "admin' and 2 between 1 and 3--",
+    "status": 200,
+    "body": "{\"ok\": false, \"rows\": []}"
+  },
+  {
+    "mode": "positive",
+    "group": "B1_bypass",
+    "family": "sqli",
+    "payload": "admin' and 2 between 1 and 3--",
+    "status": 200,
+    "body": "{\"ok\": false, \"rows\": []}"
+  },
+  {
+    "mode": "positive",
+    "group": "B1_bypass",
+    "family": "sqli",
+    "payload": "admin' and 2 between 1 and 3--",
+    "status": 200,
+    "body": "{\"ok\": false, \"rows\": []}"
+  }
+]
