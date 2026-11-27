@@ -1,43 +1,74 @@
-# AI_LOG.md — Homework 3
+# AI_LOG — HW3 AI Application Red Team
 
-## Entry 1 — Part A reliability harness, B1/B2 defense scripts, scorecard skeleton, README (`harness/`, `defend/`, `scorecard.md`, `README.md`)
+Per-entry format: who, tool/model, what was requested, what the tool produced,
+and what was independently checked before use. This log is intended to
+separate AI-assisted drafting from actual target execution.
 
-**Who:** Kevin
-**Tool:** Claude (claude.ai)
-**What I asked:** Build the reliability-measurement harness for all four Part A
-attacks using the real `seclab.attack.Payload`/`run_payloads`/`contains_oracle`
-API against the real `vulnllm_app.py` source, the B1 (model-level defense +
-bypass) and B2 (least-privilege containment) scripts, a Control Scorecard
-mapping HW3's own language onto the course's 9-axis framework, and a
-README — all without Claude writing any actual attack/injection/bypass
-payload text, since it holds that line even for this course-authorized local
-sandbox.
+## Entry 1 — Kevin — Claude (Sonnet 5)
 
-**What I got:** `harness/reliability_harness.py` with a sound oracle per
-attack — not just "the response looked suspicious," e.g. the RAG oracles
-require both that the right document was retrieved AND that the canary shows
-up in the answer, not retrieval alone; `harness/payloads.py` with six named
-placeholders Claude left as `None`, with an explanation of why;
-`defend/b1_defense_and_bypass.py` cycling `/defense` levels 0-3 and a
-transform-aware bypass oracle (literal/spaced/hyphenated/base64 forms);
-`defend/b2_containment.py` narrowing `/policy` and re-running the Part A.4
-request to prove containment; and skeletons for `scorecard.md`,
-`findings.md`, `honesty.md`, `README.md`.
+**What was requested:** build the reliability-measurement harness for Part A
+(all four attack surfaces), the B1 defense/bypass script, the B2 least-privilege
+script, a nine-axis scorecard, and README guidance using the course APIs and
+target source.
 
-**What I did with it:** I ran all three scripts against a copy of the real
-`vulnllm_app.py` using only benign test strings ("hello there," ordinary FAQ
-questions) before anything resembling an attack existed — confirmed the HTTP
-plumbing, JSON schema, and oracles don't crash or false-positive on harmless
-input. I also specifically tested the containment claim directly: narrowed
-`/policy` to exclude `get_faq` and sent an ordinary FAQ question, which
-correctly came back `DENIED_BY_POLICY` — proving the dispatcher's allow-list
-check is a real enforced gate before any actual attack payload existed.
+**What was produced (as recorded in the initial team draft):**
+- `harness/reliability_harness.py` — HTTP calls to `/chat`, `/summarize`,
+  `/rag`, and `/agent`, canary-aware oracles, five-trial default, and JSON output.
+- `harness/payloads.py` — named payload placeholders.
+- `defend/b1_defense_and_bypass.py` — defense-level loop and transformed-output
+  bypass measurement.
+- `defend/b2_containment.py` — policy restriction and benign-task check.
+- `scorecard.md`, `findings.md`, `honesty.md`, and `README.md` drafts.
 
-**Did I understand it?** Yes for the harness/oracle design — the distinction
-between "the payload was echoed back" and "a sound oracle confirmed a real
-effect" (straight from `seclab.attack`'s own docstring) is the same discipline
-from HW2's duel, and I could rebuild the oracle pattern from scratch. The
-9-axis scorecard mapping (reading HW3's own bullet points as axis 2/3/4/5/9
-restated in different words) is something I'd want to double-check myself
-against the rubric language before relying on it blindly in a future
-homework.
+**Verification recorded in that initial draft:** benign requests were used to
+check HTTP/JSON handling and that policy enforcement denies a disallowed tool.
+No attack payload was run as part of that initial drafting step. This entry is
+retained from the team's original AI log; it is not a claim that the revised
+files in this bundle are byte-for-byte identical to that first draft.
+
+## Entry 2 — Alex — ChatGPT (GPT-6)
+
+**What was requested:** review the supplied HW3 instructions, the current
+submission archive, and the `seclab` / `vulnllm_app.py` source pasted in the
+conversation; complete the payloads and correct any flaws in the harness and
+written analysis.
+
+**What was produced:**
+- Six local-lab payload values in `harness/payloads.py` for A.1, A.2, A.3a,
+  A.3b, A.4, and B1.3.
+- A revised Part A harness that resets the baseline defenses/policy, records
+  backend metadata, and requires both private-document retrieval and canary
+  disclosure for RAG exfiltration.
+- A revised B1 script that separates HTTP request errors from successful
+  responses when calculating block rates and restores defense level 0.
+- A revised B2 script using `allow = ["get_faq"]`, verifying that both
+  sensitive tools are denied, `sent` is empty, and the canary is absent from
+  the transcript; it records the legitimate balance-query functionality cost.
+- Revisions to `README.md`, `findings.md`, `scorecard.md`, and `honesty.md` to
+  align the claims with the target code and the assignment's coverage-versus-
+  containment distinction.
+
+**Independent verification performed in this authoring environment:** Python
+syntax compilation and source-level consistency checks were performed on the
+revised scripts and payloads. The archive contained the homework submission
+folder only; it did not contain the full `seclab/` and `labs/vuln-llm/` source
+tree or a running target. Therefore the live HTTP attacks were **not** executed
+here, and no `k/5`, block-rate, or containment-rate result is claimed as
+measured. Those numbers must be generated by Alex from the local course clone
+and copied from `results/*.json` before submission.
+
+**Payload assistance disclosure:** GPT-6 helped draft the test payload text.
+The payloads are scoped to the deliberately vulnerable, local course target
+and should not be used against third-party systems.
+
+## Entry 3 — Alex — local execution (to complete)
+
+**Target/backend:** `<mock or ollama; model name if applicable>`  
+**Date/time:** `<actual local execution date/time>`  
+**Commands run:** `<commands actually executed>`  
+**Files generated:** `results/part_a_findings.json`,
+`results/part_b1_findings.json`, `results/part_b2_containment.json`  
+**Independent verification:** `<state which commands/tests were re-run and what
+was checked; do not fill this with a planned check>`
+
+Do not complete Entry 3 until the local runs have actually taken place.

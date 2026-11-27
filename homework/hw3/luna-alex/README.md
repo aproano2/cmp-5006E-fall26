@@ -1,120 +1,218 @@
-# HW3 — AI Application Red Team (vuln-llm)
+# HW3 — AI Application Red Team (`vuln-llm`)
 
-Submitted by Alex Luna & Kevin (paired work, individual PR per
-`/homework/hw3/<lastname>/` folder per the professor's per-student-folder
-clarification from earlier in the semester).
+Submission folder: `homework/hw3/luna-alex/`.
 
-## What's in this folder
+## Contents
 
-```
+```text
 homework/hw3/luna-alex/
-├── README.md                    this file
-├── findings.md                  Part A write-up template (fill in after running the harness)
-├── scorecard.md                 9-axis Control Scorecard for B1 (filter) vs B2 (containment)
-├── honesty.md                   "Where our red team might be unfair" (Part C)
-├── AI_LOG.md                    required AI-use log
+├── README.md
+├── findings.md                  Part A — four oracle-confirmed attack findings
+├── scorecard.md                 B1 vs B2, nine-axis control scorecard
+├── honesty.md                   Part C — limitations and fairness
+├── AI_LOG.md                    required AI-use record
 ├── harness/
-│   ├── payloads.py              <-- THE ONE FILE YOU MUST EDIT BY HAND. See below.
-│   └── reliability_harness.py   Part A: fires all 4 attacks at vuln-llm, k/5 reliability
+│   ├── payloads.py              six attack strings used by all scripts
+│   └── reliability_harness.py   Part A — k/N trials and canary oracles
 ├── defend/
-│   ├── b1_defense_and_bypass.py Part B1: block rate across /defense levels 0-3 + bypass
-│   └── b2_containment.py        Part B2: least-privilege /policy + re-run, proves sent=[]
-└── results/                     JSON output from the three scripts above lands here
+│   ├── b1_defense_and_bypass.py Part B1 — defense levels 0–3 and bypass
+│   └── b2_containment.py        Part B2 — allow-list containment and cost
+└── results/                     generated JSON evidence (initially empty)
 ```
 
-## What's already built and tested
+## Repository layout and the `seclab.attack` import
 
-Everything except the attack content itself:
+Run all commands from the **course repository root**, the directory containing
+both `seclab/` and `labs/`.
 
-- The reliability-measurement harness for all four Part A attacks, using the
-  real `seclab.attack.Payload` / `run_payloads` / `contains_oracle` API,
-  `trials=5` by default, with a sound oracle per attack (a canary string in
-  the right field, not "the response looked suspicious").
-- The B1 script: cycles `/defense` through levels 0-3, re-measures block rate
-  at each level, and runs a transform-aware bypass oracle at level 2 (checks
-  for the secret in literal, spaced, hyphenated, and base64 form — the same
-  encodings `vulnllm_app.py`'s own mock backend already knows how to produce).
-- The B2 script: applies a least-privilege `/policy` (`get_faq`,
-  `lookup_balance` — excluding `send_email`, since nothing in
-  `plan_tool_calls()`'s benign paths ever needs it), re-runs the exact same
-  confused-deputy request from Part A multiple times, and confirms
-  `sent == []` every time. It also runs three ordinary customer requests
-  through the narrowed policy so `honesty.md`'s axis-5 question has a real
-  answer instead of an assumption.
-- `scorecard.md` with both rows (B1, B2) fully reasoned through on every axis
-  except the ones that need your actual measured numbers.
-- `honesty.md` and `findings.md` skeletons with the real structural arguments
-  already written in — only the numbers are placeholders.
+There is no need for a file literally named `seclab.attack.py`. In Python,
+`from seclab.attack import ...` means the module file is:
 
-All of the above was tested against a local reconstruction of the real
-`vulnllm_app.py` logic using only benign, non-attack strings ("hello there,"
-ordinary FAQ questions) to confirm the HTTP plumbing, JSON schema, and oracle
-logic all work correctly end-to-end — including a direct check that
-`AGENT_POLICY["allow"]` really does deny a disallowed tool call for an
-ordinary, non-malicious request. No attack payload was written, run, or
-tested against any target as part of building this.
+```text
+seclab/attack.py
+```
 
-## What you still have to do by hand
+That is the `attack.py` file inside the `seclab` directory. The scripts locate
+the repository root by checking for `seclab/attack.py` and
+`labs/vuln-llm/app/vulnllm_app.py`. Your described layout matches that
+convention. The archive only contains this homework folder; it does not copy
+or replace your existing `seclab/` or `labs/` directories.
 
-Fill in **`harness/payloads.py`** — six values, all `None` right now:
+## 1. Start the local target
 
-1. `PAYLOAD_DIRECT_INJECTION` — your `/chat` payload (A.1).
-2. `PAYLOAD_INDIRECT_INJECTION` (or `INDIRECT_INJECTION_URL`) — the poisoned
-   page content for `/summarize` (A.2).
-3. `PAYLOAD_RAG_EXFIL_QUESTION` and `PAYLOAD_RAG_POISON_QUESTION` — the two
-   questions for `/rag` (A.3).
-4. `PAYLOAD_CONFUSED_DEPUTY_REQUEST` — the request for `/agent` (A.4). This
-   same value is reused unmodified by `b2_containment.py`.
-5. `PAYLOAD_FILTER_BYPASS` — your encode/spell-out variant for B1.3.
-
-This is the one piece Claude didn't and won't write — see `AI_LOG.md` for why.
-
-## How to run it, in order
+From the course repository root, build the image if it has not already been
+built:
 
 ```bash
-# terminal 1 — leave this running
-python -m seclab.targets --up vuln-llm
-# note the printed base URL, e.g. http://127.0.0.1:<port>
-
-# terminal 2
-# 1. fill in harness/payloads.py first
-python homework/hw3/luna-alex/harness/reliability_harness.py \
-    --base-url http://127.0.0.1:<port> --trials 5
-# -> writes homework/hw3/luna-alex/results/part_a_findings.json
-
-python homework/hw3/luna-alex/defend/b1_defense_and_bypass.py \
-    --base-url http://127.0.0.1:<port> --trials 5
-# -> writes homework/hw3/luna-alex/results/part_b1_findings.json
-
-python homework/hw3/luna-alex/defend/b2_containment.py \
-    --base-url http://127.0.0.1:<port> --trials 5
-# -> writes homework/hw3/luna-alex/results/part_b2_containment.json
+docker build -t seclab/vuln-llm:local labs/vuln-llm
 ```
 
-Then:
+Start T1 and keep this terminal open:
 
-1. Open each `results/*.json`, pull the real numbers into `findings.md`,
-   `scorecard.md`, and `honesty.md` wherever you see `<...>`.
-2. If Ollama is serving a model (`ollama list` shows one, `ollama serve` is
-   running), the harness will automatically hit the real model via
-   `vulnllm_app.py`'s own `ollama_available()` check — no flag needed. If not,
-   it falls back to the deterministic `mock` backend; `GET /health` tells you
-   which one ran (`"backend": "ollama"` or `"mock"`). `honesty.md` §2 is
-   where that distinction has to be addressed either way.
-3. Double-check `findings.md`'s A.2 section names the victim and attacker
-   explicitly — HW3 asks for that by name and it's easy to skip.
+```bash
+python -m seclab.targets --up vuln-llm
+```
 
-## What's **not** extra / not required
+Copy the printed URL, for example `http://127.0.0.1:60728`. Use your actual
+port in the commands below. Confirm the backend:
 
-Nothing here beyond the file list above. No `run_all.sh`, no extra target
-beyond T1 (the assignment only lists T1 — the "two targets" framing in the
-header text is boilerplate from the template; read the "The targets" section
-closely, only `vuln-llm` is actually specified).
+```bash
+curl -s http://127.0.0.1:60728/health
+```
 
-## Ethics
+The response identifies `backend` as `mock` or `ollama`. The target source
+currently defaults to `qwen2.5:1.5b` when Ollama is reachable, unless
+`VULN_LLM_MODEL` is set differently.
 
-Local target only (`python -m seclab.targets --up vuln-llm`, bound to
-`127.0.0.1`). See `../resources/ethics-and-scope.md`. No attack traffic
-leaves the sandbox; `/summarize`'s SSRF-shaped fetch, if you exercise it with
-a real URL instead of inline `content`, should only ever point at something
-you're also hosting locally.
+**No Docker:** the lab README also allows running the app directly:
+
+```bash
+PORT=8000 python labs/vuln-llm/app/vulnllm_app.py
+```
+
+Then use `http://127.0.0.1:8000` as the base URL. Stop the direct process with
+Ctrl+C. Do not expose this deliberately vulnerable service to a public network.
+
+## 2. Run Part A — all four attacks
+
+The six payload values are already populated in `harness/payloads.py`. Review
+them before execution; they target the known local course surfaces and are
+compatible with the deterministic mock. Results on a real Ollama model may
+be probabilistic.
+
+```bash
+python homework/hw3/luna-alex/harness/reliability_harness.py \
+    --base-url http://127.0.0.1:60728 --trials 5
+```
+
+The script resets `/defense` to level 0 and `/policy` to the full allow-list so
+a previous B1/B2 run cannot alter the Part A baseline. It tests:
+
+- A.1 direct injection on `/chat`;
+- A.2 indirect injection on `/summarize`;
+- A.3 private-document exfiltration and poisoned-document triggering on `/rag`;
+- A.4 confused-deputy exfiltration through `/agent`.
+
+The A.3 exfiltration oracle requires both `private-vip` in `retrieved` and the
+canary in `answer`. The poisoning oracle requires both `poisoned-promo` in
+`retrieved` and the canary in `answer`. The A.4 oracle requires the canary in
+an entry of `sent[*].body`.
+
+### A.2 delivery mode
+
+By default, `payloads.py` supplies the page text through the target's supported
+`/summarize` `{"content": ...}` offline mode. That confirms indirect injection
+through untrusted content while keeping the test self-contained.
+
+To test the URL-fetch variant instead, set `INDIRECT_INJECTION_URL` in
+`payloads.py` to a page you host locally and ensure the app/container can reach
+that URL. A native app can use a localhost URL. With Docker, the container
+usually needs a host-reachable address such as `host.docker.internal` (the
+course `seclab.targets` code adds the Linux host-gateway mapping). Only serve
+and fetch pages you control. Record which mode you used in `findings.md`.
+
+Output:
+
+```text
+homework/hw3/luna-alex/results/part_a_findings.json
+```
+
+## 3. Run Part B1 — model-level defense and bypass
+
+```bash
+python homework/hw3/luna-alex/defend/b1_defense_and_bypass.py \
+    --base-url http://127.0.0.1:60728 --trials 5
+```
+
+It re-runs the same direct-injection payload at defense levels 0, 1, 2, and 3,
+then runs the transformed-output bypass at level 2. The output reports canary
+leaks, successful HTTP responses, request errors, and block rate. A transport
+error is not counted as a security block. The script restores defense level 0
+when it finishes.
+
+Output:
+
+```text
+homework/hw3/luna-alex/results/part_b1_findings.json
+```
+
+## 4. Run Part B2 — least-privilege containment
+
+```bash
+python homework/hw3/luna-alex/defend/b2_containment.py \
+    --base-url http://127.0.0.1:60728 --trials 5
+```
+
+The script first verifies the confused-deputy attack under the full tool
+allow-list. It then changes the allow-list to `["get_faq"]`, the minimum
+needed for its stated read-only FAQ workflow, and re-runs the **identical**
+request five times.
+
+The contained oracle checks all of the following:
+
+1. `sent == []`;
+2. `lookup_balance` and `send_email` are both `DENIED_BY_POLICY`; and
+3. the canary is absent from the response transcript.
+
+It also checks three benign tasks. Support hours and lost-card FAQ requests
+should work; an account-balance request is expected to be denied because the
+FAQ-only allow-list excludes `lookup_balance`. This documents the axis-5
+functionality cost instead of claiming the narrowest policy has no trade-off.
+
+The script leaves the allow-list narrowed so you can inspect the final state.
+The Part A harness resets it automatically before its own baseline.
+
+Output:
+
+```text
+homework/hw3/luna-alex/results/part_b2_containment.json
+```
+
+## 5. Fill the written results from the JSON evidence
+
+After all three scripts complete:
+
+1. Copy the actual `successes/trials`, evidence, and backend from
+   `part_a_findings.json` into `findings.md`.
+2. Copy each block rate and the bypass ratio from `part_b1_findings.json` into
+   `scorecard.md`.
+3. Copy baseline exfiltration, containment, injection-still-planned, and
+   benign-task outcomes from `part_b2_containment.json` into `scorecard.md` and
+   `honesty.md`.
+4. Keep `mock` and `ollama` results distinct. The mock's repeated results are
+   deterministic logic-path checks; only a real model run can measure model
+   non-determinism.
+
+Do not submit with `PENDING RUN` remaining. If only the mock is available, run
+all scripts anyway, report the deterministic `k/5` values, and explicitly say
+they do not measure model sampling variability.
+
+## 6. Optional checks and teardown
+
+Run the course target's tests and the `seclab` harness tests from repository
+root (use the exact test directory in your checkout):
+
+```bash
+pytest labs/vuln-llm/ -q
+pytest seclab/ -q
+```
+
+When finished:
+
+```bash
+python -m seclab.targets --down
+```
+
+## Ethics and scope
+
+Use only the course-provided target on your own machine and local pages that
+you control. Do not send these payloads to third-party services. See the
+course's `resources/ethics-and-scope.md` for the full scope rules.
+
+## What is deliberately not claimed
+
+This homework folder does not contain the full course repository or an
+already-running target. The scripts have been reviewed against the target
+source supplied for this task and statically checked, but the JSON trial
+results are generated only when you run them in your own course checkout.
+No live-target numbers are fabricated in this submission.
