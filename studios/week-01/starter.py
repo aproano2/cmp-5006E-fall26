@@ -14,6 +14,9 @@ it watches the cipher's confidentiality guarantee COLLAPSE the instant the
 plaintext is English — because English leaks its letter statistics through any
 substitution. Naming that assumption is naming the attack (Kerckhoffs, week 1).
 """
+import random
+from collections import Counter
+
 from cipher import (ALPHABET, ENGLISH_FREQ, apply_guess, letter_counts, score)
 
 
@@ -28,16 +31,10 @@ def frequency_guess_key(ciphertext):
     the tell that the English assumption is right even when the details aren't.
 
     Return a dict {cipher_symbol: guessed_plaintext_letter}.
-
-    Hints:
-      - ``letter_counts(ciphertext).most_common()`` gives cipher symbols, commonest
-        first.
-      - ``sorted(ENGLISH_FREQ, key=ENGLISH_FREQ.get, reverse=True)`` gives English
-        letters, commonest first.
-      - ``zip`` the two rankings.
     """
-    # TODO: build and return the frequency-rank decryption map.
-    raise NotImplementedError
+    cipher_by_rank = [symbol for symbol, _ in letter_counts(ciphertext).most_common()]
+    english_by_rank = sorted(ENGLISH_FREQ, key=ENGLISH_FREQ.get, reverse=True)
+    return dict(zip(cipher_by_rank, english_by_rank))
 
 
 def crack(ciphertext, restarts=8, iters=3000, seed=0):
@@ -48,25 +45,81 @@ def crack(ciphertext, restarts=8, iters=3000, seed=0):
     enumerate the 26! keyspace; you search only the far smaller space of "keys
     that produce English", guided by ``score``.
 
-    Algorithm (do this for each of ``restarts`` restarts, keeping the best):
-      1. Start from ``frequency_guess_key(ciphertext)`` as the initial key.
-      2. Complete it into a FULL permutation over ``ALPHABET`` — the frequency
-         guess only covers symbols that appear, so fill the missing plaintext
-         letters into any unmapped cipher symbols (use ``random`` for the spares).
-      3. ``current = score(apply_guess(ciphertext, key))``.
-      4. For ``iters`` iterations: pick two plaintext letters at random and swap
-         their assignments (``key[a], key[b] = key[b], key[a]``). Recompute the
-         score. Keep the swap if it improved the score; otherwise revert it.
-      5. Track the best-scoring key across all restarts and return it.
-
-    Return the best decryption map {cipher_symbol: plaintext_letter}. Use a seeded
-    ``random.Random(seed)`` so the result is reproducible.
+    Return the best decryption map {cipher_symbol: plaintext_letter}.
 
     NOTE: nothing in this function may reference the true key or the plaintext.
     The only inputs are the ciphertext and the public ``score`` / ``ENGLISH_FREQ``.
     """
-    # TODO: implement the random-restart hill climb described above.
-    raise NotImplementedError
+    rng = random.Random(seed)
+    bigrams = _ciphertext_bigrams(ciphertext)
+    initial_guess = frequency_guess_key(ciphertext)
+
+    best_key, best_score = None, float("-inf")
+    for _ in range(restarts):
+        # Every restart begins at the same frequency guess but fills the unseen
+        # symbols differently, so each climb starts on a different hillside.
+        key = _complete_key(initial_guess, rng)
+        current = _score_key(key, bigrams)
+
+        for _ in range(iters):
+            a, b = rng.sample(ALPHABET, 2)
+            key[a], key[b] = key[b], key[a]
+            candidate = _score_key(key, bigrams)
+            if candidate > current:
+                current = candidate               # more English-like: keep it
+            else:
+                key[a], key[b] = key[b], key[a]   # worse: undo the swap
+
+        if current > best_score:
+            best_key, best_score = dict(key), current
+
+    return best_key
+
+
+# ---- scoring a candidate key ------------------------------------------------
+#
+# ``score`` is the oracle, but calling it on a full re-decryption for every one
+# of the ~24k swaps below re-reads the whole text each time. A substitution maps
+# bigrams to bigrams, so the score of a decryption is fully determined by *how
+# often each cipher bigram occurs* — count those once, then a candidate key
+# costs one lookup per DISTINCT bigram instead of one per character.
+#
+# The bigram log-probabilities come from the public oracle itself: ``score`` of
+# a two-letter string is exactly the model's log-probability for that bigram, so
+# nothing here duplicates or second-guesses ``cipher.py``.
+
+BIGRAM_LOGPROB = {a + b: score(a + b) for a in ALPHABET for b in ALPHABET}
+
+
+def _ciphertext_bigrams(ciphertext):
+    """Count adjacent cipher-letter pairs, ignoring spaces and punctuation.
+
+    Returns [((first_symbol, second_symbol), count), ...] — the same pairs
+    ``score`` would walk, since it filters non-letters the same way.
+    """
+    letters = [ch for ch in ciphertext.upper() if ch in ALPHABET]
+    counts = Counter(zip(letters, letters[1:]))
+    return list(counts.items())
+
+
+def _score_key(key, bigrams):
+    """English-likeness of decrypting ``bigrams`` with ``key``. Higher is better."""
+    return sum(n * BIGRAM_LOGPROB[key[a] + key[b]] for (a, b), n in bigrams)
+
+
+def _complete_key(guess, rng):
+    """Extend a partial guess into a full permutation of the alphabet.
+
+    The frequency guess only covers symbols that actually appear in the
+    ciphertext; the hill climb swaps over all 26, so the leftover plaintext
+    letters are handed to the unseen symbols at random.
+    """
+    key = dict(guess)
+    unused_symbols = [c for c in ALPHABET if c not in key]
+    unused_letters = [c for c in ALPHABET if c not in key.values()]
+    rng.shuffle(unused_letters)
+    key.update(zip(unused_symbols, unused_letters))
+    return key
 
 
 # ---- Task: defeat your own attack (analysis, no test) -----------------------

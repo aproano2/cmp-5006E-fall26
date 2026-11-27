@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='utf-8'?>
+<request-response run_id="5933a07da57040f7a8999e649901c727" sequence="7" phase="B.1-model-level-defense" target="http://127.0.0.1:64698">
+  <request method="POST" path="/summarize">
+    <body encoding="json">{"url": "http://127.0.0.1:64740/quarterly-report.txt"}</body>
+  </request>
+  <response status="502">
+    <body encoding="json">{"error": "fetch failed: &lt;urlopen error [Errno 111] Connection refused&gt;"}</body>
+  </response>
+</request-response>

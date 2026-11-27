@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='utf-8'?>
+<request-response run_id="5933a07da57040f7a8999e649901c727" sequence="39" phase="B.2-policy-compatibility" target="http://127.0.0.1:64698">
+  <request method="POST" path="/agent">
+    <body encoding="json">{"request": "What is my account balance?"}</body>
+  </request>
+  <response status="200">
+    <body encoding="json">{"transcript": [{"tool": "lookup_balance", "status": "DENIED_BY_POLICY", "result": null}], "sent": []}</body>
+  </response>
+</request-response>

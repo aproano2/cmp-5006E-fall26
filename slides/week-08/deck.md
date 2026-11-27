@@ -15,7 +15,8 @@ Lesson plan: ../../weeks/week-08.md
 
 ## Trust the artifact, not the name
 
-**CMP-5006** · Week 8
+**CMP-5006** · Week 8 — *Checkpoint 1 & Duel 2 due*
+
 ---
 
 # ⚠️ Dependency confusion

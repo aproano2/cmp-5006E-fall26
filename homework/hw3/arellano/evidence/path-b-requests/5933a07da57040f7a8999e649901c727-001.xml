@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='utf-8'?>
+<request-response run_id="5933a07da57040f7a8999e649901c727" sequence="1" phase="B.1-model-level-defense" target="http://127.0.0.1:64698">
+  <request method="POST" path="/defense">
+    <body encoding="json">{"level": 2}</body>
+  </request>
+  <response status="200">
+    <body encoding="json">{"level": 2}</body>
+  </response>
+</request-response>

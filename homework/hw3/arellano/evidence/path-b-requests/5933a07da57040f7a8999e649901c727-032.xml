@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='utf-8'?>
+<request-response run_id="5933a07da57040f7a8999e649901c727" sequence="32" phase="B.2-least-privilege-containment" target="http://127.0.0.1:64698">
+  <request method="POST" path="/policy">
+    <body encoding="json">{"allow": ["get_faq"]}</body>
+  </request>
+  <response status="200">
+    <body encoding="json">{"allow": ["get_faq"]}</body>
+  </response>
+</request-response>
