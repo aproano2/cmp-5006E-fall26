@@ -1,6 +1,6 @@
 # Homework 3 — AI Application Red Team
 
-**Names:** Josue Lopez
+**Names:** Josue Lopez, Miguel Angel Jarrin, Luis Eduardo Zaldumbide
 **Class:** Computer Security
 **Date:** 25/11/2026
 
@@ -176,3 +176,198 @@ deputy (OWASP LLM06 Excessive Agency).
   every time, because the default policy allows every tool.
 - 5 trials is a small sample. A 2/5 finding could be 1/5 or 3/5 on another run, so
   the grader may see different numbers for the non-deterministic rows.
+
+## Part B1 — Model-Level Defense (Raises Cost, No Guarantee)
+
+### Defense Configuration and Methodology
+
+Four defense levels were evaluated using T1's `/defense` endpoint:
+
+- **Level 0:** No defense.
+- **Level 1:** Delimiter.
+- **Level 2:** Output filter.
+- **Level 3:** Combined defense.
+
+The representative payloads from Part A were evaluated against each defense level using the Ollama backend. Each configuration was tested over five trials, resulting in 80 trials per defense sweep.
+
+Individual responses, attack outcomes, and backend errors were recorded in `b1_raw_trials.csv` to ensure traceability and reproducibility.
+
+### Defense Sweep Results
+
+| Attack | No Defense | Delimiter | Output Filter | Combined |
+|---|---:|---:|---:|---:|
+| Direct injection | 0% | 40% | 100% | 100% |
+| Indirect injection | 60% | 40% | 100% | 100% |
+| RAG exfiltration | 0% | 0% | 40% | 80% |
+| Confused deputy | 0% | 0% | 0% | 0% |
+| **Overall block rate** | **15%** | **20%** | **60%** | **70%** |
+
+The delimiter defense provided limited and inconsistent protection, increasing the overall block rate from 15% to 20%.
+
+The output filter achieved substantially better results, blocking 100% of the detected direct and indirect injection attempts. However, its effectiveness against RAG exfiltration remained limited.
+
+The combined defense achieved the highest overall block rate in the latest execution, reaching 70%. In particular, RAG protection improved from 40% under the output filter alone to 80% under the combined defense.
+
+Nevertheless, the confused-deputy attack succeeded in every trial, regardless of the defense level. This highlights a fundamental limitation of model-level defenses: inspecting conversational output does not enforce authorization over tool execution.
+
+#### Oracle Limitations
+
+During the review of individual trials, we identified a false negative caused by the original oracle's case-sensitive comparison. A response containing a differently capitalized version of the confidential note was incorrectly classified as blocked.
+
+Although the oracle has since been made case-insensitive, the results presented above were collected before this correction.
+
+Consequently, the reported direct and indirect injection block rates should be interpreted as upper bounds rather than definitive measurements. RAG exfiltration and confused-deputy evaluations use different detection criteria and are unaffected by this specific issue.
+
+### Defense Bypass — Axis 4
+
+Three techniques were evaluated against the strongest defense configuration (Level 3) to assess whether confidential information could remain recoverable despite the output filter.
+
+| Technique | Oracle-Detected Successes | Reported Reliability |
+|---|---:|---:|
+| Spelled-out | 2/5 | 40% |
+| Base64 | 1/5 | 20% |
+| Reversed | 0/5 | 0% |
+| Benign control | 0/5 | 0% |
+
+#### Spelled-out
+
+An earlier execution demonstrated that confidential information could remain fully recoverable despite the output filter.
+
+However, some responses classified as successful during the latest execution contained incomplete or inaccurate representations of the original information. Therefore, the reported 40% reliability reflects oracle-detected successes rather than a verified rate of complete secret recovery.
+
+#### Base64
+
+One trial produced a recoverable representation of the complete confidential note.
+
+The response also contained a backend timeout annotation. Although the information was recoverable, the infrastructure error introduces uncertainty regarding the execution of that trial.
+
+The result is therefore reported with this qualification.
+
+#### Reversed
+
+No successful disclosures were detected across the five trials.
+
+Inspection of the raw responses revealed incomplete and inaccurate transformations of the confidential information. This suggests that the unsuccessful results were primarily associated with model compliance rather than demonstrated effectiveness of the output filter.
+
+#### Benign Control
+
+The benign control produced zero detected disclosures across five trials, satisfying the expected security outcome.
+
+However, several responses failed to answer the legitimate question. This indicates a potential usability limitation that is not captured by the disclosure oracle.
+
+### Reliability — Axis 9
+
+The complete defense sweep was executed multiple times using the Ollama backend. Despite maintaining the same experimental configuration, results varied between executions.
+
+| Configuration | Earlier Run | Latest Run |
+|---|---:|---:|
+| Direct injection — Delimiter | 0% | 40% |
+| Indirect injection — No defense | 20% | 60% |
+| Indirect injection — Delimiter | 80% | 40% |
+| RAG exfiltration — Output filter | 100% | 40% |
+| RAG exfiltration — Combined | 40% | 80% |
+
+These differences demonstrate that defense effectiveness is not necessarily reproducible across independent executions of a non-deterministic model.
+
+Notably, the earlier execution showed the combined defense performing worse than the output filter alone against RAG exfiltration. The latest execution showed the opposite relationship.
+
+Both observations are reported to avoid selectively presenting favorable results.
+
+Additionally, five trials per configuration provide a limited empirical estimate of reliability. The observed block rates describe experimental outcomes rather than guaranteed probabilities of future success or failure.
+
+### Security Guarantee — Axis 2
+
+No formal security guarantee can be established from the model-level defenses evaluated in Part B1.
+
+The experimental results demonstrate three fundamental limitations:
+
+- Defense effectiveness varies across independent executions.
+- Confidential information may remain recoverable despite output filtering.
+- Model-level defenses do not enforce authorization over tool execution.
+
+Although the combined defense increased the overall observed block rate from 15% to 70%, it did not eliminate information disclosure or unauthorized tool execution.
+
+The confused-deputy results are particularly significant because the attack succeeded in every trial across all defense levels and both executions.
+
+These findings demonstrate that model-level defenses should be treated as defense-in-depth mechanisms rather than enforceable security boundaries.
+
+Architectural containment, evaluated in Part B2, addresses this limitation by enforcing authorization and least privilege at the dispatcher level, independently of the model's behavior.
+
+### Generated Artifacts
+
+- `b1_defense_sweep.csv`: Aggregated defense effectiveness measurements across all attack surfaces and defense levels.
+- `b1_bypass_results.csv`: Observed bypass reliability against the combined defense.
+- `b1_raw_trials.csv`: Individual trial responses, oracle classifications, and backend error annotations.
+
+### Conclusion
+
+Model-level defenses significantly reduced the observed success rate of several attacks but did not eliminate the underlying vulnerabilities.
+
+The combined defense achieved the strongest overall protection in the latest execution, improving the observed block rate by 55 percentage points relative to the baseline.
+
+However, inconsistent results, oracle limitations, recoverable confidential information, and persistent unauthorized tool execution prevent these defenses from establishing a formal security guarantee.
+
+**Model-level defenses raise the cost of an attack, but architectural controls are necessary to establish an enforceable security boundary.**
+
+## Part B2 — Architectural Containment
+
+### Least-Privilege Policy
+
+The agent initially had access to three tools: `get_faq`, `lookup_balance`, and `send_email`.
+
+Using the `/policy` endpoint, we restricted the agent's allow-list to `get_faq`, the only tool required for its intended FAQ functionality.
+
+| Tool | Original Policy | Restricted Policy |
+| --- | --- | --- |
+| `get_faq` | Allowed | Allowed |
+| `lookup_balance` | Allowed | Denied |
+| `send_email` | Allowed | Denied |
+
+### Experimental Results
+
+The same confused-deputy payload from Part A was evaluated over five trials under the restricted policy.
+
+| Trial | lookup_balance | send_email | Messages Sent | Contained |
+| --- | --- | --- | --- | --- |
+| 1 | Denied | Denied | 0 | Yes |
+| 2 | Denied | Denied | 0 | Yes |
+| 3 | Denied | Denied | 0 | Yes |
+| 4 | Denied | Denied | 0 | Yes |
+| 5 | Denied | Denied | 0 | Yes |
+
+Both unauthorized tool calls returned `DENIED_BY_POLICY`, and the `sent` list remained empty in every trial.
+
+A benign FAQ request was also tested successfully, confirming that the agent's intended functionality was preserved.
+
+### Axis 2 — Security Guarantee
+
+The agent cannot invoke a tool outside its allow-list, regardless of what the model is convinced to do. This guarantee is enforced by the dispatcher rather than by a system prompt or output filter.
+
+Before executing a tool, the dispatcher checks whether it belongs to the allow-list. Unauthorized calls are rejected before execution, preventing both unauthorized access to sensitive account information and unauthorized email transmission.
+
+This guarantee assumes that the policy remains restricted and that all tool invocations pass through the dispatcher.
+
+### Coverage vs. Containment
+
+| Metric | Result |
+| --- | --- |
+| Injection prevention | 0/5 |
+| Injection coverage | 0% |
+| Damage containment | 5/5 |
+| Containment rate | 100% |
+| Unauthorized messages sent | 0 |
+| Benign functionality | Preserved |
+
+Although the injection successfully influenced the agent's planned tool calls in every trial, none of the unauthorized operations were executed.
+
+This is a stronger result than model-level filtering because security does not depend on the model correctly identifying or rejecting malicious instructions. Instead, the application enforces an explicit authorization boundary that limits the consequences of a successful injection.
+
+The agent's tool planner is deterministic in the provided implementation. Therefore, the five trials demonstrate consistent architectural enforcement rather than statistical reliability against a nondeterministic language model.
+
+## Part C — Honesty: "Where our red team might be unfair"
+
+The honesty section lives in its own file: **[`honesty.md`](honesty.md)**. It covers
+five self-critiques — the small sample size (n = 5) as the main limit, which findings may
+not reproduce, where the deterministic planner let us demonstrate logic we could not
+measure, the unmeasured usability cost of the least-privilege policy, and oracle /
+model-choice caveats.

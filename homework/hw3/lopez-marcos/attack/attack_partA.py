@@ -1,4 +1,4 @@
-#Names: Josue Lopez
+#Names: Josue Lopez, Miguel Angel Jarrin, Luis Eduardo Zaldumbide
 #Class: Computer Security
 #Date: 25/11/2026
 
