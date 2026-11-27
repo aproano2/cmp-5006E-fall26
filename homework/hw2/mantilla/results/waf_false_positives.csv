@@ -1,0 +1,27 @@
+field,input,waf_v1,waf_v2
+login_username,alice,pass,pass
+login_username,bob_smith,pass,pass
+login_username,o'brien,pass,any single quote
+login_username,d'angelo,pass,any single quote
+login_username,renee,pass,pass
+login_username,user.name+tag@example.com,pass,pass
+login_username,María José,pass,pass
+login_username,select_committee_chair,pass,pass
+login_username,unionrep_delegate,pass,pass
+search_or_name,wireless headphones under 50 dollars,pass,pass
+search_or_name,i want to select the union option on the benefits form,pass,SQL keyword
+search_or_name,drop table tennis lessons for beginners,pass,SQL keyword
+search_or_name,reserve the drop table at the makerspace friday,pass,SQL keyword
+search_or_name,the OR gate and the AND gate in digital logic,pass,SQL keyword
+search_or_name,director of operations or equivalent role,pass,SQL keyword
+search_or_name,how do i update my shipping address,pass,pass
+search_or_name,javascript tutorial for absolute beginners,pass,pass
+search_or_name,my order number is 1=1-2024 please help,pass,pass
+search_or_name,"quotes about resilience: ""don't give up""",pass,any single quote
+search_or_name,screenwriter for the new script,pass,pass
+search_or_name,Panic! at the Disco tickets,pass,pass
+ping_host,example.com,pass,pass
+ping_host,192.168.1.1,pass,pass
+ping_host,api.internal.corp,pass,pass
+ping_host,host-with-dashes.example.org,pass,pass
+ping_host,localhost,pass,pass

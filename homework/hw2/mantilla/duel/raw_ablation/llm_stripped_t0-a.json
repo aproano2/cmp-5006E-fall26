@@ -1,0 +1,10 @@
+{
+  "run": "stripped:t0-a",
+  "variant": "stripped",
+  "model": "gemma4:12b",
+  "model_digest": "c7597fc90b86aff6965317f37dd5465402284e26382d9b4bf2dfe3ef1491f4b6",
+  "temperature": 0.0,
+  "seed": 0,
+  "elapsed_s": 113.3,
+  "text": "```json\n[\n  {\n    \"vulnerability\": \"SQL injection\",\n    \"function\": \"do_login\",\n    \"severity\": \"HIGH\",\n    \"reason\": \"User-supplied input is directly concatenated into a SQL query string without using parameterized queries.\"\n  },\n  {\n    \"vulnerability\": \"Reflected Cross-Site Scripting (XSS)\",\n    \"function\": \"do_reflect\",\n    \"severity\": \"MEDIUM\",\n    \"reason\": \"The application reflects user-supplied input into the HTML body without any escaping or sanitization.\"\n  },\n  {\n    \"vulnerability\": \"Command injection\",\n    \"function\": \"do_ping\",\n    \"severity\": \"HIGH\",\n    \"reason\": \"The application executes a system command using user-supplied input with an insufficient blacklist-based filter.\"\n  },\n  {\n    \"vulnerability\": \"Information Disclosure\",\n    \"function\": \"do_login\",\n    \"severity\": \"LOW\",\n    \"reason\": \"The application returns internal database error messages and the raw SQL query to the client.\"\n  }\n]\n```"
+}
