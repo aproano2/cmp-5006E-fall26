@@ -1,0 +1,290 @@
+{
+  "ground_truth_count": 3,
+  "llm_macro_average_across_runs": {
+    "precision": 0.75,
+    "recall": 0.8667,
+    "f1": 0.8,
+    "mean_tp": 2.6,
+    "mean_fp": 1.0,
+    "mean_fn": 0.4
+  },
+  "ground_truth_source": "homework\\hw2\\luna-alex\\duel\\ground_truth.json",
+  "scoring_api": "seclab.scan.compare_scanners",
+  "tools": {
+    "LLM run 1": {
+      "tp_count": 3,
+      "fp_count": 0,
+      "fn_count": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "false_positives": [],
+      "missed": [],
+      "flagged_true_negative": [],
+      "hallucinated_not_present": []
+    },
+    "LLM run 2": {
+      "tp_count": 2,
+      "fp_count": 2,
+      "fn_count": 1,
+      "precision": 0.5,
+      "recall": 0.6667,
+      "f1": 0.5714,
+      "false_positives": [
+        [
+          "xss-reflected",
+          "do_reflect"
+        ],
+        [
+          "xss-reflected",
+          "do_reflect_safe"
+        ]
+      ],
+      "missed": [
+        [
+          "xss",
+          "do_reflect"
+        ]
+      ],
+      "flagged_true_negative": [
+        [
+          "xss-reflected",
+          "do_reflect_safe"
+        ]
+      ],
+      "hallucinated_not_present": []
+    },
+    "LLM run 3": {
+      "tp_count": 2,
+      "fp_count": 2,
+      "fn_count": 1,
+      "precision": 0.5,
+      "recall": 0.6667,
+      "f1": 0.5714,
+      "false_positives": [
+        [
+          "xss",
+          "do_ping"
+        ],
+        [
+          "xss",
+          "do_reflect_safe"
+        ]
+      ],
+      "missed": [
+        [
+          "cmdi",
+          "do_ping"
+        ]
+      ],
+      "flagged_true_negative": [
+        [
+          "xss",
+          "do_reflect_safe"
+        ]
+      ],
+      "hallucinated_not_present": []
+    },
+    "LLM run 4": {
+      "tp_count": 3,
+      "fp_count": 1,
+      "fn_count": 0,
+      "precision": 0.75,
+      "recall": 1.0,
+      "f1": 0.8571,
+      "false_positives": [
+        [
+          "broken-access-control",
+          "do_login"
+        ]
+      ],
+      "missed": [],
+      "flagged_true_negative": [],
+      "hallucinated_not_present": [
+        [
+          "broken-access-control",
+          "do_login"
+        ]
+      ]
+    },
+    "LLM run 5": {
+      "tp_count": 3,
+      "fp_count": 0,
+      "fn_count": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "false_positives": [],
+      "missed": [],
+      "flagged_true_negative": [],
+      "hallucinated_not_present": []
+    },
+    "Semgrep": {
+      "tp_count": 2,
+      "fp_count": 0,
+      "fn_count": 1,
+      "precision": 1.0,
+      "recall": 0.6667,
+      "f1": 0.8,
+      "false_positives": [],
+      "missed": [
+        [
+          "sqli",
+          "do_login"
+        ]
+      ],
+      "flagged_true_negative": [],
+      "hallucinated_not_present": []
+    }
+  },
+  "llm_runs": [
+    {
+      "run": 1,
+      "seed": 0,
+      "backend": "ollama",
+      "model": "qwen2.5:3b",
+      "temperature": 0.7,
+      "cached": false,
+      "elapsed_seconds": 73.8391861000564,
+      "error": null,
+      "parse_error": null
+    },
+    {
+      "run": 2,
+      "seed": 1,
+      "backend": "ollama",
+      "model": "qwen2.5:3b",
+      "temperature": 0.7,
+      "cached": false,
+      "elapsed_seconds": 24.371720500057563,
+      "error": null,
+      "parse_error": null
+    },
+    {
+      "run": 3,
+      "seed": 2,
+      "backend": "ollama",
+      "model": "qwen2.5:3b",
+      "temperature": 0.7,
+      "cached": false,
+      "elapsed_seconds": 23.48574859998189,
+      "error": null,
+      "parse_error": null
+    },
+    {
+      "run": 4,
+      "seed": 3,
+      "backend": "ollama",
+      "model": "qwen2.5:3b",
+      "temperature": 0.7,
+      "cached": false,
+      "elapsed_seconds": 28.963879499933682,
+      "error": null,
+      "parse_error": null
+    },
+    {
+      "run": 5,
+      "seed": 4,
+      "backend": "ollama",
+      "model": "qwen2.5:3b",
+      "temperature": 0.7,
+      "cached": false,
+      "elapsed_seconds": 21.021948499954306,
+      "error": null,
+      "parse_error": null
+    }
+  ],
+  "non_determinism": {
+    "runs": 5,
+    "distinct_finding_sets": 4,
+    "all_identical": false,
+    "finding_sets": [
+      [
+        [
+          "cmdi",
+          "do_ping"
+        ],
+        [
+          "sqli",
+          "do_login"
+        ],
+        [
+          "xss",
+          "do_reflect"
+        ]
+      ],
+      [
+        [
+          "cmdi",
+          "do_ping"
+        ],
+        [
+          "sqli",
+          "do_login"
+        ],
+        [
+          "xss-reflected",
+          "do_reflect"
+        ],
+        [
+          "xss-reflected",
+          "do_reflect_safe"
+        ]
+      ],
+      [
+        [
+          "sqli",
+          "do_login"
+        ],
+        [
+          "xss",
+          "do_ping"
+        ],
+        [
+          "xss",
+          "do_reflect"
+        ],
+        [
+          "xss",
+          "do_reflect_safe"
+        ]
+      ],
+      [
+        [
+          "broken-access-control",
+          "do_login"
+        ],
+        [
+          "cmdi",
+          "do_ping"
+        ],
+        [
+          "sqli",
+          "do_login"
+        ],
+        [
+          "xss",
+          "do_reflect"
+        ]
+      ],
+      [
+        [
+          "cmdi",
+          "do_ping"
+        ],
+        [
+          "sqli",
+          "do_login"
+        ],
+        [
+          "xss",
+          "do_reflect"
+        ]
+      ]
+    ]
+  },
+  "hallucination_and_miss_review": {
+    "status": "complete only after inspecting the real raw LLM and Semgrep outputs",
+    "do_not_infer": "A flagged true negative or not-present class must be checked against the actual finding evidence before naming it in the report."
+  }
+}

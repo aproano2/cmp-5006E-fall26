@@ -1,0 +1,15 @@
+Fixture verification output
+Date: 2026-11-04
+Target source: temporary reconstruction of the exact vulnweb_app.py source
+pasted for review (not the course Docker container).
+
+Ground truth checks:
+  [OK] sqli/do_login
+  [OK] xss/do_reflect
+  [OK] cmdi/do_ping
+  [OK] safe/do_reflect_safe
+Benign corpus: OK
+FIXTURES SOUND.
+
+This verifies the fixture expectations against the provided source copy. It
+is not a Medium-filter test and does not replace seclab.attack.

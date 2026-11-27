@@ -1,0 +1,26 @@
+[
+  {
+    "id": "B1-XSS-01",
+    "payload": "<a href=jav&#x61;script:alert(1)>click</a>",
+    "waf_allowed": true,
+    "dialog_fired": false,
+    "dialog_message": null,
+    "error": "Link click completed but no JavaScript dialog was observed."
+  },
+  {
+    "id": "B1-XSS-02",
+    "payload": "<a href=j&#97;vascript:alert(1)>click</a>",
+    "waf_allowed": true,
+    "dialog_fired": false,
+    "dialog_message": null,
+    "error": "Link click completed but no JavaScript dialog was observed."
+  },
+  {
+    "id": "B1-XSS-03",
+    "payload": "<a href=java&#x73;cript:alert(1)>click</a>",
+    "waf_allowed": true,
+    "dialog_fired": false,
+    "dialog_message": null,
+    "error": "Link click completed but no JavaScript dialog was observed."
+  }
+]

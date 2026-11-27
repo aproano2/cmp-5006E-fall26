@@ -1,0 +1,44 @@
+{
+  "corpus": "benign_traffic.json",
+  "total_checked": 26,
+  "false_positive_count": 5,
+  "false_positive_rate": 0.19230769230769232,
+  "false_positives": [
+    {
+      "field": "login_username",
+      "value": "o'brien",
+      "blocked": true,
+      "rule": "'",
+      "classification": "false_positive"
+    },
+    {
+      "field": "login_username",
+      "value": "d'angelo",
+      "blocked": true,
+      "rule": "'",
+      "classification": "false_positive"
+    },
+    {
+      "field": "search_or_name",
+      "value": "drop table tennis lessons for beginners",
+      "blocked": true,
+      "rule": "(?i)\\bdrop\\b.{0,10}\\btable\\b",
+      "classification": "false_positive"
+    },
+    {
+      "field": "search_or_name",
+      "value": "reserve the drop table at the makerspace friday",
+      "blocked": true,
+      "rule": "(?i)\\bdrop\\b.{0,10}\\btable\\b",
+      "classification": "false_positive"
+    },
+    {
+      "field": "search_or_name",
+      "value": "quotes about resilience: \"don't give up\"",
+      "blocked": true,
+      "rule": "'",
+      "classification": "false_positive"
+    }
+  ],
+  "interpretation": "Rate over the instructor-provided synthetic benign corpus, not production traffic."
+}
