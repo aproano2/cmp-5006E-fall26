@@ -6,8 +6,9 @@ outputs are reported in the notebook and the evidence files, not here.
 
 ## 1 - First version of the notebook
 
-**Tool:** AI coding assistant in Santiago's local session. The tool and model
-identifier were not recorded at the time.
+**Tool:** most likely OpenAI Codex, in Santiago's local session. The tool was
+not written down at the time; we infer it because the group used Codex for
+Homework 2 and Santiago's log wording matches it. The model identifier is unknown.
 
 **What we asked:** Trace `hw-3-ai-redteam.md` to the course sources
 (`seclab.attack`, `seclab.targets`, `seclab.llm`, and
