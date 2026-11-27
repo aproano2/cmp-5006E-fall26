@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='utf-8'?>
+<request-response run_id="452be90dc0f441ab92c455d7fdec215e" sequence="1" phase="A.0-benign-controls" target="http://127.0.0.1:38045">
+  <request method="POST" path="/defense">
+    <body encoding="json">{"level": 0}</body>
+  </request>
+  <response status="200">
+    <body encoding="json">{"level": 0}</body>
+  </response>
+</request-response>
