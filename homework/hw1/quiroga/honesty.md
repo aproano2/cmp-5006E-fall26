@@ -4,9 +4,7 @@
 grouped by the four questions in the assignment. We would rather lose a point of "confidence" than hide a hole.)
 
 ---
-
 ## 1. Did a break rely on an assumption the deployment didn't actually make?
-
 **Yes, in several places.**
 
 1. **Break 4 (`token_mac`): we did not break what the assignment describes.** The task text says

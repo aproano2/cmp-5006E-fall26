@@ -1,11 +1,10 @@
 # AI_LOG.md — Homework 1 (Crypto & Protocols)
 
-**Disclosure up front.** Keoma Quiroga, David Bucheli, and I (Gabriel Avalos) did all the reasoning, vulnerability analysis, and algorithm design for this homework. We used Claude as technical assistants to help with Python syntax, debugging small issues in our scripts, and formatting our Markdown files. The AI did not solve the assignment for us. We provided the logic and made all design decisions, and we take full responsibility for what is submitted here.
+**Disclosure up front.** Keoma Quiroga, David Bucheli, and Gabriel Avalos did all the reasoning, vulnerability analysis, and algorithm design for this homework. We used Claude as technical assistants to help with Python syntax, debugging small issues in our scripts, and formatting our Markdown files. The AI did not solve the assignment for us. We provided the logic and made all design decisions, and we take full responsibility for what is submitted here.
 
 **Data policy (rule 1).** Everything attacked here is the course's synthetic sandbox (`duel1_targets.py`). No real secrets, credentials, or personal data were pasted into the assistant.
 
 ---
-
 ## Entry 0 — Setup and decisions
 
 **Tool:** Claude
