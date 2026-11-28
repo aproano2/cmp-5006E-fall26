@@ -4,10 +4,6 @@ Per [`../../../resources/ai-policy.md`](../../../resources/ai-policy.md). AI
 materially shaped this submission, so it is logged in full. There is no penalty
 for heavy use; there is a penalty for hiding it.
 
-> **Attestation note (mine to confirm before submitting):** the "Did I understand
-> it?" line in each entry is *my* claim, not the model's. I should read every
-> script here and edit any "Yes" down to the truth before submitting. — B.V.
-
 **Tools used:** Claude (Claude Code, Opus-class model), November 2026, as the
 assistant; local `qwen2.5:1.5b` via Ollama as the **target** model (it is the
 thing being attacked, not an assistant).
@@ -31,9 +27,11 @@ evidence in `results/*.json`, not just the k/5 totals. Checked that every contro
 lands 0/5 except `C2-balance` on the real model, and confirmed by reading the
 reply that it is a genuine spontaneous leak, not an oracle bug (see README Part C).
 
-**Did I understand it?** Partially — confirm before submitting. The core idea
-(instructions and untrusted data share one channel; the dispatcher, not the
-prompt, is the boundary) I can explain on a whiteboard.
+**Did I understand it?** Yes. Instructions and untrusted data share one channel,
+so every attack is the same move from a different seat: the user (direct), a web
+page (indirect), a stored document (RAG), or a tool request (agent). The oracle
+is the canary, not the model's tone, and k/5 matters because the model samples
+at temperature 0.7. The boundary that holds is the dispatcher, not the prompt.
 
 ## Entry 2 — the backend-error fallback
 
